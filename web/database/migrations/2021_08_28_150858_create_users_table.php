@@ -29,6 +29,7 @@ class CreateUsersTable extends Migration
                 ->string('platform');
 
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
