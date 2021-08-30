@@ -6,8 +6,8 @@ use Laravel\Lumen\Routing\Controller as BaseController;
 
 /**
  * @OA\Info(
- *     title="Files API",
- *     description="This is Files Microservice API",
+ *     title="Waiting Lists API Microservice",
+ *     description="This is API of Waiting Lists Microservice",
  *     version="1.0",
  *
  *     @OA\Contact(

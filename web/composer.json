@@ -1,6 +1,6 @@
 {
-    "name": "promo/waiting-list",
-    "description": "Waiting List Microservice",
+    "name": "promo/waiting-lists",
+    "description": "Waiting Lists API Microservice",
     "type": "project",
     "private": true,
     "require": {

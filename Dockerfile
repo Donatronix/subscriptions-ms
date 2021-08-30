@@ -14,11 +14,7 @@ RUN apk update && apk add --no-cache \
 RUN docker-php-ext-install \
     intl \
     sockets \
-    bcmath \
-    pdo \
-    pdo_mysql \
-#    gd \
-    exif
+    bcmath
 
 COPY ./web      /app
 COPY ./pubsub   /pubsub
@@ -44,10 +40,11 @@ RUN apt update --fix-missing && apt upgrade -y
 RUN apt install -y \
         mc \
         curl \
+        g++ \
         openssh-client \
         build-essential \
         libssl-dev \
-       # zlib1g-dev \
+        zlib1g-dev \
         libicu-dev
 
 #RUN docker-php-ext-configure gd \
@@ -56,20 +53,17 @@ RUN apt install -y \
 #    --with-webp=/usr/include/
 
 RUN docker-php-ext-install -j$(nproc) \
-#    gd \
+    pdo \
     pdo_mysql \
     intl \
     sockets \
-    bcmath \
-    exif
+    bcmath
 
 RUN pecl install xdebug-3.0.3
 
 #RUN docker-php-ext-configure xdebug
 RUN docker-php-ext-enable \
-    xdebug \
-# 	gd \
-    exif
+    xdebug
 
 # Configure Apache
 COPY conf/vhost.conf /etc/apache2/sites-available/000-default.conf

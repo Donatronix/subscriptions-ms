@@ -4,13 +4,9 @@
  * @var Laravel\Lumen\Routing\Router $router
  */
 $router->group([
-    'prefix' => 'files',
+    'prefix' => 'waiting-lists',
     'namespace' => '\App\Api\V1\Controllers',
-   // 'middleware' => 'checkUser'
+    'middleware' => 'checkUser'
 ], function ($router) {
-    $router->get('/', 'FileController@index');
-    $router->post('/', 'FileController@store');
-    $router->patch('/', 'FileController@update');
-    $router->get('/{id}', 'FileController@show');
-    $router->delete('/{id}', 'FileController@destroy');
+
 });

@@ -23,8 +23,6 @@ $app = new Laravel\Lumen\Application(
     dirname(__DIR__)
 );
 
-$app->instance('path.storage', app()->basePath() . DIRECTORY_SEPARATOR . 'storage');
-
 $app->withFacades();
 
 $app->withEloquent();
@@ -62,6 +60,7 @@ $app->singleton(
 */
 
 $app->configure('app');
+$app->configure('settings');
 
 /*
 |--------------------------------------------------------------------------
@@ -75,7 +74,8 @@ $app->configure('app');
 */
 
 $app->middleware([
-    \App\Http\Middleware\CorsMiddleware::class
+    \App\Http\Middleware\CorsMiddleware::class,
+    \App\Http\Middleware\TrimStrings::class,
 ]);
 
 $app->routeMiddleware([
@@ -89,7 +89,7 @@ $app->routeMiddleware([
 | Register Service Providers
 |--------------------------------------------------------------------------
 |
-| Here we will register all of the application's service providers which
+| Here we will register all the application's service providers which
 | are used to bind services into the container. Service providers are
 | totally optional, so you are not required to uncomment this line.
 |
@@ -99,7 +99,8 @@ $app->routeMiddleware([
 $app->register(App\Providers\AuthServiceProvider::class);
 $app->register(App\Providers\EventServiceProvider::class);
 
-/** Pubsub - RebbitMQ */
+/** Pubsub - RabbitMQ */
+$app->configure('queues');
 $app->register(VladimirYuldashev\LaravelQueueRabbitMQ\LaravelQueueRabbitMQServiceProvider::class);
 class_alias(\Illuminate\Support\Facades\App::class, 'App');
 $app->register(\Sumra\PubSub\PubSubServiceProvider::class);
@@ -117,7 +118,7 @@ $app->register(\SwaggerLume\ServiceProvider::class);
 |--------------------------------------------------------------------------
 |
 | Next we will include the routes file so that they can all be added to
-| the application. This will provide all of the URLs the application
+| the application. This will provide all the URLs the application
 | can respond to, as well as the controllers that may handle them.
 |
 */

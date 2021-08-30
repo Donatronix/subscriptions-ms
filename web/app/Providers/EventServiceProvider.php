@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use App\Listeners\SaveAvatarsListener;
 use Laravel\Lumen\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -13,8 +12,5 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        'SaveAvatars' => [
-            SaveAvatarsListener::class,
-        ],
     ];
 }
