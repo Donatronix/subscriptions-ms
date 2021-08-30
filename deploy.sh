@@ -28,8 +28,8 @@ start)
     echo "${GREEN}Generate docker-compose${NC}\n"
     echo "Deploy Name: $DEPLOY_NAME\nBranch: $BRANCH\nRev: $REVISION"
     cat compose-tmpl.yaml | grep -v "#"  > docker-compose.yaml
-    sed -i "" "s~{{DEPLOY_NAME}}~$DEPLOY_NAME~" docker-compose.yaml
-    sed -i "" "s~{{DOCKER_IMAGE}}~$DOCKER_ECR_REPO_URL/$DEPLOY_NAME:$BRANCH-$REVISION~" docker-compose.yaml
+    sed -i"" "s~{{DEPLOY_NAME}}~$DEPLOY_NAME~" docker-compose.yaml
+    sed -i"" "s~{{DOCKER_IMAGE}}~$DOCKER_ECR_REPO_URL/$DEPLOY_NAME:$BRANCH-$REVISION~" docker-compose.yaml
     echo "Run docker-compose up "
     docker-compose stop
     docker-compose up -d
