@@ -8,5 +8,5 @@ $router->group([
     'namespace' => '\App\Api\V1\Controllers',
     'middleware' => 'checkUser'
 ], function ($router) {
-
+    $router->get('/', 'UserController@index');
 });
