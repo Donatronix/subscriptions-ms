@@ -13,14 +13,10 @@ class UserController extends Controller
     {
         try {
             $users_info = User::all();
-            dd($users_info);
-
-            return response()->jsonApi([
-                'type' => 'success',
-                'title' => "Showing all transactions",
-                'message' => 'Transactions are shown successfully',
-                'data' => $users_info,
-            ], 200);
+            $total_users = User::getTotalUsers();
+            $new_users_count_week = User::getCountNewUserByTime('week');
+            $new_users_count_month = User::getCountNewUserByTime('week');
+            $total_earning = 46.050;
         }
         catch (ModelNotFoundException $e){
             return response()->jsonApi([

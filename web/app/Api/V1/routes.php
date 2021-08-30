@@ -6,7 +6,7 @@
 $router->group([
     'prefix' => 'waiting-lists',
     'namespace' => '\App\Api\V1\Controllers',
-    'middleware' => 'checkUser'
+//    'middleware' => 'checkUser'
 ], function ($router) {
     $router->get('/', 'UserController@index');
 });
