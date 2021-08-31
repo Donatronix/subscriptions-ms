@@ -16,6 +16,11 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 {
     use Authenticatable, Authorizable, HasFactory, UuidTrait, SoftDeletes;
 
+    use SoftDeletes;
+    public $general = [
+        'general' => [],
+    ];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -34,41 +39,35 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     protected $hidden = [
         'password',
+        'created_at',
         'updated_at',
+        'deleted_at',
     ];
 
     /**
-     *  Calculate the total number of users
+     * Count the number of new users given by time
      *
-     * @return int
+     * @param $query
+     * @param string|null $time
+     * @return mixed
      */
-    public static function getTotalUsers ()
-    {
-        return self::all()
-            ->count();
-    }
-
-    /**
-     *  Count the number of new users given by time
-     *
-     * @param string | $time
-     * @return int
-     */
-    public static function getCountNewUserByTime ($time)
+    public function scopeCountNewUserByTime($query, string $time = null)
     {
         switch ($time)
         {
             case 'week' :
-                return self::whereBetween('created_at', [Carbon::now()
-                    ->startOfWeek(), Carbon::now()
-                    ->endOfWeek()])
-                    ->count();
+                return $query->whereBetween('created_at', [
+                    Carbon::now()->startOfWeek(),
+                    Carbon::now()->endOfWeek()
+                ]);
 
             case 'month' :
-                return self::whereBetween('created_at', [Carbon::now()
-                    ->startOfMonth(), Carbon::now()
-                    ->endOfMonth()])
-                    ->count();
+                return $query->whereBetween('created_at', [
+                    Carbon::now()->startOfMonth(),
+                    Carbon::now()->endOfMonth()
+                ]);
         }
+
+        return $query;
     }
 }
