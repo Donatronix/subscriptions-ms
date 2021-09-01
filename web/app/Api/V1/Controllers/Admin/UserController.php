@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Api\V1\Controllers;
+namespace App\Api\V1\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
@@ -14,7 +14,7 @@ class UserController extends Controller
      *  Display a listing of the users
      *
      *  @OA\Get(
-     *     path="/v1/waiting-lists/",
+     *     path="/v1/waiting-lists/admin/",
      *     description="Get all users",
      *     tags={"Users"},
      *
