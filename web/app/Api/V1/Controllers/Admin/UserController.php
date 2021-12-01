@@ -5,7 +5,6 @@ namespace App\Api\V1\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use App\Services\DataService;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
