@@ -24,7 +24,6 @@ class UserFactory extends Factory
     {
         return [
             'username' => $this->faker->name,
-            'email' => $this->faker->unique()->safeEmail,
             'platform' => 'sumra chat',
         ];
     }

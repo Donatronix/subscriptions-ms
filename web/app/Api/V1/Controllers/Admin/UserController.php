@@ -85,12 +85,6 @@ class UserController extends Controller
      *                     example="Vasya",
      *                 ),
      *                 @OA\Property(
-     *                     property="email",
-     *                     type="string",
-     *                     description="User email",
-     *                     example="kassulke.adonis@example.org",
-     *                 ),
-     *                 @OA\Property(
      *                     property="platform",
      *                     type="string",
      *                     description="Where the user came from",
@@ -123,11 +117,6 @@ class UserController extends Controller
      *                  property="username",
      *                  type="string",
      *                  description="Username not found"
-     *              ),
-     *              @OA\Property(
-     *                  property="email",
-     *                  type="string",
-     *                  description="Email not found"
      *              ),
      *              @OA\Property(
      *                  property="platform",
