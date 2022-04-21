@@ -44,27 +44,51 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     /**
      * Count the number of new users given by time
      *
-     * @param $query
+     * @param             $query
      * @param string|null $time
+     *
      * @return mixed
      */
-    public function scopeCountNewUserByTime($query, string $time = null)
+    public function scopeCountNewUserByTime($query, string $time = null): mixed
     {
-        switch ($time)
-        {
-            case 'week' :
-                return $query->whereBetween('created_at', [
-                    Carbon::now()->startOfWeek(),
-                    Carbon::now()->endOfWeek()
-                ]);
+        return $query->whereBetween('created_at', $this->getPeriod($time));
 
-            case 'month' :
-                return $query->whereBetween('created_at', [
-                    Carbon::now()->startOfMonth(),
-                    Carbon::now()->endOfMonth()
-                ]);
-        }
+    }
 
-        return $query;
+    /**
+     * @param             $query
+     * @param string|null $time
+     *
+     * @return mixed
+     */
+    public function scopeCountNewUsersByPlatform($query, string $time = null): mixed
+    {
+        return $query->whereBetween('created_at', $this->getPeriod($time))
+            ->groupBy('platform')
+            ->selectRaw('platform, count(*) as total');
+    }
+
+
+    /**
+     * @param $time
+     *
+     * @return array
+     */
+    protected function getPeriod($time): array
+    {
+        return match ($time) {
+            'week' => [
+                Carbon::now()->startOfWeek(),
+                Carbon::now()->endOfWeek(),
+            ],
+            'month' => [
+                Carbon::now()->startOfMonth(),
+                Carbon::now()->endOfMonth(),
+            ],
+            default => [
+                Carbon::now()->startOfDay(),
+                Carbon::now()->endOfDay(),
+            ],
+        };
     }
 }

@@ -22,7 +22,9 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+
         return [
+            'id' => $this->faker->uuid(),
             'username' => $this->faker->name,
             'platform' => 'sumra chat',
         ];

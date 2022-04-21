@@ -11,6 +11,7 @@ $router->group([
      * PUBLIC ACCESS
      */
 
+
     /**
      * PRIVATE ACCESS
      */
@@ -34,6 +35,7 @@ $router->group([
         /**
          * User admin
          */
+        $router->get('/', 'UserController@index');
         $router->get('/users/{id}', 'UserController@show');
     });
 });
