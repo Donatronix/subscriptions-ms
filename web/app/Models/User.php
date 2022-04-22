@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Lumen\Auth\Authorizable;
 use Carbon\Carbon;
+use Sumra\SDK\Traits\UuidTrait;
 
 class User extends Model implements AuthenticatableContract, AuthorizableContract
 {
@@ -17,6 +18,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     use Authorizable;
     use HasFactory;
     use SoftDeletes;
+    use UuidTrait;
 
     /**
      * The attributes that are mass assignable.
