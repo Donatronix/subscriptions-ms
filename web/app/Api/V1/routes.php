@@ -35,7 +35,7 @@ $router->group([
         /**
          * User admin
          */
-        $router->get('/', 'UserController@index');
+        $router->get('/users', 'UserController@index');
         $router->get('/users/{id}', 'UserController@show');
     });
 });

@@ -14,7 +14,7 @@ class UserController extends Controller
      *  Display a listing of the users
      *
      * @OA\Get(
-     *     path="/v1/admin/",
+     *     path="/admin/users",
      *     description="Get all users",
      *     tags={"Users"},
      *
@@ -226,7 +226,7 @@ class UserController extends Controller
      *  Display a user.
      *
      * @OA\Get(
-     *     path="/v1/admin/users/{id}",
+     *     path="/admin/users/{id}",
      *     description="Get user by id",
      *     tags={"User"},
      *
