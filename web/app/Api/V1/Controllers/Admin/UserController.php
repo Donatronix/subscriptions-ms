@@ -228,7 +228,7 @@ class UserController extends Controller
      * @OA\Get(
      *     path="/admin/users/{id}",
      *     description="Get user by id",
-     *     tags={"User"},
+     *     tags={"Users"},
      *
      *     security={{
      *          "default" :{
