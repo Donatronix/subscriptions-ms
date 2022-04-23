@@ -10,20 +10,7 @@ $router->group([
     /**
      * PUBLIC ACCESS
      */
-    $router->group([
-        'prefix' => '',
-        'namespace' => 'Admin',
-
-    ], function ($router) {
-        /**
-         * User admin
-         */
-        $router->get('/subscribers', 'SubscriberController@index');
-        $router->get('/subscribers/{id}', 'SubscriberController@show');
-        $router->post('/subscribers', 'SubscriberController@store');
-        $router->put('/subscribers/{id}/update', 'SubscriberController@update');
-        $router->delete('/subscribers/{id}/delete', 'SubscriberController@destroy');
-    });
+    
 
     /**
      * PRIVATE ACCESS
@@ -48,10 +35,10 @@ $router->group([
         /**
          * User admin
          */
-//        $router->get('/subscribers', 'SubscriberController@index');
-//        $router->get('/subscribers/{id}', 'SubscriberController@show');
-//        $router->post('/subscribers', 'SubscriberController@store');
-//        $router->put('/subscribers/{id}/update', 'SubscriberController@update');
-//        $router->delete('/subscribers/{id}/delete', 'SubscriberController@destroy');
+        $router->get('/subscribers', 'SubscriberController@index');
+        $router->get('/subscribers/{id}', 'SubscriberController@show');
+        $router->post('/subscribers', 'SubscriberController@store');
+        $router->put('/subscribers/{id}/update', 'SubscriberController@update');
+        $router->delete('/subscribers/{id}/delete', 'SubscriberController@destroy');
     });
 });
