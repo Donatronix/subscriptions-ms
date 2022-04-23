@@ -9,8 +9,7 @@
         "ext-json": "*",
         "ext-openssl": "*",
         "laravel/lumen-framework": "~8",
-        "sumra/sdk": "*",
-        "ext-mongodb": "*"
+        "sumra/sdk": "*"
     },
     "require-dev": {
         "fakerphp/faker": "~1",

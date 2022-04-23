@@ -37,14 +37,14 @@ class Subscriber extends Model
     ];
 
     /**
-     * Count the number of new users given by time
+     * Count the number of new subscribers given by time
      *
      * @param             $query
      * @param string|null $time
      *
      * @return mixed
      */
-    public function scopeCountNewUserByTime($query, string $time = null): mixed
+    public function scopeCountNewSubscriberByTime($query, string $time = null): mixed
     {
         return $query->whereBetween('created_at', $this->getPeriod($time));
 
@@ -56,7 +56,7 @@ class Subscriber extends Model
      *
      * @return mixed
      */
-    public function scopeCountNewUsersByPlatform($query, string $time = null): mixed
+    public function scopeCountNewSubscribersByPlatform($query, string $time = null): mixed
     {
         return $query->whereBetween('created_at', $this->getPeriod($time))
             ->groupBy('platform')

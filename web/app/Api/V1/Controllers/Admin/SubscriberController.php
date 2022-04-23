@@ -429,7 +429,7 @@ class SubscriberController extends Controller
                         'new_subscribers_count_platforms_month' => Subscriber::countNewSubscribersByPlatform('month')->get()->toArray(),
 //                        'total_earning' => 46.050,
                     ],
-                ], $subscriber->toArray()),
+                ], $subscriber?->toArray() ?? []),
                 200);
 
         } catch (ModelNotFoundException $e) {
@@ -442,7 +442,7 @@ class SubscriberController extends Controller
         } catch (Throwable $e) {
             return response()->jsonApi([
                 'type' => 'danger',
-                'title' => "Update failed",
+                'title' => "Get subscriber failed",
                 'message' => $e->getMessage(),
                 'data' => null,
             ], 404);
@@ -669,7 +669,7 @@ class SubscriberController extends Controller
             if ($validator->fails()) {
                 return response()->jsonApi([
                     'type' => 'danger',
-                    'title' => "Not operation",
+                    'title' => "Invalid data",
                     'message' => $validator->messages()->toArray(),
                     'data' => null,
                 ], 404);
@@ -682,8 +682,8 @@ class SubscriberController extends Controller
             if ($subscriber = Subscriber::find($validated['id'])) {
                 return response()->jsonApi([
                     'type' => 'danger',
-                    'title' => "Not operation",
-                    'message' => "Subscriber alrerady exists",
+                    'title' => "Adding new subscriber failed",
+                    'message' => "Subscriber already exists",
                     'data' => null,
                 ], 404);
             }
@@ -701,7 +701,7 @@ class SubscriberController extends Controller
             return response()->jsonApi([
                 'type' => 'success',
                 'title' => 'Operation was a success',
-                'message' => 'Subscriber was updated successfully',
+                'message' => 'Subscriber was added successfully',
                 'general' => [
                     'total_subscribers' => Subscriber::count(),
                     'new_subscribers_count_week' => Subscriber::countNewSubscriberByTime('week')->get()->count(),
@@ -722,7 +722,7 @@ class SubscriberController extends Controller
         } catch (Throwable $e) {
             return response()->jsonApi([
                 'type' => 'danger',
-                'title' => "Update failed",
+                'title' => "Subscription failed",
                 'message' => $e->getMessage(),
                 'data' => null,
             ], 404);
@@ -1211,7 +1211,7 @@ class SubscriberController extends Controller
             return response()->jsonApi([
                 'type' => 'success',
                 'title' => 'Operation was a success',
-                'message' => 'Subscriber was updated successfully',
+                'message' => 'Subscriber was deleted successfully',
                 'general' => [
                     'total_subscribers' => Subscriber::count(),
                     'new_subscribers_count_week' => Subscriber::countNewSubscriberByTime('week')->get()->count(),
@@ -1225,14 +1225,14 @@ class SubscriberController extends Controller
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([
                 'type' => 'danger',
-                'title' => "Update failed",
+                'title' => "Delete failed",
                 'message' => "Subscriber does not exist",
                 'data' => null,
             ], 404);
         } catch (Throwable $e) {
             return response()->jsonApi([
                 'type' => 'danger',
-                'title' => "Update failed",
+                'title' => "Delete failed",
                 'message' => $e->getMessage(),
                 'data' => null,
             ], 404);
