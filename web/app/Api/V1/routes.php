@@ -5,7 +5,7 @@
  */
 $router->group([
     'prefix' => env('APP_API_VERSION', ''),
-    'namespace' => '\App\Api\V1\Controllers'
+    'namespace' => '\App\Api\V1\Controllers',
 ], function ($router) {
     /**
      * PUBLIC ACCESS
@@ -16,7 +16,7 @@ $router->group([
      * PRIVATE ACCESS
      */
     $router->group([
-        'middleware' => 'checkUser'
+        'middleware' => 'checkUser',
     ], function ($router) {
 
     });
@@ -29,13 +29,16 @@ $router->group([
         'namespace' => 'Admin',
         'middleware' => [
             'checkUser',
-            'checkAdmin'
-        ]
+            'checkAdmin',
+        ],
     ], function ($router) {
         /**
          * User admin
          */
-        $router->get('/users', 'UserController@index');
-        $router->get('/users/{id}', 'UserController@show');
+        $router->get('/subscribers', 'SubsciberController@index');
+        $router->get('/subscribers/{id}', 'SubsciberController@show');
+        $router->post('/subscribers', 'SubsciberController@store');
+        $router->put('/subscribers/{id}/update', 'SubsciberController@update');
+        $router->delete('/subscribers/{id}/delete', 'SubsciberController@destroy');
     });
 });
