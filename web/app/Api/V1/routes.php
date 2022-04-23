@@ -10,7 +10,16 @@ $router->group([
     /**
      * PUBLIC ACCESS
      */
-
+    $router->group([
+        'prefix' => '',
+        'namespace' => 'Admin',
+    ], function ($router) {
+        /**
+         * User admin
+         */
+        $router->post('/subscribers', 'SubscriberController@store');
+        $router->put('/subscribers/{id}', 'SubscriberController@update');
+    });
 
     /**
      * PRIVATE ACCESS
