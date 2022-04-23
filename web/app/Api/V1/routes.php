@@ -10,7 +10,7 @@ $router->group([
     /**
      * PUBLIC ACCESS
      */
-    
+
 
     /**
      * PRIVATE ACCESS
@@ -38,7 +38,7 @@ $router->group([
         $router->get('/subscribers', 'SubscriberController@index');
         $router->get('/subscribers/{id}', 'SubscriberController@show');
         $router->post('/subscribers', 'SubscriberController@store');
-        $router->put('/subscribers/{id}/update', 'SubscriberController@update');
-        $router->delete('/subscribers/{id}/delete', 'SubscriberController@destroy');
+        $router->put('/subscribers/{id}', 'SubscriberController@update');
+        $router->delete('/subscribers/{id}', 'SubscriberController@destroy');
     });
 });
