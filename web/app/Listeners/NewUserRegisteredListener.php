@@ -34,7 +34,8 @@ class NewUserRegisteredListener
         $username = $user->username;
         $id = $user->id;
 
-        Subscriber::query()->create([
+
+        Subscriber::query()->firstOrCreate([
             'user_id' => $id,
             'username' => $username,
         ]);
