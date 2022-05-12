@@ -4,11 +4,11 @@ namespace App\Listeners;
 
 use App\Events\NewUserRegistered;
 use App\Models\Subscriber;
-use App\Traits\GetCountryTrait;
+
 
 class NewUserRegisteredListener
 {
-    use GetCountryTrait;
+
 
     /**
      * Create the event listener.

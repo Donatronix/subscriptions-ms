@@ -15,7 +15,7 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        NewUserRegistered::class => [
+        'NewUserRegistered' => [
             NewUserRegisteredListener::class,
         ],
     ];
