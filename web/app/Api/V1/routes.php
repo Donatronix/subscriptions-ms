@@ -42,12 +42,36 @@ $router->group([
         ],
     ], function ($router) {
         /**
-         * User admin
+         * Subscribers
          */
         $router->get('/subscribers', 'SubscriberController@index');
         $router->get('/subscribers/{id}', 'SubscriberController@show');
         $router->post('/subscribers', 'SubscriberController@store');
         $router->put('/subscribers/{id}', 'SubscriberController@update');
         $router->delete('/subscribers/{id}', 'SubscriberController@destroy');
+
+    });
+
+    /**
+     * ADMIN PANEL ACCESS
+     */
+    $router->group([
+        'prefix' => 'admins',
+        'namespace' => 'Admin',
+        'middleware' => [
+            'checkUser',
+            'checkAdmin',
+        ],
+    ], function ($router) {
+
+        /**
+         * Admins
+         */
+        $router->get('/', 'AdminController@index');
+        $router->get('/{id}', 'AdminController@show');
+        $router->post('/', 'AdminController@store');
+        $router->put('/{id}', 'AdminController@update');
+        $router->delete('/{id}', 'AdminController@destroy');
+        $router->patch('/{id}', 'AdminController@updateRole');
     });
 });

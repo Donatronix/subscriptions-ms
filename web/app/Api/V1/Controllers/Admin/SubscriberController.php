@@ -737,7 +737,7 @@ class SubscriberController extends Controller
      *  Update subscriber record
      *
      * @OA\Put(
-     *     path="/admin/subscribers/{id}/update",
+     *     path="/admin/subscribers/{id}",
      *     description="Update subscriber",
      *     tags={"Subscribers"},
      *
@@ -1022,7 +1022,7 @@ class SubscriberController extends Controller
      *  Delete subscriber record
      *
      * @OA\Delete(
-     *     path="/admin/subscribers/{id}/delete",
+     *     path="/admin/subscribers/{id}",
      *     description="Delete subscriber",
      *     tags={"Subscribers"},
      *
