@@ -2,18 +2,18 @@
 
 namespace Database\Factories;
 
-use App\Models\User;
+use App\Models\Subscriber;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
-class UserFactory extends Factory
+class SubscriberFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = User::class;
+    protected $model = Subscriber::class;
 
     /**
      * Define the model's default state.
@@ -22,7 +22,9 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+
         return [
+            'id' => $this->faker->uuid(),
             'username' => $this->faker->name,
             'platform' => 'sumra chat',
         ];
