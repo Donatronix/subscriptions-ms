@@ -73,5 +73,8 @@ $router->group([
         $router->put('/{id}', 'AdminController@update');
         $router->delete('/{id}', 'AdminController@destroy');
         $router->patch('/{id}', 'AdminController@updateRole');
+
+
+        $router->get('/dashboard', 'SubscribersDashboardController@index');
     });
 });

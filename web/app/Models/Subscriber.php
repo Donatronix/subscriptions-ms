@@ -58,9 +58,22 @@ class Subscriber extends Model
      */
     public function scopeCountNewSubscribersByPlatform($query, string $time = null): mixed
     {
-        return $query->whereBetween('created_at', $this->getPeriod($time))
+        return $this->scopeCountNewSubscriberByTime($query, $time)
             ->groupBy('platform')
             ->selectRaw('platform, count(*) as total');
+    }
+
+    /**
+     * @param             $query
+     * @param string|null $time
+     *
+     * @return mixed
+     */
+    public function scopeCountNewSubscribersByChannel($query, string $time = null): mixed
+    {
+        return $this->scopeCountNewSubscriberByTime($query, $time)
+            ->groupBy('channel')
+            ->selectRaw('channel, count(*) as total');
     }
 
 
@@ -79,6 +92,10 @@ class Subscriber extends Model
             'month' => [
                 Carbon::now()->startOfMonth(),
                 Carbon::now()->endOfMonth(),
+            ],
+            'year' => [
+                Carbon::now()->startOfYear(),
+                Carbon::now()->endOfYear(),
             ],
             default => [
                 Carbon::now()->startOfDay(),
