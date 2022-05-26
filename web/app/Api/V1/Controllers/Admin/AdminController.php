@@ -16,7 +16,7 @@ class AdminController extends Controller
      *  Display a listing of the admins
      *
      * @OA\Get(
-     *     path="/admins",
+     *     path="/admin/admins",
      *     description="Get all admins",
      *     tags={"Admins"},
      *
@@ -181,7 +181,7 @@ class AdminController extends Controller
      *  Display a admin.
      *
      * @OA\Get(
-     *     path="/admins/{id}",
+     *     path="/admin/admins/{id}",
      *     description="Get admin by id",
      *     tags={"Admins"},
      *
@@ -331,7 +331,7 @@ class AdminController extends Controller
      *  Add new admin
      *
      * @OA\Post(
-     *     path="/admins",
+     *     path="/admin/admins",
      *     description="Add new admin",
      *     tags={"Admins"},
      *
@@ -545,7 +545,7 @@ class AdminController extends Controller
      *  Update admin record
      *
      * @OA\Put(
-     *     path="/admins/{id}",
+     *     path="/admin/admins/{id}",
      *     description="Update admin",
      *     tags={"Admins"},
      *
@@ -769,7 +769,7 @@ class AdminController extends Controller
      *  Delete admin record
      *
      * @OA\Delete(
-     *     path="/admins/{id}",
+     *     path="/admin/admins/{id}",
      *     description="Delete admin",
      *     tags={"Admins"},
      *
@@ -904,7 +904,6 @@ class AdminController extends Controller
                 $admin->delete();
 
                 $admins = Admin::paginate(config('settings.pagination_limit'));
-
             });
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([
@@ -933,7 +932,7 @@ class AdminController extends Controller
      *  Update admin role
      *
      * @OA\Patch(
-     *     path="/admins/{id}",
+     *     path="/admin/admins/{id}",
      *     description="Update admin role",
      *     tags={"Admins"},
      *
