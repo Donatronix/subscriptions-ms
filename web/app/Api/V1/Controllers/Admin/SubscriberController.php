@@ -502,6 +502,15 @@ class SubscriberController extends Controller
      *         )
      *     ),
      *
+     *     @OA\Parameter(
+     *         name="channel",
+     *         in="query",
+     *         description="Channel subscriber is using to signup",
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *
      *     @OA\Response(
      *         response="200",
      *         description="Output data",
@@ -626,6 +635,11 @@ class SubscriberController extends Controller
      *                  description="Platform not found"
      *              ),
      *              @OA\Property(
+     *                  property="channel",
+     *                  type="string",
+     *                  description="Channel not found"
+     *              ),
+     *              @OA\Property(
      *                  property="total_subscribers",
      *                  type="string",
      *                  description="Total subscriber not found"
@@ -667,6 +681,7 @@ class SubscriberController extends Controller
                     'id' => 'required|string|max:255',
                     'username' => 'required|string|max:255',
                     'platform' => 'required|string|max:255',
+                    'channel' => 'required|string|max:255',
                 ]);
 
                 if ($validator->fails()) {
@@ -1250,5 +1265,4 @@ class SubscriberController extends Controller
             'data' => $subscribers->toArray(),
         ], 200);
     }
-
 }
