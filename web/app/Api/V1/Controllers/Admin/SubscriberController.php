@@ -1265,5 +1265,4 @@ class SubscriberController extends Controller
             'data' => $subscribers->toArray(),
         ], 200);
     }
-
 }
