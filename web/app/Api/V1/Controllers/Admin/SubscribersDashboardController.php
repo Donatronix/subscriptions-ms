@@ -12,7 +12,7 @@ class SubscribersDashboardController extends Controller
      *  Display a listing of the subscribers
      *
      * @OA\Get(
-     *     path="/admin/subscribers/dashboard",
+     *     path="/admin/dashboard",
      *     description="Get all subscribers dashboard",
      *     tags={"Dashboard"},
      *
