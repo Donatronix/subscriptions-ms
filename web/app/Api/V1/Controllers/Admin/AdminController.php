@@ -157,7 +157,7 @@ class AdminController extends Controller
                     'type' => 'success',
                     'title' => 'Operation was success',
                     'message' => 'The data was displayed successfully',
-                ], $admins->toArray()),
+                ], ['data' => $admins->toArray() ?? []]),
                 200);
 
         } catch (ModelNotFoundException $e) {
@@ -307,7 +307,7 @@ class AdminController extends Controller
                     'type' => 'success',
                     'title' => 'Operation was success',
                     'message' => 'Admin was displayed successfully',
-                ], $admin?->toArray() ?? []),
+                ], ['data' => $admin?->toArray() ?? []]),
                 200);
 
         } catch (ModelNotFoundException $e) {

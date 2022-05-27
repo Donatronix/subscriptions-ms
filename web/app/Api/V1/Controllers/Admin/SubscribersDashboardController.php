@@ -286,7 +286,7 @@ class SubscribersDashboardController extends Controller
 
                     'total_earning' => 46.050,
                 ],
-            ], Subscriber::all()->toArray()),
+            ], ['data' => Subscriber::all()->toArray()]),
             200);
     }
 }
