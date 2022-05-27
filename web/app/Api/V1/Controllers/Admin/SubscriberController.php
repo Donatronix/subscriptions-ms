@@ -211,7 +211,7 @@ class SubscriberController extends Controller
                         'new_subscribers_count_platforms_month' => Subscriber::countNewSubscribersByPlatform('month')->get()->toArray(),
 //                        'total_earning' => 46.050,
                     ],
-                ], $subscribers->toArray()),
+                ], ['data' => $subscribers->toArray()]),
                 200);
 
         } catch (ModelNotFoundException $e) {
