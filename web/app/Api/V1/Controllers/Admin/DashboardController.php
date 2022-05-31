@@ -271,8 +271,6 @@ class DashboardController extends Controller
 
             $totalEarnings = $response->body();
 
-            dd($totalEarnings);
-
             return response()->jsonApi([
                 'type' => 'success',
                 'title' => 'Operation was success',
