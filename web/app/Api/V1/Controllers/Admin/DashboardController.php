@@ -262,31 +262,29 @@ class DashboardController extends Controller
         $newSubscribersByChannelPerMonth = Subscriber::countNewSubscribersByChannel('month')->get();
         $newSubscribersByChannelPerYear = Subscriber::countNewSubscribersByChannel('year')->get();
 
+        return response()->jsonApi([
+            'type' => 'success',
+            'title' => 'Operation was success',
+            'message' => 'The data was displayed successfully',
+            'general' => [
+                'total_subscribers' => Subscriber::query()->count(),
+                'new_subscribers_by_week_count' => $newSubscribersByWeek->count(),
+                'new_subscribers_by_month_count' => $newSubscribersByMonth->count(),
+                'new_subscribers_by_year_count' => $newSubscribersByYear->count(),
 
-        return response()->jsonApi(
-            array_merge([
-                'type' => 'success',
-                'title' => 'Operation was success',
-                'message' => 'The data was displayed successfully',
-                'general' => [
-                    'total_subscribers' => Subscriber::query()->count(),
-                    'new_subscribers_by_week_count' => $newSubscribersByWeek->count(),
-                    'new_subscribers_by_month_count' => $newSubscribersByMonth->count(),
-                    'new_subscribers_by_year_count' => $newSubscribersByYear->count(),
+                //platforms
+                'new_subscribers_by_platforms_per_week' => $newSubscribersByPlatformPerWeek,
+                'new_subscribers_by_platforms_per_month' => $newSubscribersByPlatformPerMonth,
+                'new_subscribers_by_platforms_per_year' => $newSubscribersByPlatformPerYear,
 
-                    //platforms
-                    'new_subscribers_by_platforms_per_week' => $newSubscribersByPlatformPerWeek,
-                    'new_subscribers_by_platforms_per_month' => $newSubscribersByPlatformPerMonth,
-                    'new_subscribers_by_platforms_per_year' => $newSubscribersByPlatformPerYear,
+                //channels
+                'new_subscribers_by_channels_per_week' => $newSubscribersByChannelPerWeek,
+                'new_subscribers_by_channels_per_month' => $newSubscribersByChannelPerMonth,
+                'new_subscribers_by_channels_per_year' => $newSubscribersByChannelPerYear,
 
-                    //channels
-                    'new_subscribers_by_channels_per_week' => $newSubscribersByChannelPerWeek,
-                    'new_subscribers_by_channels_per_month' => $newSubscribersByChannelPerMonth,
-                    'new_subscribers_by_channels_per_year' => $newSubscribersByChannelPerYear,
-
-                    'total_earning' => 46.050,
-                ],
-            ], ['data' => Subscriber::all()->toArray()]),
-            200);
+                'total_earning' => 46.050,
+            ],
+            'data' => Subscriber::all()->toArray()
+        ], 200);
     }
 }
