@@ -43,8 +43,10 @@ return [
     'api' => [
         'files' => [
             'host' => env('API_FILES_HOST', 'http://localhost:8080'),
-            'version' => env('API_FILES_VERSION', '/v1')
-        ]
+            'version' => env('API_FILES_VERSION', '/v1'),
+        ],
+        'app_id' => "waiting-lists-ms-9009",
+        'referrals_ms' => env('REFERRALS_MS_URL', 'http://localhost:8091/v1/admin/total-reward'),
     ],
 
     /**
