@@ -47,7 +47,6 @@ class Subscriber extends Model
     public function scopeCountNewSubscriberByTime($query, string $time = null): mixed
     {
         return $query->whereBetween('created_at', $this->getPeriod($time));
-
     }
 
     /**

@@ -34,7 +34,7 @@ $router->group([
         /**
          * Dashboard
          */
-        $router->get('/dashboard', 'SubscribersDashboardController@index');
+        $router->get('/dashboard', 'DashboardController@index');
 
         /**
          * Subscribers

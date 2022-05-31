@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Subscriber;
 use Illuminate\Http\Request;
 
-class SubscribersDashboardController extends Controller
+class DashboardController extends Controller
 {
     /**
      *  Display a listing of the subscribers
