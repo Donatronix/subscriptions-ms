@@ -209,11 +209,11 @@ class SubscriberController extends Controller
                         'new_subscribers_count_month' => Subscriber::countNewSubscriberByTime('month')->get()->count(),
                         'new_subscribers_count_platforms_week' => Subscriber::countNewSubscribersByPlatform('week')->get()->toArray(),
                         'new_subscribers_count_platforms_month' => Subscriber::countNewSubscribersByPlatform('month')->get()->toArray(),
-//                        'total_earning' => 46.050,
+                        //                        'total_earning' => 46.050,
                     ],
                 ], ['data' => $subscribers->toArray()]),
-                200);
-
+                200
+            );
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([
                 'type' => 'danger',
@@ -428,11 +428,10 @@ class SubscriberController extends Controller
                         'new_subscribers_count_month' => Subscriber::countNewSubscriberByTime('month')->get()->count(),
                         'new_subscribers_count_platforms_week' => Subscriber::countNewSubscribersByPlatform('week')->get()->toArray(),
                         'new_subscribers_count_platforms_month' => Subscriber::countNewSubscribersByPlatform('month')->get()->toArray(),
-//                        'total_earning' => 46.050,
-                    ],
-                ], $subscriber?->toArray() ?? []),
-                200);
-
+                    ],'data' => $subscriber
+                ]),
+                200
+            );
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([
                 'type' => 'danger',
@@ -676,7 +675,7 @@ class SubscriberController extends Controller
     {
         try {
             $subscriber = null;
-            DB::transaction(function () use ($request, &$subscriber) {
+            $subscriber = DB::transaction(function () use ($request, &$subscriber) {
                 $validator = Validator::make($request->all(), [
                     'id' => 'required|string|max:255',
                     'username' => 'required|string|max:255',
@@ -685,12 +684,12 @@ class SubscriberController extends Controller
                 ]);
 
                 if ($validator->fails()) {
-                    return response()->jsonApi([
+                    return [
                         'type' => 'danger',
                         'title' => "Invalid data",
                         'message' => $validator->messages()->toArray(),
                         'data' => null,
-                    ], 404);
+                    ];
                 }
 
                 // Retrieve the validated input...
@@ -698,25 +697,49 @@ class SubscriberController extends Controller
 
 
                 if ($subscriber = Subscriber::find($validated['id'])) {
-                    return response()->jsonApi([
+                    return [
                         'type' => 'danger',
                         'title' => "Adding new subscriber failed",
                         'message' => "Subscriber already exists",
                         'data' => null,
-                    ], 404);
+                    ];
                 }
 
                 if ($subscriber = Subscriber::where('username', $validated['username'])->first()) {
-                    return response()->jsonApi([
+                    return [
                         'type' => 'danger',
                         'title' => "Not operation",
                         'message' => "Username already in use",
                         'data' => null,
-                    ], 404);
+                    ];
                 }
 
                 $subscriber = Subscriber::create($validated);
+                return [
+                    'type' => 'success',
+                    'title' => 'Operation was a success',
+                    'message' => 'Subscriber was added successfully',
+                    'data' => $subscriber,
+                ];
             });
+
+            if ($subscriber['type'] == "success") {
+                return response()->jsonApi([
+                    'type' => 'success',
+                    'title' => 'Operation was a success',
+                    'message' => 'Subscriber was added successfully',
+                    'general' => [
+                        'total_subscribers' => Subscriber::count(),
+                        'new_subscribers_count_week' => Subscriber::countNewSubscriberByTime('week')->get()->count(),
+                        'new_subscribers_count_month' => Subscriber::countNewSubscriberByTime('month')->get()->count(),
+                        'new_subscribers_count_platforms_week' => Subscriber::countNewSubscribersByPlatform('week')->get()->toArray(),
+                        'new_subscribers_count_platforms_month' => Subscriber::countNewSubscribersByPlatform('month')->get()->toArray(),
+                    ],
+                    'data' => $subscriber['data'],
+                ], 200);
+            } else {
+                return response()->jsonApi($subscribers, 404);
+            }
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([
                 'type' => 'danger',
@@ -732,20 +755,6 @@ class SubscriberController extends Controller
                 'data' => null,
             ], 404);
         }
-        return response()->jsonApi([
-            'type' => 'success',
-            'title' => 'Operation was a success',
-            'message' => 'Subscriber was added successfully',
-            'general' => [
-                'total_subscribers' => Subscriber::count(),
-                'new_subscribers_count_week' => Subscriber::countNewSubscriberByTime('week')->get()->count(),
-                'new_subscribers_count_month' => Subscriber::countNewSubscriberByTime('month')->get()->count(),
-                'new_subscribers_count_platforms_week' => Subscriber::countNewSubscribersByPlatform('week')->get()->toArray(),
-                'new_subscribers_count_platforms_month' => Subscriber::countNewSubscribersByPlatform('month')->get()->toArray(),
-                //                    'total_earning' => 46.050,
-            ],
-            'data' => $subscriber->toArray(),
-        ], 200);
     }
 
     /**
@@ -970,38 +979,61 @@ class SubscriberController extends Controller
     {
         try {
             $subscriber = null;
-            DB::transaction(function () use ($request, $id, &$subscriber) {
+            $subscriber = DB::transaction(function () use ($request, $id, &$subscriber) {
                 $validator = Validator::make($request->all(), [
                     'username' => 'required|string|max:255',
                     'platform' => 'required|string|max:255',
                 ]);
 
                 if ($validator->fails()) {
-                    return response()->jsonApi([
+                    return [
                         'type' => 'danger',
                         'title' => "Not operation",
                         'message' => $validator->messages()->toArray(),
                         'data' => null,
-                    ], 404);
+                    ];
                 }
 
                 // Retrieve the validated input...
                 $validated = $validator->validated();
 
                 if (Subscriber::where('username', $validated['username'])->first() != Subscriber::find($id)) {
-                    return response()->jsonApi([
+                    return [
                         'type' => 'danger',
                         'title' => "Not operation",
                         'message' => "Username already in use",
                         'data' => null,
-                    ], 404);
+                    ];
                 }
 
                 $subscriber = Subscriber::find($id);
 
                 $subscriber->update($validated);
-
+                return [
+                    'type' => 'success',
+                    'title' => 'Operation was a success',
+                    'message' => 'Subscriber was added successfully',
+                    'data' => $subscriber,
+                ];
             });
+
+            if ($subscriber['type'] == "success") {
+                return response()->jsonApi([
+                    'type' => 'success',
+                    'title' => 'Operation was a success',
+                    'message' => 'Subscriber was updated successfully',
+                    'general' => [
+                        'total_subscribers' => Subscriber::count(),
+                        'new_subscribers_count_week' => Subscriber::countNewSubscriberByTime('week')->get()->count(),
+                        'new_subscribers_count_month' => Subscriber::countNewSubscriberByTime('month')->get()->count(),
+                        'new_subscribers_count_platforms_week' => Subscriber::countNewSubscribersByPlatform('week')->get()->toArray(),
+                        'new_subscribers_count_platforms_month' => Subscriber::countNewSubscribersByPlatform('month')->get()->toArray(),
+                    ],
+                    'data' => $subscriber['data'],
+                ], 200);
+            } else {
+                return response()->jsonApi($subscribers, 404);
+            }
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([
                 'type' => 'danger',
@@ -1017,20 +1049,6 @@ class SubscriberController extends Controller
                 'data' => null,
             ], 404);
         }
-        return response()->jsonApi([
-            'type' => 'success',
-            'title' => 'Operation was a success',
-            'message' => 'Subscriber was updated successfully',
-            'general' => [
-                'total_subscribers' => Subscriber::count(),
-                'new_subscribers_count_week' => Subscriber::countNewSubscriberByTime('week')->get()->count(),
-                'new_subscribers_count_month' => Subscriber::countNewSubscriberByTime('month')->get()->count(),
-                'new_subscribers_count_platforms_week' => Subscriber::countNewSubscribersByPlatform('week')->get()->toArray(),
-                'new_subscribers_count_platforms_month' => Subscriber::countNewSubscribersByPlatform('month')->get()->toArray(),
-                //                    'total_earning' => 46.050,
-            ],
-            'data' => $subscriber->toArray(),
-        ], 200);
     }
 
     /**
@@ -1227,28 +1245,44 @@ class SubscriberController extends Controller
     {
         try {
             $subscribers = null;
-            DB::transaction(function () use ($id, &$subscribers) {
+            $subscribers = DB::transaction(function () use ($id, &$subscribers) {
                 $subscriber = Subscriber::find($id);
 
-                $subscriber->delete();
+                if ($subscriber) {
+                    $subscriber->delete();
+                } else {
+                    return [
+                        'type' => 'danger',
+                        'title' => "Deletion failed",
+                        'message' => "Subscriber does not exist",
+                        'data' => null,
+                    ];
+                }
 
                 $subscribers = Subscriber::paginate(config('settings.pagination_limit'));
+                return [
+                    'type' => 'success',
+                    'data' => $subscribers
+                ];
             });
 
-            return response()->jsonApi([
-                'type' => 'success',
-                'title' => 'Operation was a success',
-                'message' => 'Subscriber was deleted successfully',
-                'general' => [
-                    'total_subscribers' => Subscriber::count(),
-                    'new_subscribers_count_week' => Subscriber::countNewSubscriberByTime('week')->get()->count(),
-                    'new_subscribers_count_month' => Subscriber::countNewSubscriberByTime('month')->get()->count(),
-                    'new_subscribers_count_platforms_week' => Subscriber::countNewSubscribersByPlatform('week')->get()->toArray(),
-                    'new_subscribers_count_platforms_month' => Subscriber::countNewSubscribersByPlatform('month')->get()->toArray(),
-                    //                    'total_earning' => 46.050,
-                ],
-                'data' => $subscribers->toArray(),
-            ], 200);
+            if ($subscribers['type'] == "success") {
+                return response()->jsonApi([
+                    'type' => 'success',
+                    'title' => 'Operation was a success',
+                    'message' => 'Subscriber was deleted successfully',
+                    'general' => [
+                        'total_subscribers' => Subscriber::count(),
+                        'new_subscribers_count_week' => Subscriber::countNewSubscriberByTime('week')->get()->count(),
+                        'new_subscribers_count_month' => Subscriber::countNewSubscriberByTime('month')->get()->count(),
+                        'new_subscribers_count_platforms_week' => Subscriber::countNewSubscribersByPlatform('week')->get()->toArray(),
+                        'new_subscribers_count_platforms_month' => Subscriber::countNewSubscribersByPlatform('month')->get()->toArray(),
+                    ],
+                    'data' => $subscribers['data'],
+                ], 200);
+            } else {
+                return response()->jsonApi($subscribers, 404);
+            }
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([
                 'type' => 'danger',
