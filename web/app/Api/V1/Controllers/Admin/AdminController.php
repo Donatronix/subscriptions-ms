@@ -353,9 +353,9 @@ class AdminController extends Controller
      *     },
      *
      *     @OA\Parameter(
-     *         name="id",
+     *         name="phone",
      *         in="query",
-     *         description="Admin user id",
+     *         description="Admin phone number",
      *         @OA\Schema(
      *             type="string"
      *         )
