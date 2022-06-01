@@ -293,7 +293,7 @@ class SubscribersDashboardController extends Controller
 
                     'total_earning' => $totalEarnings,
                 ],
-                'data' => Subscriber::all()->toArray(),
+                'data' => Subscriber::all(),
             ], 200);
         } catch (Throwable $e) {
             return response()->jsonApi([
