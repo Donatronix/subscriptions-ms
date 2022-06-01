@@ -199,7 +199,7 @@ class SubscriberController extends Controller
             $subscribers = Subscriber::paginate($request->get('limit', config('settings.pagination_limit')));
 
             return response()->jsonApi(
-                array_merge([
+                [
                     'type' => 'success',
                     'title' => 'Operation was success',
                     'message' => 'The data was displayed successfully',
@@ -209,11 +209,12 @@ class SubscriberController extends Controller
                         'new_subscribers_count_month' => Subscriber::countNewSubscriberByTime('month')->get()->count(),
                         'new_subscribers_count_platforms_week' => Subscriber::countNewSubscribersByPlatform('week')->get()->toArray(),
                         'new_subscribers_count_platforms_month' => Subscriber::countNewSubscribersByPlatform('month')->get()->toArray(),
-//                        'total_earning' => 46.050,
+                        //                        'total_earning' => 46.050,
                     ],
-                ], ['data' => $subscribers->toArray()]),
-                200);
-
+                    'data' => $subscribers->toArray()
+                ],
+                200
+            );
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([
                 'type' => 'danger',
@@ -418,7 +419,7 @@ class SubscriberController extends Controller
             $subscriber = Subscriber::find($id);
 
             return response()->jsonApi(
-                array_merge([
+                [
                     'type' => 'success',
                     'title' => 'Operation was success',
                     'message' => 'Subscriber was displayed successfully',
@@ -428,11 +429,12 @@ class SubscriberController extends Controller
                         'new_subscribers_count_month' => Subscriber::countNewSubscriberByTime('month')->get()->count(),
                         'new_subscribers_count_platforms_week' => Subscriber::countNewSubscribersByPlatform('week')->get()->toArray(),
                         'new_subscribers_count_platforms_month' => Subscriber::countNewSubscribersByPlatform('month')->get()->toArray(),
-//                        'total_earning' => 46.050,
+                        //                        'total_earning' => 46.050,
                     ],
-                ], $subscriber?->toArray() ?? []),
-                200);
-
+                    'data' => $subscriber?->toArray()
+                ],
+                200
+            );
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([
                 'type' => 'danger',
@@ -1000,7 +1002,6 @@ class SubscriberController extends Controller
                 $subscriber = Subscriber::find($id);
 
                 $subscriber->update($validated);
-
             });
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([
@@ -1233,7 +1234,6 @@ class SubscriberController extends Controller
                 $subscriber->delete();
 
                 $subscribers = Subscriber::paginate(config('settings.pagination_limit'));
-
             });
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([
