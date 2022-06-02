@@ -145,12 +145,7 @@ class AdminController extends Controller
     {
         try {
 
-            $admins = match ($request->get('role')) {
-                'admin' => Admin::where('role', 'admin')->paginate($request->get('limit', config('settings.pagination_limit'))),
-                'super admin', 'super_admin' => Admin::where('role', 'super admin')->paginate($request->get('limit', config('settings.pagination_limit'))),
-                default => Admin::all(),
-            };
-
+            $admins = Admin::where('role', $request->get('role'))->paginate($request->get('limit', config('settings.pagination_limit')));
 
             return response()->jsonApi(
                 array_merge([
