@@ -54,4 +54,22 @@ $router->group([
         $router->delete('admins/{id}', 'AdminController@destroy');
         $router->patch('admins/{id}', 'AdminController@updateRole');
     });
+
+    /**
+     * ADMIN PANEL ACCESS
+     */
+    $router->group([
+        'prefix' => 'admin',
+        'namespace' => 'Admin',
+        'middleware' => [
+            'checkUser',
+            'checkAdmin',
+        ],
+    ], function ($router) {
+        /**
+         * Dashboard
+         */
+        $router->get('/dashboard', 'DashboardController@index');
+
+    });
 });
