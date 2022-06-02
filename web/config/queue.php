@@ -70,7 +70,8 @@ return [
         'rabbitmq' => [
 
             'driver' => 'rabbitmq',
-            'queue' => env('RABBITMQ_QUEUE', 'default'),
+            'queue' => env('RABBITMQ_QUEUE', 'waitingLinst'),
+            // 'queue' => env('RABBITMQ_QUEUE', 'default'),
 
             //'dsn' => env('RABBITMQ_DSN', null),
 
@@ -86,23 +87,23 @@ return [
 
             'hosts' => [
                 [
-                    'host' => env('RABBITMQ_HOST', '127.0.0.1'),
-                    'port' => env('RABBITMQ_PORT', 5672),
-                    'user' => env('RABBITMQ_USER', 'guest'),
-                    'password' => env('RABBITMQ_PASSWORD', 'guest'),
-                    'vhost' => env('RABBITMQ_VHOST', '/'),
+                    'host' => env('RABBITMQ_HOST', ''),
+                    'port' => env('RABBITMQ_PORT', ''),
+                    'user' => env('RABBITMQ_USER', ''),
+                    'password' => env('RABBITMQ_PASSWORD', ''),
+                    'vhost' => env('RABBITMQ_VHOST', ''),
                 ],
             ],
 
             'options' => [
                 'exchange' => [
 
-                    'name' => env('RABBITMQ_EXCHANGE_NAME'),
+                    'name' => env('RABBITMQ_EXCHANGE_NAME', ''),
 
                     /**
                      * Determine if exchange should be created if it does not exist.
                      */
-                    'declare' => env('RABBITMQ_EXCHANGE_DECLARE', true),
+                    'declare' => env('RABBITMQ_EXCHANGE_DECLARE', false),
 
                     /**
                      * Read more about possible values at https://www.rabbitmq.com/tutorials/amqp-concepts.html
