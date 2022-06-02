@@ -17,7 +17,6 @@ $router->group([
     $router->group([
         'middleware' => 'checkUser',
     ], function ($router) {
-
     });
 
     /**
@@ -27,8 +26,8 @@ $router->group([
         'prefix' => 'admin',
         'namespace' => 'Admin',
         'middleware' => [
-            'checkUser',
-            'checkAdmin'
+            // 'checkUser',
+            // 'checkAdmin'
         ]
     ], function ($router) {
         /**

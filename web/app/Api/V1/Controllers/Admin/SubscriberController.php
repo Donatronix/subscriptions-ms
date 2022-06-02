@@ -415,6 +415,23 @@ class SubscriberController extends Controller
         try {
             $subscriber = Subscriber::find($id);
 
+            return response()->jsonApi(
+                [
+                    'type' => 'success',
+                    'title' => 'Operation was success',
+                    'message' => 'Subscriber was displayed successfully',
+                    'general' => [
+                        'total_subscribers' => Subscriber::count(),
+                        'new_subscribers_count_week' => Subscriber::countNewSubscriberByTime('week')->get()->count(),
+                        'new_subscribers_count_month' => Subscriber::countNewSubscriberByTime('month')->get()->count(),
+                        'new_subscribers_count_platforms_week' => Subscriber::countNewSubscribersByPlatform('week')->get()->toArray(),
+                        'new_subscribers_count_platforms_month' => Subscriber::countNewSubscribersByPlatform('month')->get()->toArray(),
+                        //                        'total_earning' => 46.050,
+                    ],
+                    'data' => $subscriber?->toArray()
+                ],
+                200
+            );
             return response()->jsonApi([
                 'type' => 'success',
                 'title' => 'Operation was success',
@@ -1024,8 +1041,9 @@ class SubscriberController extends Controller
                         'new_subscribers_count_month' => Subscriber::countNewSubscriberByTime('month')->get()->count(),
                         'new_subscribers_count_platforms_week' => Subscriber::countNewSubscribersByPlatform('week')->get()->toArray(),
                         'new_subscribers_count_platforms_month' => Subscriber::countNewSubscribersByPlatform('month')->get()->toArray(),
+                        //                    'total_earning' => 46.050,
                     ],
-                    'data' => $subscriber['data'],
+                    'data' => $subscriber->toArray(),
                 ], 200);
             } else {
                 return response()->jsonApi($subscribers, 404);

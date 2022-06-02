@@ -266,7 +266,7 @@ class DashboardController extends Controller
             $newSubscribersByChannelPerYear = Subscriber::countNewSubscribersByChannel('year')->get();
 
             $response = Http::withHeaders([
-                'app_id' => config('settings.api.app_id'),
+                'app-id' => config('settings.api.app_id'),
             ])->get(config('settings.api.referrals_ms'));
 
             $totalEarnings = $response->body();
@@ -293,7 +293,7 @@ class DashboardController extends Controller
 
                     'total_earning' => $totalEarnings,
                 ],
-                'data' => Subscriber::all()->toArray(),
+                'data' => Subscriber::all(),
             ], 200);
         } catch (Throwable $e) {
             return response()->jsonApi([
