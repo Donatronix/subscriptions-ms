@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Throwable;
 
-class SubscribersDashboardController extends Controller
+class DashboardController extends Controller
 {
     /**
      *  Display a listing of the subscribers

@@ -513,6 +513,13 @@ class AdminController extends Controller
 
                 $admin = Admin::create($validated);
             });
+
+            return response()->jsonApi([
+                'type' => 'success',
+                'title' => 'Operation was a success',
+                'message' => 'Admin was added successfully',
+                'data' => $admin->toArray(),
+            ], 200);
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([
                 'type' => 'danger',
@@ -528,12 +535,6 @@ class AdminController extends Controller
                 'data' => null,
             ], 404);
         }
-        return response()->jsonApi([
-            'type' => 'success',
-            'title' => 'Operation was a success',
-            'message' => 'Admin was added successfully',
-            'data' => $admin->toArray(),
-        ], 200);
     }
 
     /**
@@ -737,6 +738,13 @@ class AdminController extends Controller
 
                 $admin->update($validated);
             });
+
+            return response()->jsonApi([
+                'type' => 'success',
+                'title' => 'Update was a success',
+                'message' => 'Admin was updated successfully',
+                'data' => $admin->toArray(),
+            ], 200);
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([
                 'type' => 'danger',
@@ -752,12 +760,6 @@ class AdminController extends Controller
                 'data' => null,
             ], 404);
         }
-        return response()->jsonApi([
-            'type' => 'success',
-            'title' => 'Update was a success',
-            'message' => 'Admin was updated successfully',
-            'data' => $admin->toArray(),
-        ], 200);
     }
 
     /**
