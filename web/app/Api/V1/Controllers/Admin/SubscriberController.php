@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use OpenApi\Annotations as OA;
 use Throwable;
 
 class SubscriberController extends Controller
@@ -210,7 +211,7 @@ class SubscriberController extends Controller
                     'new_subscribers_count_platforms_month' => Subscriber::countNewSubscribersByPlatform('month')->get()->toArray(),
                     //                        'total_earning' => 46.050,
                 ],
-                'data' => $subscribers->toArray()
+                'data' => $subscribers->toArray(),
             ], 200);
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([
@@ -428,7 +429,7 @@ class SubscriberController extends Controller
                         'new_subscribers_count_platforms_month' => Subscriber::countNewSubscribersByPlatform('month')->get()->toArray(),
                         //                        'total_earning' => 46.050,
                     ],
-                    'data' => $subscriber?->toArray()
+                    'data' => $subscriber?->toArray(),
                 ],
                 200
             );
@@ -443,7 +444,7 @@ class SubscriberController extends Controller
                     'new_subscribers_count_platforms_week' => Subscriber::countNewSubscribersByPlatform('week')->get()->toArray(),
                     'new_subscribers_count_platforms_month' => Subscriber::countNewSubscribersByPlatform('month')->get()->toArray(),
                 ],
-                'data' => $subscriber
+                'data' => $subscriber,
             ], 200);
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([
@@ -751,7 +752,7 @@ class SubscriberController extends Controller
                     'data' => $subscriber['data'],
                 ], 200);
             } else {
-                return response()->jsonApi($subscribers, 404);
+                return response()->jsonApi(Subscriber::all(), 404);
             }
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([
@@ -1046,7 +1047,7 @@ class SubscriberController extends Controller
                     'data' => $subscriber->toArray(),
                 ], 200);
             } else {
-                return response()->jsonApi($subscribers, 404);
+                return response()->jsonApi(Subscriber::all(), 404);
             }
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([
@@ -1276,7 +1277,7 @@ class SubscriberController extends Controller
                 $subscribers = Subscriber::paginate(config('settings.pagination_limit'));
                 return [
                     'type' => 'success',
-                    'data' => $subscribers
+                    'data' => $subscribers,
                 ];
             });
 
