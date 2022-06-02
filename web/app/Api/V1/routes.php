@@ -5,7 +5,7 @@
  */
 $router->group([
     'prefix' => env('APP_API_VERSION', ''),
-    'namespace' => '\App\Api\V1\Controllers'
+    'namespace' => '\App\Api\V1\Controllers',
 ], function ($router) {
     /**
      * PUBLIC ACCESS
@@ -26,9 +26,9 @@ $router->group([
         'prefix' => 'admin',
         'namespace' => 'Admin',
         'middleware' => [
-            // 'checkUser',
-            // 'checkAdmin'
-        ]
+            'checkUser',
+            'checkAdmin',
+        ],
     ], function ($router) {
         /**
          * Dashboard
