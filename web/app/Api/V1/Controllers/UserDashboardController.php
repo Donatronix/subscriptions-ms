@@ -1,15 +1,16 @@
 <?php
 
-namespace App\Api\V1\Controllers\Admin;
+namespace App\Api\V1\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Models\Subscriber;
 use App\Traits\SubscribersAnalysisTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Validator;
+use OpenApi\Annotations as OA;
 use Throwable;
 
-class DashboardController extends Controller
+class UserDashboardController extends Controller
 {
     /**
      *  Display a listing of the subscribers
@@ -253,11 +254,18 @@ class DashboardController extends Controller
     {
         try {
 
+            $validation = Validator::make($request->all(), [
+                'user_id' => 'required|exists:subscribers,id',
+            ]);
+            $validated = $validation->validated();
+
             $statistics = SubscribersAnalysisTrait::getSubscribersStatistics();
 
             $response = Http::retry(3, 100)->withHeaders([
                 'app-id' => config('settings.api.app_id'),
-            ])->get(config('settings.api.referrals_ms'));
+            ])->get(config('settings.api.referrals_ms'), [
+                'user_id' => $validated['user_id'],
+            ]);
 
             $totalEarnings = $response->json('data');
 
@@ -269,8 +277,9 @@ class DashboardController extends Controller
                     'total_subscribers' => Subscriber::query()->count(),
                     $statistics,
                     'total_earning' => $totalEarnings,
+
                 ],
-                'data' => Subscriber::all(),
+                'data' => Subscriber::find($validated['user_id']),
             ], 200);
         } catch (Throwable $e) {
             return response()->jsonApi([
