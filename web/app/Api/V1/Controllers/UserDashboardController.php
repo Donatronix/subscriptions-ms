@@ -261,7 +261,7 @@ class UserDashboardController extends Controller
 
             $response = Http::retry(3, 100)->withHeaders([
                 'app-id' => config('settings.api.app_id'),
-            ])->get(config('settings.api.referrals_ms'), [
+            ])->get(config('settings.api.referrals_ms') . '/total-earnings', [
                 'user_id' => $validated['user_id'],
             ]);
 
