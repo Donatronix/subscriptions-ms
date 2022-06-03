@@ -5,7 +5,7 @@
  */
 $router->group([
     'prefix' => env('APP_API_VERSION', ''),
-    'namespace' => '\App\Api\V1\Controllers'
+    'namespace' => '\App\Api\V1\Controllers',
 ], function ($router) {
     /**
      * PUBLIC ACCESS
@@ -26,9 +26,9 @@ $router->group([
         'prefix' => 'admin',
         'namespace' => 'Admin',
         'middleware' => [
-            // 'checkUser',
-            // 'checkAdmin'
-        ]
+            'checkUser',
+            'checkAdmin',
+        ],
     ], function ($router) {
         /**
          * Dashboard
@@ -53,5 +53,21 @@ $router->group([
         $router->put('admins/{id}', 'AdminController@update');
         $router->delete('admins/{id}', 'AdminController@destroy');
         $router->patch('admins/{id}', 'AdminController@updateRole');
+    });
+
+    /**
+     * User PANEL ACCESS
+     */
+    $router->group([
+        'prefix' => 'user',
+        'middleware' => [
+            'checkUser',
+        ],
+    ], function ($router) {
+        /**
+         * Dashboard
+         */
+        $router->get('/dashboard', 'UserDashboardController@index');
+
     });
 });

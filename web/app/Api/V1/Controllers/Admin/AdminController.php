@@ -145,12 +145,7 @@ class AdminController extends Controller
     {
         try {
 
-            $admins = match ($request->get('role')) {
-                'admin' => Admin::where('role', 'admin')->paginate($request->get('limit', config('settings.pagination_limit'))),
-                'super admin', 'super_admin' => Admin::where('role', 'super admin')->paginate($request->get('limit', config('settings.pagination_limit'))),
-                default => Admin::all(),
-            };
-
+            $admins = Admin::where('role', $request->get('role'))->paginate($request->get('limit', config('settings.pagination_limit')));
 
             return response()->jsonApi(
                 array_merge([
@@ -712,7 +707,7 @@ class AdminController extends Controller
     {
         try {
             $admin = Admin::find($id);
-            DB::transaction(function () use ($request, $id, &$admin) {
+            $data = DB::transaction(function () use ($request, $id, &$admin) {
                 $validator = Validator::make($request->all(), [
                     'name' => 'required|string',
                     'email' => 'required|string',
@@ -720,36 +715,36 @@ class AdminController extends Controller
                 ]);
 
                 if ($validator->fails()) {
-                    return response()->jsonApi([
+                    return [
                         'type' => 'danger',
                         'title' => "Not operation",
                         'message' => $validator->messages()->toArray(),
                         'data' => null,
-                    ], 404);
+                    ];
                 }
 
                 // Retrieve the validated input...
                 $validated = $validator->validated();
 
-
-                if (Admin::where('email', $validated['email'])->where('phone', $validated['phone'])->first() != $admin) {
-                    return response()->jsonApi([
-                        'type' => 'danger',
-                        'title' => "Not operation",
-                        'message' => "Admin already in use",
-                        'data' => null,
-                    ], 404);
-                }
-
                 $admin->update($validated);
+                return [
+                    'type' => 'success',
+                    'title' => 'Update was a success',
+                    'message' => 'Admin was updated successfully',
+                    'data' => $admin,
+                ];
             });
 
+            if($data['type'] == 'success'){
             return response()->jsonApi([
                 'type' => 'success',
                 'title' => 'Update was a success',
                 'message' => 'Admin was updated successfully',
-                'data' => $admin->toArray(),
+                'data' => $data['data'],
             ], 200);
+        }else{
+            return response()->jsonApi($data, 404);
+        }
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([
                 'type' => 'danger',
@@ -1093,6 +1088,13 @@ class AdminController extends Controller
 
                 $admin->update($validated);
             });
+            
+            return response()->jsonApi([
+                'type' => 'success',
+                'title' => 'Update was a success',
+                'message' => 'Admin was updated successfully',
+                'data' => $admin->toArray(),
+            ], 200);
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([
                 'type' => 'danger',
@@ -1108,12 +1110,6 @@ class AdminController extends Controller
                 'data' => null,
             ], 404);
         }
-        return response()->jsonApi([
-            'type' => 'success',
-            'title' => 'Update was a success',
-            'message' => 'Admin was updated successfully',
-            'data' => $admin->toArray(),
-        ], 200);
     }
 
 }
