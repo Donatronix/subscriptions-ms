@@ -29,7 +29,7 @@ return [
         '80000000-8000-8000-8000-000000000008',
         '80000008-8008-8008-8008-800000000008',
         '90000000-9000-9000-9000-000000000009',
-        '90000009-9009-9009-9009-900000000009'
+        '90000009-9009-9009-9009-900000000009',
     ],
 
     /**
@@ -46,7 +46,7 @@ return [
             'version' => env('API_FILES_VERSION', '/v1'),
         ],
         'app_id' => "waiting-lists-ms-9009",
-        'referrals_ms' => env('REFERRALS_MS_URL', 'http://localhost:8091/v1/admin/total-reward'),
+        'referrals_ms' => env('API_REFERRALS_HOST', 'http://localhost:8091/v1/admin/total-reward'),
     ],
 
     /**
@@ -55,6 +55,6 @@ return [
     'exchange_queue' => [
         'files' => env('RABBITMQ_RECEIVER_FILES', 'FilesMS'),
         'referrals' => env('RABBITMQ_RECEIVER_REFERRALS', 'ReferralsMS'),
-        'contacts_book' => env('RABBITMQ_RECEIVER_CONTACTS', 'ContactsBooksMS')
+        'contacts_book' => env('RABBITMQ_RECEIVER_CONTACTS', 'ContactsBooksMS'),
     ],
 ];
