@@ -17,6 +17,7 @@ class CreateSubscribersTable extends Migration
             $table->uuid('id')->primary();
             $table->string('username');
             $table->string('platform')->nullable();
+            $table->string('channel')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

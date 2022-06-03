@@ -20,9 +20,9 @@ class Subscriber extends Model
      * @var array
      */
     protected $fillable = [
-        'id',
         'username',
         'platform',
+        'channel'
     ];
 
     /**

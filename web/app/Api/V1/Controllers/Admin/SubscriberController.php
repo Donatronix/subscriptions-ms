@@ -19,7 +19,7 @@ class SubscriberController extends Controller
      * @OA\Get(
      *     path="/admin/subscribers",
      *     description="Get all subscribers",
-     *     tags={"Subscribers"},
+     *     tags={"Admin | Subscribers"},
      *
      *     security={{
      *          "default" :{
@@ -236,7 +236,7 @@ class SubscriberController extends Controller
      * @OA\Get(
      *     path="/admin/subscribers/{id}",
      *     description="Get subscriber by id",
-     *     tags={"Subscribers"},
+     *     tags={"Admin | Subscribers"},
      *
      *     security={{
      *          "default" :{
@@ -469,7 +469,7 @@ class SubscriberController extends Controller
      * @OA\Post(
      *     path="/admin/subscribers",
      *     description="Add new subscriber",
-     *     tags={"Subscribers"},
+     *     tags={"Admin | Subscribers"},
      *
      *     security={{
      *          "default" :{
@@ -777,7 +777,7 @@ class SubscriberController extends Controller
      * @OA\Put(
      *     path="/admin/subscribers/{id}",
      *     description="Update subscriber",
-     *     tags={"Subscribers"},
+     *     tags={"Admin | Subscribers"},
      *
      *     security={{
      *          "default" :{
@@ -1072,7 +1072,7 @@ class SubscriberController extends Controller
      * @OA\Delete(
      *     path="/admin/subscribers/{id}",
      *     description="Delete subscriber",
-     *     tags={"Subscribers"},
+     *     tags={"Admin | Subscribers"},
      *
      *     security={{
      *          "default" :{

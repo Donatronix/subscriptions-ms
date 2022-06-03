@@ -16,7 +16,7 @@ class UserDashboardController extends Controller
      *  Display a listing of the subscribers
      *
      * @OA\Get(
-     *     path="/admin/dashboard",
+     *     path="/dashboard",
      *     description="Get all subscribers dashboard",
      *     tags={"Dashboard"},
      *
@@ -253,7 +253,6 @@ class UserDashboardController extends Controller
     public function index(Request $request): mixed
     {
         try {
-
             $validation = Validator::make($request->all(), [
                 'user_id' => 'required|exists:subscribers,id',
             ]);

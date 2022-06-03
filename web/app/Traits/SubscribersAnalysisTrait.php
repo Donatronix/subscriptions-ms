@@ -8,7 +8,6 @@ trait SubscribersAnalysisTrait
 {
     public static function getSubscribersStatistics(): array
     {
-
         $newSubscribersByWeek = Subscriber::countNewSubscriberByTime('week')->get();
         $newSubscribersByMonth = Subscriber::countNewSubscriberByTime('month')->get();
         $newSubscribersByYear = Subscriber::countNewSubscriberByTime('year')->get();
@@ -37,8 +36,6 @@ trait SubscribersAnalysisTrait
             'new_subscribers_by_channels_per_week' => $newSubscribersByChannelPerWeek,
             'new_subscribers_by_channels_per_month' => $newSubscribersByChannelPerMonth,
             'new_subscribers_by_channels_per_year' => $newSubscribersByChannelPerYear,
-
         ];
-
     }
 }

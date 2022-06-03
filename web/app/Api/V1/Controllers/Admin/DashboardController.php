@@ -17,7 +17,7 @@ class DashboardController extends Controller
      * @OA\Get(
      *     path="/admin/dashboard",
      *     description="Get all subscribers dashboard",
-     *     tags={"Dashboard"},
+     *     tags={"Admin | Dashboard"},
      *
      *     security={{
      *          "default" :{

@@ -20,7 +20,6 @@ class Admin extends Model
      * @var array
      */
     protected $fillable = [
-        'id',
         'name',
         'email',
         'phone',
@@ -49,7 +48,6 @@ class Admin extends Model
     public function scopeCountNewSubscriberByTime($query, string $time = null): mixed
     {
         return $query->whereBetween('created_at', $this->getPeriod($time));
-
     }
 
     /**

@@ -24,7 +24,6 @@ class SubscriberFactory extends Factory
     {
 
         return [
-            'id' => $this->faker->uuid(),
             'username' => $this->faker->name,
             'platform' => 'sumra chat',
         ];
