@@ -56,20 +56,18 @@ $router->group([
     });
 
     /**
-     * ADMIN PANEL ACCESS
+     * User PANEL ACCESS
      */
     $router->group([
-        'prefix' => 'admin',
-        'namespace' => 'Admin',
+        'prefix' => 'user',
         'middleware' => [
             'checkUser',
-            'checkAdmin',
         ],
     ], function ($router) {
         /**
          * Dashboard
          */
-        $router->get('/dashboard', 'DashboardController@index');
+        $router->get('/dashboard', 'UserDashboardController@index');
 
     });
 });
