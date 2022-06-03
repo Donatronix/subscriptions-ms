@@ -7,7 +7,6 @@ use App\Traits\SubscribersAnalysisTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
-use OpenApi\Annotations as OA;
 use Throwable;
 
 class UserDashboardController extends Controller
@@ -262,7 +261,7 @@ class UserDashboardController extends Controller
 
             $response = Http::retry(3, 100)->withHeaders([
                 'app-id' => config('settings.api.app_id'),
-            ])->get(config('settings.api.referrals_ms'), [
+            ])->get(config('settings.api.referrals_ms') . '/total-earnings', [
                 'user_id' => $validated['user_id'],
             ]);
 
