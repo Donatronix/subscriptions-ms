@@ -5,8 +5,8 @@ namespace App\Api\V1\Controllers;
 use App\Models\Subscriber;
 use App\Traits\SubscribersAnalysisTrait;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Validator;
 use Throwable;
 
 class UserDashboardController extends Controller
@@ -252,20 +252,17 @@ class UserDashboardController extends Controller
     public function index(Request $request): mixed
     {
         try {
-            $validation = Validator::make($request->all(), [
-                'user_id' => 'required|exists:subscribers,id',
-            ]);
-            $validated = $validation->validated();
+            $user_id = Auth::user()->id;
 
             $statistics = SubscribersAnalysisTrait::getSubscribersStatistics();
 
             $response = Http::retry(3, 100)->withHeaders([
                 'app-id' => config('settings.api.app_id'),
-            ])->get(config('settings.api.referrals_ms') . '/total-earnings', [
-                'user_id' => $validated['user_id'],
-            ]);
+                'user_id' => $user_id,
+            ])->get(config('settings.api.referrals_ms') . '/v1/admin/total-earnings');
 
-            $totalEarnings = $response->json('data');
+
+            $totalEarnings = floatVal($response->json('data'));
 
             return response()->jsonApi([
                 'type' => 'success',
@@ -277,7 +274,7 @@ class UserDashboardController extends Controller
                     'total_earning' => $totalEarnings,
 
                 ],
-                'data' => Subscriber::find($validated['user_id']),
+                'data' => Subscriber::find($user_id),
             ], 200);
         } catch (Throwable $e) {
             return response()->jsonApi([
