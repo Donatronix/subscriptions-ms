@@ -35,9 +35,7 @@ class pingJob extends Command
 
     public function handle()
     {
-        $lists = Subscriber::all();
-        $proLink ="https://discord.gg/DUMwfyckKy";
-        dispatch(new subscriberJobs($lists, $proLink))->onQueue('waitingLinst');
+       
         // ...
     }
 }

@@ -1,25 +1,24 @@
 <?php
 
-namespace App\Jobs;
+namespace App\Listeners;
 
 use App\Models\SubMgsId;
 use App\Models\WaitingListMS as ModelsWaitingListMS;
 use Sumra\SDK\Facades\PubSub;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
+// use PubSub;
 
-
-class subscriberJobs implements ShouldQueue
+class WaitingListMS
 {
-    use InteractsWithQueue, Queueable, SerializesModels;
-
-    private const RECEIVER_LISTENER = 'waitingListMS';
+    public $inputData;
     /**
-     * Create a new job instance.
+     * @var string
+     */
+    private const RECEIVER_LISTENER = 'waitingListMS';
+
+    /**
+     * Create the event listener.
      *
      * @return void
      */
@@ -29,14 +28,14 @@ class subscriberJobs implements ShouldQueue
     }
 
     /**
-     * Execute the job.
+     * Handle the event.
      *
+     * @param  WaitingList $event
      * @return void
      */
     public function handle()
     {
         $inputData = $this->inputData;
-        dd($this->inputData);
         $request = new \Illuminate\Http\Request($inputData);
 
         $validation = Validator::make($request->all(), [
@@ -54,7 +53,6 @@ class subscriberJobs implements ShouldQueue
         }
         
         $inputData = (object)$request->all();
-        // dd($inputData->platform);
         // Write log
         try {
             $waitListMs = SubMgsId::create([
@@ -84,7 +82,7 @@ class subscriberJobs implements ShouldQueue
                 return true;
             }
         } catch (\Exception $e) {
-            Log::info('Log of waiting list message failed: ' . $e->getMessage());
+            Log::info('Waiting list message failed: ' . $e->getMessage());
         }
     }
 }

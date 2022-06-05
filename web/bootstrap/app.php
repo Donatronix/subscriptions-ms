@@ -126,6 +126,7 @@ $app->register(\SwaggerLume\ServiceProvider::class);
  * Artisan Commands Lumen Generator
  */
 $app->register(Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);
+$app->register(VladimirYuldashev\LaravelQueueRabbitMQ\LaravelQueueRabbitMQServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------

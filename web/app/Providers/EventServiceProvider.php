@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Events\NewUserRegistered;
 use App\Jobs\subscriberJobs;
 use App\Listeners\NewUserRegisteredListener;
+use App\Listeners\WaitingListMS;
 use Laravel\Lumen\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -18,6 +19,9 @@ class EventServiceProvider extends ServiceProvider
         'NewUserRegistered' => [
             NewUserRegisteredListener::class,
         ],
+        'WaitingList' => [
+            WaitingListMS::class,
+            ],
     ];
 
     /**
@@ -28,11 +32,5 @@ class EventServiceProvider extends ServiceProvider
     public function shouldDiscoverEvents(): bool
     {
         return true;
-    }
-
-    function boot(){
-        $this->app->bind(
-            subscriberJobs::class."@handle",
-            fn($job) => $job->handle());  
     }
 }
