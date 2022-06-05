@@ -3,10 +3,10 @@
 namespace App\Listeners;
 
 use App\Events\NewUserRegistered;
-use App\Models\Subscriber;
+use App\Models\Admin;
 
 
-class NewUserRegisteredListener
+class AdminRoleUpdateListener
 {
 
 
@@ -29,14 +29,12 @@ class NewUserRegisteredListener
      */
     public function handle(mixed $event)
     {
-        $user = $event->user;
+        $id = $event->user_id;
+        $role = $event->role;
 
-        $username = $user->username;
-        $id = $user->id;
-
-        Subscriber::query()->firstOrCreate([
-            'user_id' => $id,
-            'username' => $username,
-        ]);
+        Admin::query()->find($id)
+            ->update([
+                'role' => $role,
+            ]);
     }
 }

@@ -72,7 +72,6 @@ $app->configure('settings');
 */
 
 $app->middleware([
-    \Fruitcake\Cors\HandleCors::class,
     \Sumra\SDK\Middleware\TrimStrings::class,
 ]);
 
@@ -98,12 +97,6 @@ $app->register(App\Providers\AuthServiceProvider::class);
 $app->register(App\Providers\EventServiceProvider::class);
 
 /**
- * Enable CORS policy
- */
-$app->configure('cors');
-$app->register(Fruitcake\Cors\CorsServiceProvider::class);
-
-/**
  * Pubsub - RabbitMQ
  */
 $app->configure('queues');
@@ -126,7 +119,6 @@ $app->register(\SwaggerLume\ServiceProvider::class);
  * Artisan Commands Lumen Generator
  */
 $app->register(Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);
-$app->register(VladimirYuldashev\LaravelQueueRabbitMQ\LaravelQueueRabbitMQServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------

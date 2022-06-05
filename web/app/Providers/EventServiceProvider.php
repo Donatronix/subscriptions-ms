@@ -3,6 +3,9 @@
 namespace App\Providers;
 
 use App\Events\NewUserRegistered;
+use App\Listeners\AdminRoleUpdateListener;
+use App\Listeners\AdminUpdateListener;
+use App\Listeners\NewAdminAddedListener;
 use App\Jobs\subscriberJobs;
 use App\Listeners\NewUserRegisteredListener;
 use App\Listeners\WaitingListMS;
@@ -19,9 +22,15 @@ class EventServiceProvider extends ServiceProvider
         'NewUserRegistered' => [
             NewUserRegisteredListener::class,
         ],
+        'NewAdminAdded' => [
+            NewAdminAddedListener::class,
+        ],
+        'AdminRoleUpdate' => [
+            AdminRoleUpdateListener::class,
+        ],
         'WaitingList' => [
             WaitingListMS::class,
-            ],
+        ],
     ];
 
     /**

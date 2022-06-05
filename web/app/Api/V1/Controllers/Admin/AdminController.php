@@ -14,12 +14,12 @@ use Throwable;
 class AdminController extends Controller
 {
     /**
-     *  Display a listing of the admins
+     *  Display a listing of the administrators
      *
      * @OA\Get(
-     *     path="/admin/admins",
-     *     description="Get all admins",
-     *     tags={"Admins"},
+     *     path="/admin/administrators",
+     *     description="Get all administrators",
+     *     tags={"Admin | Administrators"},
      *
      *     security={{
      *          "default" :{
@@ -41,7 +41,7 @@ class AdminController extends Controller
      *     @OA\Parameter(
      *         name="role",
      *         in="query",
-     *         description="Admin role",
+     *         description="Administrator role",
      *         @OA\Schema(
      *             type="string"
      *         )
@@ -55,11 +55,11 @@ class AdminController extends Controller
      *             @OA\Property(
      *                 property="data",
      *                 type="object",
-     *                 description="Admin parameter list",
+     *                 description="Administrator parameter list",
      *                 @OA\Property(
      *                     property="id",
      *                     type="string",
-     *                     description="Admin uuid",
+     *                     description="Administrator uuid",
      *                     example="9443407b-7eb8-4f21-8a5c-9614b4ec1bf9",
      *                 ),
      *                 @OA\Property(
@@ -71,19 +71,19 @@ class AdminController extends Controller
      *                 @OA\Property(
      *                     property="email",
      *                     type="string",
-     *                     description="Admin email",
+     *                     description="Administrator email",
      *                     example="admin@mail.com",
      *                 ),
      *                 @OA\Property(
      *                     property="phone",
      *                     type="string",
-     *                     description="Admin phone number",
+     *                     description="Administrator phone number",
      *                     example="++44625546453",
      *                 ),
      *                 @OA\Property(
      *                     property="role",
      *                     type="string",
-     *                     description="Admin role",
+     *                     description="Administrator role",
      *                     example="admin",
      *                 ),
      *             ),
@@ -146,19 +146,14 @@ class AdminController extends Controller
     {
         try {
 
-            $admins = match ($request->get('role')) {
-                'admin' => Admin::where('role', 'admin')->paginate($request->get('limit', config('settings.pagination_limit'))),
-                'super admin', 'super_admin' => Admin::where('role', 'super admin')->paginate($request->get('limit', config('settings.pagination_limit'))),
-                default => Admin::all(),
-            };
-
+            $administrators = Admin::where('role', $request->get('role'))->paginate($request->get('limit', config('settings.pagination_limit')));
 
             return response()->jsonApi(
                 array_merge([
                     'type' => 'success',
                     'title' => 'Operation was success',
                     'message' => 'The data was displayed successfully',
-                ], ['data' => $admins->toArray() ?? []]),
+                ], ['data' => $administrators->toArray() ?? []]),
                 200);
 
         } catch (ModelNotFoundException $e) {
@@ -182,9 +177,9 @@ class AdminController extends Controller
      *  Display a admin.
      *
      * @OA\Get(
-     *     path="/admin/admins/{id}",
+     *     path="/admin/administrators/{id}",
      *     description="Get admin by id",
-     *     tags={"Admins"},
+     *     tags={"Admin | Administrators"},
      *
      *     security={{
      *          "default" :{
@@ -211,11 +206,11 @@ class AdminController extends Controller
      *             @OA\Property(
      *                 property="data",
      *                 type="object",
-     *                 description="Admin parameter list",
+     *                 description="Administrator parameter list",
      *                 @OA\Property(
      *                     property="id",
      *                     type="string",
-     *                     description="Admin uuid",
+     *                     description="Administrator uuid",
      *                     example="9443407b-7eb8-4f21-8a5c-9614b4ec1bf9",
      *                 ),
      *                 @OA\Property(
@@ -227,19 +222,19 @@ class AdminController extends Controller
      *                 @OA\Property(
      *                     property="email",
      *                     type="string",
-     *                     description="Admin email",
+     *                     description="Administrator email",
      *                     example="admin@mail.com",
      *                 ),
      *                 @OA\Property(
      *                     property="phone",
      *                     type="string",
-     *                     description="Admin phone number",
+     *                     description="Administrator phone number",
      *                     example="++44625546453",
      *                 ),
      *                 @OA\Property(
      *                     property="role",
      *                     type="string",
-     *                     description="Admin role",
+     *                     description="Administrator role",
      *                     example="admin",
      *                 ),
      *             ),
@@ -307,7 +302,7 @@ class AdminController extends Controller
                 array_merge([
                     'type' => 'success',
                     'title' => 'Operation was success',
-                    'message' => 'Admin was displayed successfully',
+                    'message' => 'Administrator was displayed successfully',
                 ], ['data' => $admin?->toArray() ?? []]),
                 200);
 
@@ -315,7 +310,7 @@ class AdminController extends Controller
             return response()->jsonApi([
                 'type' => 'danger',
                 'title' => "Not operation",
-                'message' => "Admin does not exist",
+                'message' => "Administrator does not exist",
                 'data' => null,
             ], 404);
         } catch (Throwable $e) {
@@ -332,9 +327,9 @@ class AdminController extends Controller
      *  Add new admin
      *
      * @OA\Post(
-     *     path="/admin/admins",
+     *     path="/admin/administrators",
      *     description="Add new admin",
-     *     tags={"Admins"},
+     *     tags={"Admin | Administrators"},
      *
      *     security={{
      *          "default" :{
@@ -354,9 +349,9 @@ class AdminController extends Controller
      *     },
      *
      *     @OA\Parameter(
-     *         name="id",
+     *         name="phone",
      *         in="query",
-     *         description="Admin user id",
+     *         description="Administrator phone number",
      *         @OA\Schema(
      *             type="string"
      *         )
@@ -365,7 +360,7 @@ class AdminController extends Controller
      *     @OA\Parameter(
      *         name="name",
      *         in="query",
-     *         description="Admin name",
+     *         description="Administrator name",
      *         @OA\Schema(
      *             type="string"
      *         )
@@ -374,7 +369,7 @@ class AdminController extends Controller
      *     @OA\Parameter(
      *         name="email",
      *         in="query",
-     *         description="Admin email",
+     *         description="Administrator email",
      *         @OA\Schema(
      *             type="string"
      *         )
@@ -388,11 +383,11 @@ class AdminController extends Controller
      *             @OA\Property(
      *                 property="data",
      *                 type="object",
-     *                 description="Admin parameter list",
+     *                 description="Administrator parameter list",
      *                 @OA\Property(
      *                     property="id",
      *                     type="string",
-     *                     description="Admin uuid",
+     *                     description="Administrator uuid",
      *                     example="9443407b-7eb8-4f21-8a5c-9614b4ec1bf9",
      *                 ),
      *                 @OA\Property(
@@ -404,19 +399,19 @@ class AdminController extends Controller
      *                 @OA\Property(
      *                     property="email",
      *                     type="string",
-     *                     description="Admin email",
+     *                     description="Administrator email",
      *                     example="admin@mail.com",
      *                 ),
      *                 @OA\Property(
      *                     property="phone",
      *                     type="string",
-     *                     description="Admin phone number",
+     *                     description="Administrator phone number",
      *                     example="+4432366456945",
      *                 ),
      *                 @OA\Property(
      *                     property="role",
      *                     type="string",
-     *                     description="Admin role",
+     *                     description="Administrator role",
      *                     example="admin",
      *                 ),
      *             ),
@@ -503,7 +498,7 @@ class AdminController extends Controller
                     return response()->jsonApi([
                         'type' => 'danger',
                         'title' => "Adding new admin failed",
-                        'message' => "Admin already exists",
+                        'message' => "Administrator already exists",
                         'data' => null,
                     ], 404);
                 }
@@ -519,11 +514,18 @@ class AdminController extends Controller
 
                 $admin = Admin::create($validated);
             });
+
+            return response()->jsonApi([
+                'type' => 'success',
+                'title' => 'Operation was a success',
+                'message' => 'Administrator was added successfully',
+                'data' => $admin->toArray(),
+            ], 200);
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([
                 'type' => 'danger',
                 'title' => "Not operation",
-                'message' => "Admin was not added. Please try again.",
+                'message' => "Administrator was not added. Please try again.",
                 'data' => null,
             ], 404);
         } catch (Throwable $e) {
@@ -534,21 +536,15 @@ class AdminController extends Controller
                 'data' => null,
             ], 404);
         }
-        return response()->jsonApi([
-            'type' => 'success',
-            'title' => 'Operation was a success',
-            'message' => 'Admin was added successfully',
-            'data' => $admin->toArray(),
-        ], 200);
     }
 
     /**
      *  Update admin record
      *
      * @OA\Put(
-     *     path="/admin/admins/{id}",
+     *     path="/admin/administrators/{id}",
      *     description="Update admin",
-     *     tags={"Admins"},
+     *     tags={"Admin | Administrators"},
      *
      *     security={{
      *          "default" :{
@@ -570,7 +566,7 @@ class AdminController extends Controller
      *     @OA\Parameter(
      *         name="id",
      *         in="query",
-     *         description="Admin user id",
+     *         description="Administrator user id",
      *         @OA\Schema(
      *             type="string"
      *         )
@@ -579,7 +575,7 @@ class AdminController extends Controller
      *     @OA\Parameter(
      *         name="name",
      *         in="query",
-     *         description="Admin name",
+     *         description="Administrator name",
      *         @OA\Schema(
      *             type="string"
      *         )
@@ -588,7 +584,7 @@ class AdminController extends Controller
      *     @OA\Parameter(
      *         name="email",
      *         in="query",
-     *         description="Admin email",
+     *         description="Administrator email",
      *         @OA\Schema(
      *             type="string"
      *         )
@@ -597,7 +593,7 @@ class AdminController extends Controller
      *     @OA\Parameter(
      *         name="phone",
      *         in="query",
-     *         description="Admin phone number",
+     *         description="Administrator phone number",
      *         @OA\Schema(
      *             type="string"
      *         )
@@ -606,7 +602,7 @@ class AdminController extends Controller
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
-     *         description="Admin user id",
+     *         description="Administrator user id",
      *         @OA\Schema(
      *             type="string"
      *         )
@@ -620,11 +616,11 @@ class AdminController extends Controller
      *             @OA\Property(
      *                 property="data",
      *                 type="object",
-     *                 description="Admin parameter list",
+     *                 description="Administrator parameter list",
      *                 @OA\Property(
      *                     property="id",
      *                     type="string",
-     *                     description="Admin uuid",
+     *                     description="Administrator uuid",
      *                     example="9443407b-7eb8-4f21-8a5c-9614b4ec1bf9",
      *                 ),
      *                 @OA\Property(
@@ -636,19 +632,19 @@ class AdminController extends Controller
      *                 @OA\Property(
      *                     property="email",
      *                     type="string",
-     *                     description="Admin email",
+     *                     description="Administrator email",
      *                     example="sumra chat",
      *                 ),
      *                 @OA\Property(
      *                     property="phone",
      *                     type="string",
-     *                     description="Admin phone number",
+     *                     description="Administrator phone number",
      *                     example="+445667474124146",
      *                 ),
      *                 @OA\Property(
      *                     property="role",
      *                     type="string",
-     *                     description="Admin role",
+     *                     description="Administrator role",
      *                     example="admin",
      *                 ),
      *             ),
@@ -712,7 +708,7 @@ class AdminController extends Controller
     {
         try {
             $admin = Admin::find($id);
-            DB::transaction(function () use ($request, $id, &$admin) {
+            $data = DB::transaction(function () use ($request, $id, &$admin) {
                 $validator = Validator::make($request->all(), [
                     'name' => 'required|string',
                     'email' => 'required|string',
@@ -720,34 +716,41 @@ class AdminController extends Controller
                 ]);
 
                 if ($validator->fails()) {
-                    return response()->jsonApi([
+                    return [
                         'type' => 'danger',
                         'title' => "Not operation",
                         'message' => $validator->messages()->toArray(),
                         'data' => null,
-                    ], 404);
+                    ];
                 }
 
                 // Retrieve the validated input...
                 $validated = $validator->validated();
 
-
-                if (Admin::where('email', $validated['email'])->where('phone', $validated['phone'])->first() != $admin) {
-                    return response()->jsonApi([
-                        'type' => 'danger',
-                        'title' => "Not operation",
-                        'message' => "Admin already in use",
-                        'data' => null,
-                    ], 404);
-                }
-
                 $admin->update($validated);
+                return [
+                    'type' => 'success',
+                    'title' => 'Update was a success',
+                    'message' => 'Administrator was updated successfully',
+                    'data' => $admin,
+                ];
             });
+
+            if($data['type'] == 'success'){
+            return response()->jsonApi([
+                'type' => 'success',
+                'title' => 'Update was a success',
+                'message' => 'Administrator was updated successfully',
+                'data' => $data['data'],
+            ], 200);
+        }else{
+            return response()->jsonApi($data, 404);
+        }
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([
                 'type' => 'danger',
                 'title' => "Update failed",
-                'message' => "Admin does not exist",
+                'message' => "Administrator does not exist",
                 'data' => null,
             ], 404);
         } catch (Throwable $e) {
@@ -758,21 +761,15 @@ class AdminController extends Controller
                 'data' => null,
             ], 404);
         }
-        return response()->jsonApi([
-            'type' => 'success',
-            'title' => 'Update was a success',
-            'message' => 'Admin was updated successfully',
-            'data' => $admin->toArray(),
-        ], 200);
     }
 
     /**
      *  Delete admin record
      *
      * @OA\Delete(
-     *     path="/admin/admins/{id}",
+     *     path="/admin/administrators/{id}",
      *     description="Delete admin",
-     *     tags={"Admins"},
+     *     tags={"Admin | Administrators"},
      *
      *     security={{
      *          "default" :{
@@ -794,7 +791,7 @@ class AdminController extends Controller
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
-     *         description="Admin user id",
+     *         description="Administrator user id",
      *         @OA\Schema(
      *             type="string"
      *         )
@@ -808,11 +805,11 @@ class AdminController extends Controller
      *             @OA\Property(
      *                 property="data",
      *                 type="object",
-     *                 description="Admin parameter list",
+     *                 description="Administrator parameter list",
      *                 @OA\Property(
      *                     property="id",
      *                     type="string",
-     *                     description="Admin uuid",
+     *                     description="Administrator uuid",
      *                     example="9443407b-7eb8-4f21-8a5c-9614b4ec1bf9",
      *                 ),
      *                 @OA\Property(
@@ -824,19 +821,19 @@ class AdminController extends Controller
      *                 @OA\Property(
      *                     property="email",
      *                     type="string",
-     *                     description="Admin email",
+     *                     description="Administrator email",
      *                     example="sumra@mail.com",
      *                 ),
      *                 @OA\Property(
      *                     property="phone",
      *                     type="string",
-     *                     description="Admin phone number",
+     *                     description="Administrator phone number",
      *                     example="+44625546453",
      *                 ),
      *                 @OA\Property(
      *                     property="role",
      *                     type="string",
-     *                     description="Admin role",
+     *                     description="Administrator role",
      *                     example="admin",
      *                 ),
      *             ),
@@ -898,19 +895,19 @@ class AdminController extends Controller
     public function destroy($id): mixed
     {
         try {
-            $admins = null;
-            DB::transaction(function () use ($id, &$admins) {
+            $administrators = null;
+            DB::transaction(function () use ($id, &$administrators) {
                 $admin = Admin::find($id);
 
                 $admin->delete();
 
-                $admins = Admin::paginate(config('settings.pagination_limit'));
+                $administrators = Admin::paginate(config('settings.pagination_limit'));
             });
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([
                 'type' => 'danger',
                 'title' => "Delete failed",
-                'message' => "Admin does not exist",
+                'message' => "Administrator does not exist",
                 'data' => null,
             ], 404);
         } catch (Throwable $e) {
@@ -924,8 +921,8 @@ class AdminController extends Controller
         return response()->jsonApi([
             'type' => 'success',
             'title' => 'Operation was a success',
-            'message' => 'Admin was deleted successfully',
-            'data' => $admins->toArray(),
+            'message' => 'Administrator was deleted successfully',
+            'data' => $administrators->toArray(),
         ], 200);
     }
 
@@ -933,9 +930,9 @@ class AdminController extends Controller
      *  Update admin role
      *
      * @OA\Patch(
-     *     path="/admin/admins/{id}",
+     *     path="/admin/administrators/{id}",
      *     description="Update admin role",
-     *     tags={"Admins"},
+     *     tags={"Admin | Administrators"},
      *
      *     security={{
      *          "default" :{
@@ -957,7 +954,7 @@ class AdminController extends Controller
      *     @OA\Parameter(
      *         name="role",
      *         in="query",
-     *         description="Admin role",
+     *         description="Administrator role",
      *         @OA\Schema(
      *             type="string"
      *         ),
@@ -967,7 +964,7 @@ class AdminController extends Controller
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
-     *         description="Admin user id",
+     *         description="Administrator user id",
      *         @OA\Schema(
      *             type="string"
      *         ),
@@ -981,11 +978,11 @@ class AdminController extends Controller
      *             @OA\Property(
      *                 property="data",
      *                 type="object",
-     *                 description="Admin parameter list",
+     *                 description="Administrator parameter list",
      *                 @OA\Property(
      *                     property="id",
      *                     type="string",
-     *                     description="Admin uuid",
+     *                     description="Administrator uuid",
      *                     example="9443407b-7eb8-4f21-8a5c-9614b4ec1bf9",
      *                 ),
      *                 @OA\Property(
@@ -997,19 +994,19 @@ class AdminController extends Controller
      *                 @OA\Property(
      *                     property="email",
      *                     type="string",
-     *                     description="Admin email",
+     *                     description="Administrator email",
      *                     example="sumra chat",
      *                 ),
      *                 @OA\Property(
      *                     property="phone",
      *                     type="string",
-     *                     description="Admin phone number",
+     *                     description="Administrator phone number",
      *                     example="+445667474124146",
      *                 ),
      *                 @OA\Property(
      *                     property="role",
      *                     type="string",
-     *                     description="Admin role",
+     *                     description="Administrator role",
      *                     example="admin",
      *                 ),
      *             ),
@@ -1092,11 +1089,18 @@ class AdminController extends Controller
 
                 $admin->update($validated);
             });
+
+            return response()->jsonApi([
+                'type' => 'success',
+                'title' => 'Update was a success',
+                'message' => 'Administrator was updated successfully',
+                'data' => $admin->toArray(),
+            ], 200);
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([
                 'type' => 'danger',
                 'title' => "Update failed",
-                'message' => "Admin does not exist",
+                'message' => "Administrator does not exist",
                 'data' => null,
             ], 404);
         } catch (Throwable $e) {
@@ -1107,12 +1111,5 @@ class AdminController extends Controller
                 'data' => null,
             ], 404);
         }
-        return response()->jsonApi([
-            'type' => 'success',
-            'title' => 'Update was a success',
-            'message' => 'Admin was updated successfully',
-            'data' => $admin->toArray(),
-        ], 200);
     }
-
 }

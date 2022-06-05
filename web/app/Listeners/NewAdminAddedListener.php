@@ -3,10 +3,10 @@
 namespace App\Listeners;
 
 use App\Events\NewUserRegistered;
-use App\Models\Subscriber;
+use App\Models\Admin;
 
 
-class NewUserRegisteredListener
+class NewAdminAddedListener
 {
 
 
@@ -29,14 +29,22 @@ class NewUserRegisteredListener
      */
     public function handle(mixed $event)
     {
-        $user = $event->user;
+        $user = $event->admin;
+        $role = $event->role;
+        if (is_array($user)) {
+            $user = collect($user);
+        }
 
-        $username = $user->username;
         $id = $user->id;
 
-        Subscriber::query()->firstOrCreate([
+
+        Admin::query()->firstOrCreate([
             'user_id' => $id,
-            'username' => $username,
+            'name' => $user->name,
+            'email' => $user->email,
+            'phone' => $user->phone,
+            'role' => $role,
         ]);
+
     }
 }

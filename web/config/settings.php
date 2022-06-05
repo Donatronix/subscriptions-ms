@@ -43,8 +43,10 @@ return [
     'api' => [
         'files' => [
             'host' => env('API_FILES_HOST', 'http://localhost:8080'),
-            'version' => env('API_FILES_VERSION', '/v1')
-        ]
+            'version' => env('API_FILES_VERSION', '/v1'),
+        ],
+        'app_id' => "waiting-lists-ms-9009",
+        'referrals_ms' => env('API_REFERRALS_HOST', 'http://localhost:8091/v1/admin/total-reward'),
     ],
 
     /**
@@ -53,6 +55,6 @@ return [
     'exchange_queue' => [
         'files' => env('RABBITMQ_RECEIVER_FILES', 'FilesMS'),
         'referrals' => env('RABBITMQ_RECEIVER_REFERRALS', 'ReferralsMS'),
-        'contacts_book' => env('RABBITMQ_RECEIVER_CONTACTS', 'ContactsBookMS')
+        'contacts_book' => env('RABBITMQ_RECEIVER_CONTACTS', 'ContactsBooksMS'),
     ],
 ];

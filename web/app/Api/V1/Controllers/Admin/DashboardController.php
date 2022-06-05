@@ -4,9 +4,12 @@ namespace App\Api\V1\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Subscriber;
+use App\Traits\SubscribersAnalysisTrait;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use Throwable;
 
-class SubscribersDashboardController extends Controller
+class DashboardController extends Controller
 {
     /**
      *  Display a listing of the subscribers
@@ -14,7 +17,7 @@ class SubscribersDashboardController extends Controller
      * @OA\Get(
      *     path="/admin/dashboard",
      *     description="Get all subscribers dashboard",
-     *     tags={"Dashboard"},
+     *     tags={"Admin | Dashboard"},
      *
      *     security={{
      *          "default" :{
@@ -248,45 +251,34 @@ class SubscribersDashboardController extends Controller
      */
     public function index(Request $request): mixed
     {
-        $newSubscribersByWeek = Subscriber::countNewSubscriberByTime('week')->get();
-        $newSubscribersByMonth = Subscriber::countNewSubscriberByTime('month')->get();
-        $newSubscribersByYear = Subscriber::countNewSubscriberByTime('year')->get();
+        try {
 
-        //Group by platform
-        $newSubscribersByPlatformPerWeek = Subscriber::countNewSubscribersByPlatform('week')->get();
-        $newSubscribersByPlatformPerMonth = Subscriber::countNewSubscribersByPlatform('month')->get();
-        $newSubscribersByPlatformPerYear = Subscriber::countNewSubscribersByPlatform('year')->get();
+            $statistics = SubscribersAnalysisTrait::getSubscribersStatistics();
 
-        //group by channel
-        $newSubscribersByChannelPerWeek = Subscriber::countNewSubscribersByChannel('week')->get();
-        $newSubscribersByChannelPerMonth = Subscriber::countNewSubscribersByChannel('month')->get();
-        $newSubscribersByChannelPerYear = Subscriber::countNewSubscribersByChannel('year')->get();
+            $response = Http::retry(3, 100)->withHeaders([
+                'app-id' => config('settings.api.app_id'),
+            ])->get(config('settings.api.referrals_ms') . '/total-earnings');
 
+            $totalEarnings = $response->json('data');
 
-        return response()->jsonApi(
-            array_merge([
+            return response()->jsonApi([
                 'type' => 'success',
                 'title' => 'Operation was success',
                 'message' => 'The data was displayed successfully',
                 'general' => [
                     'total_subscribers' => Subscriber::query()->count(),
-                    'new_subscribers_by_week_count' => $newSubscribersByWeek->count(),
-                    'new_subscribers_by_month_count' => $newSubscribersByMonth->count(),
-                    'new_subscribers_by_year_count' => $newSubscribersByYear->count(),
-
-                    //platforms
-                    'new_subscribers_by_platforms_per_week' => $newSubscribersByPlatformPerWeek,
-                    'new_subscribers_by_platforms_per_month' => $newSubscribersByPlatformPerMonth,
-                    'new_subscribers_by_platforms_per_year' => $newSubscribersByPlatformPerYear,
-
-                    //channels
-                    'new_subscribers_by_channels_per_week' => $newSubscribersByChannelPerWeek,
-                    'new_subscribers_by_channels_per_month' => $newSubscribersByChannelPerMonth,
-                    'new_subscribers_by_channels_per_year' => $newSubscribersByChannelPerYear,
-
-                    'total_earning' => 46.050,
+                    $statistics,
+                    'total_earning' => $totalEarnings,
                 ],
-            ], ['data' => Subscriber::all()->toArray()]),
-            200);
+                'data' => Subscriber::all(),
+            ], 200);
+        } catch (Throwable $e) {
+            return response()->jsonApi([
+                'type' => 'danger',
+                'title' => "Get subscriber dashboard failed",
+                'message' => $e->getMessage(),
+                'data' => null,
+            ], 404);
+        }
     }
 }

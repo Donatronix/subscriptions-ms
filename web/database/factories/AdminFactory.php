@@ -29,9 +29,7 @@ class AdminFactory extends Factory
      */
     public function definition(): array
     {
-
         return [
-            'id' => $this->faker->uuid(),
             'name' => $this->faker->name,
             'email' => $this->faker->email(),
             'phone' => $this->faker->phoneNumber(),

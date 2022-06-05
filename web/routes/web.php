@@ -2,14 +2,8 @@
 
 /** @var \Laravel\Lumen\Routing\Router $router */
 
-use App\Jobs\subscriberJobs;
-use App\Listeners\WaitingListMS as ListenersWaitingListMS;
-use App\Models\SubMgsId;
-use App\Models\Subscriber;
 use App\Models\SubscriberMessage;
-use App\Models\WaitingListMS;
-use Sumra\SDK\PubSub;
-use Illuminate\Support\Facades\Route;
+
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -42,6 +36,6 @@ $router->group([
     $router->get('/view', function () use ($router) {
         return view('test');
     });
+
     $router->post('/analyze', 'testController@storeTest');
-    
 });

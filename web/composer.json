@@ -9,10 +9,7 @@
         "ext-json": "*",
         "ext-openssl": "*",
         "laravel/lumen-framework": "~8",
-        "sumra/sdk": "*",
-        "php-amqplib/php-amqplib": ">=2.9.0",
-        "sumra/pubsub": "*",
-        "vladimir-yuldashev/laravel-queue-rabbitmq": "^9.1"
+        "sumra/sdk": "*"
     },
     "require-dev": {
         "fakerphp/faker": "~1",
@@ -37,13 +34,6 @@
             "url": "../sumra-sdk",
             "options": {
                 "symlink": false
-            }
-        },
-        {
-            "type" : "path",
-            "url" : "../pubsub",
-            "options": {
-            "symlink": false
             }
         }
     ],
