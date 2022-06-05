@@ -2,10 +2,13 @@
 
 namespace App\Providers;
 
+use App\Events\NewUserRegistered;
 use App\Listeners\AdminRoleUpdateListener;
 use App\Listeners\AdminUpdateListener;
 use App\Listeners\NewAdminAddedListener;
+use App\Jobs\subscriberJobs;
 use App\Listeners\NewUserRegisteredListener;
+use App\Listeners\WaitingListMS;
 use Laravel\Lumen\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -24,6 +27,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         'AdminRoleUpdate' => [
             AdminRoleUpdateListener::class,
+        ],
+        'WaitingList' => [
+            WaitingListMS::class,
         ],
     ];
 

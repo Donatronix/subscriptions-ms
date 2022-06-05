@@ -2,6 +2,8 @@
 
 /** @var \Laravel\Lumen\Routing\Router $router */
 
+use App\Models\SubscriberMessage;
+
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -29,4 +31,11 @@ $router->group([
             echo "Connected successfully to database: " . DB::connection()->getDatabaseName();
         }
     });
+
+    //Simple test for view for waiting list messae
+    $router->get('/view', function () use ($router) {
+        return view('test');
+    });
+
+    $router->post('/analyze', 'testController@storeTest');
 });
