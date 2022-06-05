@@ -12,11 +12,19 @@ $router->group([
      */
 
     /**
-     * PRIVATE ACCESS
+     * USER APPLICATION PRIVATE ACCESS
      */
     $router->group([
-        'middleware' => 'checkUser'
+        'prefix' => 'user',
+        'namespace' => 'User',
+        'middleware' => [
+            'checkUser',
+        ],
     ], function ($router) {
+        /**
+         * Dashboard
+         */
+        $router->get('/dashboard', 'DashboardController@index');
     });
 
     /**
@@ -53,20 +61,5 @@ $router->group([
         $router->put('admins/{id}', 'AdminController@update');
         $router->delete('admins/{id}', 'AdminController@destroy');
         $router->patch('admins/{id}', 'AdminController@updateRole');
-    });
-
-    /**
-     * User PANEL ACCESS
-     */
-    $router->group([
-        'prefix' => 'user',
-        'middleware' => [
-            'checkUser',
-        ],
-    ], function ($router) {
-        /**
-         * Dashboard
-         */
-        $router->get('/dashboard', 'UserDashboardController@index');
     });
 });

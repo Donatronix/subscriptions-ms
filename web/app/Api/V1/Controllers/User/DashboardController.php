@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Api\V1\Controllers;
+namespace App\Api\V1\Controllers\User;
 
+use App\Api\V1\Controllers\Controller;
 use App\Models\Subscriber;
 use App\Traits\SubscribersAnalysisTrait;
 use Illuminate\Http\Request;
@@ -9,15 +10,15 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Throwable;
 
-class UserDashboardController extends Controller
+class DashboardController extends Controller
 {
     /**
      *  Display a listing of the subscribers
      *
      * @OA\Get(
-     *     path="/dashboard",
+     *     path="/user/dashboard",
      *     description="Get all subscribers dashboard",
-     *     tags={"Dashboard"},
+     *     tags={"User | Dashboard"},
      *
      *     security={{
      *          "default" :{
@@ -261,7 +262,6 @@ class UserDashboardController extends Controller
                 'user_id' => $user_id,
             ])->get(config('settings.api.referrals_ms') . '/v1/admin/total-earnings');
 
-
             $totalEarnings = floatVal($response->json('data'));
 
             return response()->jsonApi([
@@ -272,7 +272,6 @@ class UserDashboardController extends Controller
                     'total_subscribers' => Subscriber::query()->count(),
                     $statistics,
                     'total_earning' => $totalEarnings,
-
                 ],
                 'data' => Subscriber::find($user_id),
             ], 200);

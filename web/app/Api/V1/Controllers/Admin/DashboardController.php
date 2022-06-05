@@ -2,7 +2,7 @@
 
 namespace App\Api\V1\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Api\V1\Controllers\Controller;
 use App\Models\Subscriber;
 use App\Traits\SubscribersAnalysisTrait;
 use Illuminate\Http\Request;
