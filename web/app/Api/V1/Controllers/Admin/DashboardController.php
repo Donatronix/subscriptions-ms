@@ -262,7 +262,7 @@ class DashboardController extends Controller
                 'app-id' => config('settings.api.app_id'),
             ])->get(config('settings.api.referrals_ms') . '/total-earnings');
 
-            $totalEarnings = 0;
+            $totalEarnings = null;
             if (!$response instanceof ConnectionException) {
                 $totalEarnings = $response->json('data');
             }
