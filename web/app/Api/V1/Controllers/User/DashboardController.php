@@ -257,10 +257,12 @@ class DashboardController extends Controller
 
             $statistics = SubscribersAnalysisTrait::getSubscribersStatistics();
 
-            $response = Http::retry(3, 100)->withHeaders([
-                'app-id' => config('settings.api.app_id'),
-                'user_id' => $user_id,
-            ])->get(config('settings.api.referrals_ms') . '/v1/admin/total-earnings');
+            $response = Http::retry(3, 100)
+                ->withHeaders([
+                    'app-id' => config('settings.api.app_id'),
+                    'user_id' => $user_id,
+                ])
+                ->get(config('settings.api.referrals_ms') . '/v1/total-earnings');
 
             $totalEarnings = floatVal($response->json('data'));
 
