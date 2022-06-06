@@ -5,6 +5,7 @@ namespace App\Api\V1\Controllers\Admin;
 use App\Api\V1\Controllers\Controller;
 use App\Models\Subscriber;
 use App\Traits\SubscribersAnalysisTrait;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Throwable;
@@ -255,11 +256,16 @@ class DashboardController extends Controller
 
             $statistics = SubscribersAnalysisTrait::getSubscribersStatistics();
 
-            $response = Http::retry(3, 100)->withHeaders([
+            $response = Http::retry(3, 100, function ($exception, $request) {
+                return $exception instanceof ConnectionException;
+            })->withHeaders([
                 'app-id' => config('settings.api.app_id'),
             ])->get(config('settings.api.referrals_ms') . '/total-earnings');
 
-            $totalEarnings = $response->json('data');
+            $totalEarnings = 0;
+            if (!$response instanceof ConnectionException) {
+                $totalEarnings = $response->json('data');
+            }
 
             return response()->jsonApi([
                 'type' => 'success',
