@@ -102,4 +102,19 @@ class Subscriber extends Model
             ],
         };
     }
+
+    /**
+     * @param $query
+     * @param $time
+     *
+     * @return mixed
+     */
+
+    public function submgId(){
+        $this->hasMany('App\Models\SubMgsId', 'subscriber_id');
+    }
+
+
+
+
 }
