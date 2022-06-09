@@ -13,4 +13,10 @@ class WaitingListMS extends Model
     ];
 
     protected $guarded = [];
+
+    public function submgId(){
+        $this->hasMany('App\Models\SubMgsId', 'waiting_list_ms_id');
+    }
+
+    
 }

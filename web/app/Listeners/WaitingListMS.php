@@ -46,8 +46,8 @@ class WaitingListMS
             PubSub::transaction(function () {})->publish(self::RECEIVER_LISTENER, [
                 'status' => 'error',
                 'subsriber_id' => $inputData['platform'],
-                'message_id' => $inputData['message_id'],
-                'message' => $validation->errors()
+                'waiting_list_ms_id' => $inputData['message'],
+                'error' => $validation->errors()
             ], "waitingLinst");
             return true;
         }
@@ -56,12 +56,12 @@ class WaitingListMS
         // Write log
         try {
             $waitListMs = SubMgsId::create([
-                'message_id' => $inputData->message_id,
+                'waiting_list_ms_id' => $inputData->message_id,
                 'subsriber_id' => $inputData->subscriber_id,
             ]);
             if (!$waitListMs) {
                 $waitListMs = SubMgsId::create([
-                    'message_id' => $inputData->message_id,
+                    'waiting_list_ms_id' => $inputData->message_id,
                     'subsriber_id' => $inputData->subscriber_id,
                     'status' => "Failed",
                 ]);
@@ -72,11 +72,12 @@ class WaitingListMS
                 // Return result
                 PubSub::transaction(function () {
                 })->publish(self::RECEIVER_LISTENER, [
+
                     'type' => 'success',
-                    'title' => "WitingList Message Sent",
+                    'title' => $inputData->title,
                     'data' => [
                         "subscriber_id" => $inputData->subsriber_id,
-                        "message_id" => $inputData->message_id,
+                        "waiting_list_ms_id" => $inputData->message_id,
                     ]
                 ], "waitingLinst");
                 return true;

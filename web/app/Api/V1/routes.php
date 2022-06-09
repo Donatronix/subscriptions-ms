@@ -61,5 +61,11 @@ $router->group([
         $router->put('admins/{id}', 'AdminController@update');
         $router->delete('admins/{id}', 'AdminController@destroy');
         $router->patch('admins/{id}', 'AdminController@updateRole');
+
+        /**
+         * Waiting List Messages
+         */
+        $router->get('waiting-list-messages', 'WaitingListMSController@index');
+        $router->post('waiting-list-messages', 'WaitingListMSController@store');
     });
 });
