@@ -344,7 +344,7 @@ class WaitingListMSController extends Controller
      *     ),
      *
      *     @OA\Parameter(
-     *         name="message",
+     *         name="message_id",
      *         in="query",
      *         description="New waiting list Message",
      *         @OA\Schema(
@@ -362,7 +362,7 @@ class WaitingListMSController extends Controller
      *     ),
      *
      *     @OA\Parameter(
-     *         name="subscriber_ids",
+     *         name="subscriber_ids[]",
      *         in="query",
      *         description="list of selected subscribers",
      *         @OA\Schema(
@@ -380,25 +380,25 @@ class WaitingListMSController extends Controller
      *                 type="object",
      *                 description="Waitinglist Message parameter list",
      *                 @OA\Property(
-     *                     property="title",
+     *                     property="Title",
      *                     type="string",
      *                     description="Message title",
      *                     example="New waiting list message",
      *                 ),
      *                 @OA\Property(
-     *                     property="message",
+     *                     property="Message",
      *                     type="string",
      *                    description="Publish new message",
-     *                     example="This is just a message to subscribers on waiting list",
+     *                     example="This is just a message to subscribers on waiting list (take message id)",
      *                 ),
      *                 @OA\Property(
-     *                     property="url",
+     *                     property="Product url",
      *                     type="string",
      *                    description="Product URL",
      *                     example="https://discord.gg/DUMwfyckKy",
      *                 ),
      *                 @OA\Property(
-     *                     property="subscriber_ids",
+     *                     property="Subscriber ids",
      *                     type="string",
      *                     description="Selected Subscriber Ids ",
      *                     example="subscriber 1, subscriber 2, subscriber 3",
@@ -445,12 +445,14 @@ class WaitingListMSController extends Controller
             'message_id' => 'string|required',
             'subscriber_ids'   => 'required|array',
         ]);
+
+        $message = WaitingListMS::find($request->message_id);
         
         if ($validation->fails()) {
             SubMgsId::create([
                 'status' => 'failed',
                 'subscriber_id' => $request->subscriber_ids,
-                'message_id' => $request->message_id,
+                'message_id' => $message->id,
                 'message' => $validation->errors()
             ]);
             return response()->jsonApi([
@@ -463,14 +465,14 @@ class WaitingListMSController extends Controller
 
         try {
             $waitListMs = SubMgsId::create([
-            'message_id' => $request->message_id,
+            'message_id' => $message->id,
             'subscriber_ids' => $request->subscriber_id,
             'status' => 'delivered',
             ]);
             
             $data = [
                 "subscriber_ids" => $request->subscriber_ids,
-                "message_id" => $request->message_id,
+                "message" => $message->message,
                 "title" => $request->title,
             ];
             dispatch(PubSubService::Publisher($data)); 
