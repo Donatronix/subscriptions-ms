@@ -389,7 +389,7 @@ class WaitingListMSController extends Controller
      *                     property="Message",
      *                     type="string",
      *                    description="Publish new message",
-     *                     example="This is just a message to subscribers on waiting list (take message id)",
+     *                     example="This is just a message to subscribers on waiting list (take message id: 9681089e-ebe4-4944-95f7-f3335d4f7305)",
      *                 ),
      *                 @OA\Property(
      *                     property="Product url",
