@@ -312,7 +312,7 @@ class WaitingListMSController extends Controller
   /**
      *  Send message to subscribers
      *
-     * @OA\Get(
+     * @OA\POST(
      *     path="/publish/wait-messages",
      *     description="Send a new message",
      *     tags={"Waitlist Messages"},
