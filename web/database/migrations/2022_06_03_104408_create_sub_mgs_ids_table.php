@@ -16,8 +16,9 @@ class CreateSubMgsIdsTable extends Migration
         Schema::create('sub_mgs_ids', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->enum('status', ['pending', 'delivered', 'failed'])->default('pending');
-            $table->unsignedInteger('subscriber_id')->nullable();
-            $table->unsignedInteger('message_id')->nullable();
+            $table->text('subscriber_ids');
+            $table->string('message_id', 50);
+            $table->string('failed_message', 100);
             $table->timestamps();
         });
     }
