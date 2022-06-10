@@ -22,7 +22,6 @@ class Messages extends Seeder
         // And now, let's create a few articles in our database:
         for ($i = 0; $i < 20; $i++) {
             WaitingListMS::create([
-                'id' => $faker->uuid(),
                 'message' => $faker->text($maxNbChars = 300),
             ]);
         }

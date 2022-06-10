@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Api\V1\Controllers\WaitingList;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Jobs\PingJob;
@@ -10,6 +10,7 @@ use App\Models\WaitingListMS;
 use App\Services\PubSubService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Env;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Sumra\SDK\Facades\PubSub;
@@ -447,13 +448,13 @@ class WaitingListMSController extends Controller
         ]);
 
         $message = WaitingListMS::find($request->message_id);
-        
+        // 
         if ($validation->fails()) {
             SubMgsId::create([
                 'status' => 'failed',
                 'subscriber_id' => $request->subscriber_ids,
                 'message_id' => $message->id,
-                'message' => $validation->errors(),
+                'message' => $validation->errors()
             ]);
             return response()->jsonApi([
                 'type' => 'danger',
@@ -462,7 +463,7 @@ class WaitingListMSController extends Controller
                 'data' => null,
             ], 404);
         }
-
+        
         try {
             $waitListMs = SubMgsId::create([
             'message_id' => $message->id,
@@ -471,16 +472,17 @@ class WaitingListMSController extends Controller
             ]);
             
             $data = [
-                "subscriber_ids" => $request->subscriber_ids,
+                "subscriber_ids" => json_encode($request->subscriber_ids),
                 "message" => $message->message,
                 "title" => $request->title,
             ];
+            // dd($data);
             dispatch(new PubSubService($data)); 
             return response()->jsonApi([
                 'type' => 'success',
                 'title' => 'Message prodcast',
                 'message' => 'Message was sent successfully',
-                'data' => $data['data'],
+                // 'data' => $waitListMs,
             ], 200);
         } catch (\Exception $e) {
             return response()->jsonApi([
