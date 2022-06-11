@@ -29,7 +29,7 @@ class EventServiceProvider extends ServiceProvider
             AdminRoleUpdateListener::class,
         ],
         'WaitingList' => [
-            WaitingListMS::class,
+            WaitingListMSListener::class,
         ],
     ];
 

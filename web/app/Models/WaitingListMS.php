@@ -9,6 +9,7 @@ class WaitingListMS extends Model
     protected $table = 'waiting_list_ms';
 
     protected $fillable = [
+        'id',
         'message',
     ];
 
