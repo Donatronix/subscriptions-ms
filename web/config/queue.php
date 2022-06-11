@@ -88,8 +88,8 @@ return [
                 [
                     'host' => env('RABBITMQ_HOST', '127.0.0.1'),
                     'port' => env('RABBITMQ_PORT', 5672),
-                    'user' => env('RABBITMQ_USER', 'guest'),
-                    'password' => env('RABBITMQ_PASSWORD', 'guest'),
+                    'user' => env('RABBITMQ_USER', 'sikiru'),
+                    'password' => env('RABBITMQ_PASSWORD', '123456'),
                     'vhost' => env('RABBITMQ_VHOST', '/'),
                 ],
             ],
@@ -102,7 +102,7 @@ return [
                     /**
                      * Determine if exchange should be created if it does not exist.
                      */
-                    'declare' => env('RABBITMQ_EXCHANGE_DECLARE', true),
+                    'declare' => env('RABBITMQ_EXCHANGE_DECLARE', false),
 
                     /**
                      * Read more about possible values at https://www.rabbitmq.com/tutorials/amqp-concepts.html

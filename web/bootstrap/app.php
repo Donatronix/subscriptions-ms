@@ -26,6 +26,8 @@ $app = new Laravel\Lumen\Application(
 $app->withFacades();
 $app->withEloquent();
 
+// app(Anik\Amqp\Facades\Amqp::class)
+
 /*
 |--------------------------------------------------------------------------
 | Register Container Bindings
@@ -99,6 +101,7 @@ $app->register(App\Providers\EventServiceProvider::class);
 /**
  * Pubsub - RabbitMQ
  */
+
 $app->configure('queues');
 $app->register(VladimirYuldashev\LaravelQueueRabbitMQ\LaravelQueueRabbitMQServiceProvider::class);
 class_alias(\Illuminate\Support\Facades\App::class, 'App');
