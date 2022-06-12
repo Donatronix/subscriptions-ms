@@ -12,13 +12,19 @@ set -o pipefail
 # exits if any of your variables is not set
 set -o nounset
 
-sleep 30
+# Set sleep 60 sec
+sleep 60
+
+# Display current directory
+ls -la
 
 # Swagger docs generate
-php /var/www/html/artisan swagger-lume:generate
+echo "Run php artisan swagger-lume:generate"
+php artisan swagger-lume:generate
 
 # Run Pubsub Queue
-php /var/www/html/artisan queue:listen rabbitmq --queue=Staging.WaitingListsMS --timeout=0
+echo "Run php artisan queue:listen rabbitmq --queue=${PUBSUB_QUEUE} --timeout=0 --tries=3"
+php artisan queue:listen rabbitmq --queue=${PUBSUB_QUEUE} --timeout=0 --tries=3 #> /dev/null
 
 # now we bring the primary process back into the foreground and leave it there
 fg %1

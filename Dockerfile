@@ -2,6 +2,10 @@ FROM webdevops/php-nginx:8.1-alpine
 LABEL Maintainer="Ihor Porokhnenko <ihor.porokhnenko@gmail.com>"
 LABEL Description="Lightweight container with Nginx & PHP-FPM 8 based on Alpine Linux."
 
+# Set environment variables
+ARG MODE
+ENV MODE=${MODE:-staging}
+
 # Do a single run command to make the intermediary containers smaller.
 RUN set -ex
 
@@ -29,8 +33,8 @@ COPY --chown=nginx:nginx ./sumra-sdk /var/www/sumra-sdk
 WORKDIR /var/www/html
 
 ## Update env
-RUN cp -f .env.production .env
-RUN rm -rf /var/www/html/.env.production
+RUN cp -f .env.${MODE} .env
+RUN rm -rf /var/www/html/.env.${MODE}
 
 ## Set writable dirs
 RUN chown -R nginx:nginx /var/www/html
@@ -39,16 +43,8 @@ RUN chmod -R 777 /var/www/html/storage/
 ## Composer packages install
 RUN composer install
 
-#COPY ./entrypoint.sh /opt/docker/bin/entrypoint.d/service-init.sh
-#ENTRYPOINT ["/bin/bash", "-c", "/opt/docker/bin/entrypoint.d/service-init.sh" ]
-
-#COPY ./entrypoint.sh /service-init.sh
-#ENTRYPOINT ["/bin/bash", "-c", "./service-init.sh" ]
-
-
+## SET Entrypoint for service init
 COPY ./entrypoint.sh /service-init.sh
 RUN sed -i 's/\r$//g' /service-init.sh
 RUN chmod +x /service-init.sh
 ENTRYPOINT ["/service-init.sh"]
-
-
