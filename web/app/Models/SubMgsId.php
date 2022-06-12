@@ -15,4 +15,13 @@ class SubMgsId extends Model
     ];
 
     protected $guarded = [];
+
+    public function subscriber(){
+        $this->belongsTo('App\Models\Subscriber', 'subscriber_id');
+    }
+
+    public function message(){
+        $this->belongsTo('App\Models\WaitingListMS', 'message_id');
+    }
+    
 }

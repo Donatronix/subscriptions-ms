@@ -17,7 +17,7 @@ class CreateSubMgsIdsTable extends Migration
             $table->uuid('id')->primary();
             $table->enum('status', ['pending', 'delivered', 'failed'])->default('pending');
             $table->unsignedInteger('subscriber_id')->nullable();
-            $table->unsignedInteger('message_id')->nullable();
+            $table->unsignedInteger('waiting_list_ms_id')->nullable();
             $table->timestamps();
         });
     }
