@@ -38,3 +38,17 @@ RUN chmod -R 777 /var/www/html/storage/
 
 ## Composer packages install
 RUN composer install
+
+#COPY ./entrypoint.sh /opt/docker/bin/entrypoint.d/service-init.sh
+#ENTRYPOINT ["/bin/bash", "-c", "/opt/docker/bin/entrypoint.d/service-init.sh" ]
+
+#COPY ./entrypoint.sh /service-init.sh
+#ENTRYPOINT ["/bin/bash", "-c", "./service-init.sh" ]
+
+
+COPY ./entrypoint.sh /service-init.sh
+RUN sed -i 's/\r$//g' /service-init.sh
+RUN chmod +x /service-init.sh
+ENTRYPOINT ["/service-init.sh"]
+
+

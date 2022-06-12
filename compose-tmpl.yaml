@@ -19,7 +19,8 @@ services:
       - ./web:/var/www/html:rw
       - ./logs:/var/log/nginx:rw
 #     - ./xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini:rw
-#    command: /bin/bash -c "php artisan swagger-lume:generate && php artisan queue:listen rabbitmq --queue=WaitingListsMS --timeout=0 > /dev/null"
+    #entrypoint: "/bin/bash -c 'while :; do sleep 1m & wait $${!}; php artisan swagger-lume:generate && php artisan queue:listen rabbitmq --queue=Staging.WaitingListsMS --timeout=0 --tries=3; done'"
+  #  entrypoint: "/bin/bash -c 'while :; do sleep 1m & wait $${!}; php artisan swagger-lume:generate && php artisan queue:listen rabbitmq --queue=Staging.WaitingListsMS --timeout=0 > /dev/null; done'"
 
 networks:
   promo-net:
