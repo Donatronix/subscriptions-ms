@@ -1,14 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Api\V1\Controllers\Admin;
 
 use App\Models\WaitingListMS;
 use App\Models\Subscriber;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-
-class WaitingListMSController extends Controller
+class WaitingListMsController extends Controller
 {
     public function index()
     {
@@ -58,6 +57,6 @@ class WaitingListMSController extends Controller
                 dispatch(new WaitingListMS($data));
             }
         }
-    
+
     }
 }

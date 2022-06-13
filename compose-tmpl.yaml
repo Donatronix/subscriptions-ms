@@ -18,10 +18,10 @@ services:
       - PUBSUB_QUEUE=Staging.WaitingListsMS
     volumes:
       - ./web:/var/www/html:rw
-      - ./logs:/var/log/nginx:rw
+      - ./logs:/var/log:rw
 #     - ./xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini:rw
 
 networks:
   ugg.network:
-    name: PromoNet
+    name: UltainfinityGlobalGroup.Network
     driver: bridge
