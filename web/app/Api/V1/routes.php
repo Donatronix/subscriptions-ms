@@ -53,14 +53,14 @@ $router->group([
         $router->delete('subscribers/{id}', 'SubscriberController@destroy');
 
         /**
-         * Admins
+         * Administrators
          */
-        $router->get('admins', 'AdminController@index');
-        $router->post('admins', 'AdminController@store');
-        $router->get('admins/{id}', 'AdminController@show');
-        $router->put('admins/{id}', 'AdminController@update');
-        $router->delete('admins/{id}', 'AdminController@destroy');
-        $router->patch('admins/{id}', 'AdminController@updateRole');
+        $router->get('administrators', 'AdminController@index');
+        $router->post('administrators', 'AdminController@store');
+        $router->get('administrators/{id}', 'AdminController@show');
+        $router->put('administrators/{id}', 'AdminController@update');
+        $router->delete('administrators/{id}', 'AdminController@destroy');
+        $router->patch('administrators/{id}', 'AdminController@updateRole');
 
         /**
          * Waiting List Messages
