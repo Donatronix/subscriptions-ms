@@ -6,7 +6,7 @@ echo "Run php artisan optimize"
 
 # Update DB
 echo "Run php artisan migrate"
-#/usr/local/bin/php /var/www/html/artisan migrate
+/usr/local/bin/php /var/www/html/artisan migrate
 
 # Swagger docs generate
 echo "Run php artisan swagger-lume:generate"
