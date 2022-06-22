@@ -3,14 +3,17 @@
 namespace App\Api\V1\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Listeners\WaitingListMS as ListenersWaitingListMS;
-use App\Models\WaitingListMS;
 use App\Models\Subscriber;
+use App\Models\WaitingListMS;
+use App\Listeners\WaitingListMSListener;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Throwable;
 
 
-class WaitingListMSController extends Controller
+class WaitingListMsController extends Controller
 {
     public function index()
     {
@@ -21,12 +24,11 @@ class WaitingListMSController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'platform' => 'required',
+            'id' => 'required',
             'message' => 'required',
         ]);
-        $message = WaitingListMS::create([
-            'message' => $request->message,
-        ]);
+        $validated = $validator->validated();
+        $message = WaitingListMS::create($validated);
 
         $message_id = $message->id;
 
@@ -43,7 +45,7 @@ class WaitingListMSController extends Controller
                         "waiting_list_ms_id" => $message_id,
                         "product_url" => $request->url
                     ];
-                    dispatch(new ListenersWaitingListMS($data));
+                    dispatch(new WaitingListMSListener($data));
                 }
             }
         } else {
@@ -57,9 +59,10 @@ class WaitingListMSController extends Controller
                     "waiting_list_ms_id" => $message_id,
                     "product_url" => $request->url
                 ];
-                dispatch(new ListenersWaitingListMS($data));
+                dispatch(new WaitingListMSListener($data));
             }
         }
+        
     
     }
 }

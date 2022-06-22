@@ -124,7 +124,7 @@ class WaitingListMSController extends Controller
                     return response()->jsonApi([
                         'type' => 'danger',
                         'title' => "Invalid data",
-                        'message' => $validator->messages()->toArray(),
+                        'message' => $validator->errors(),
                         'data' => null,
                     ], 404);
                 }
@@ -148,7 +148,7 @@ class WaitingListMSController extends Controller
                 'type' => 'success',
                 'title' => 'Operation was a success',
                 'message' => 'Message was added successfully',
-                'data' => $wait_message->toArray(),
+                'data' => $wait_message,
             ], 200);
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([
@@ -273,7 +273,7 @@ class WaitingListMSController extends Controller
                     return [
                         'type' => 'danger',
                         'title' => "Not operation",
-                        'message' => $validator->messages()->toArray(),
+                        'message' => $validator->errors(),
                         'data' => null,
                     ];
                 }
