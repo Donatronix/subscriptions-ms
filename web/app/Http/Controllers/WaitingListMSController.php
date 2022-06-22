@@ -465,8 +465,9 @@ class WaitingListMSController extends Controller
         }
         
         try {
+            $corr_id = uniqid();
             $waitListMs = SubMgsId::create([
-            'message_id' => $message->id,
+            'message_id' => $corr_id,
             'subscriber_ids' => $request->subscriber_id,
             'status' => 'delivered',
             ]);
@@ -474,6 +475,7 @@ class WaitingListMSController extends Controller
             $data = [
                 "subscriber_ids" => json_encode($request->subscriber_ids),
                 "message" => $message->message,
+                'message_id' => $corr_id,
                 "title" => $request->title,
             ];
             // dd($data);

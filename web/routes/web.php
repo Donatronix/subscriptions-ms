@@ -5,6 +5,7 @@ use Anik\Amqp\ConsumableMessage;
 use Anik\Laravel\Amqp\Facades\Amqp;
 use App\Models\Subscriber;
 use App\Models\SubscriberMessage;
+use App\Services\ConsumerService;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 
@@ -32,6 +33,8 @@ $router->group([
 ], function ($router) {
     $router->get('db-test', function () {
         if (DB::connection()->getDatabaseName()) {
+            $worker = new ConsumerService();
+            $worker->listen();
             echo "Connected successfully to database: " . DB::connection()->getDatabaseName();
         }
     });

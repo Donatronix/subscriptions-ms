@@ -1,7 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Api\V1\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
+use App\Listeners\WaitingListMS as ListenersWaitingListMS;
 use App\Models\WaitingListMS;
 use App\Models\Subscriber;
 use Illuminate\Http\Request;
@@ -41,7 +43,7 @@ class WaitingListMSController extends Controller
                         "waiting_list_ms_id" => $message_id,
                         "product_url" => $request->url
                     ];
-                    dispatch(new WaitingListMS($data));
+                    dispatch(new ListenersWaitingListMS($data));
                 }
             }
         } else {
@@ -55,7 +57,7 @@ class WaitingListMSController extends Controller
                     "waiting_list_ms_id" => $message_id,
                     "product_url" => $request->url
                 ];
-                dispatch(new WaitingListMS($data));
+                dispatch(new ListenersWaitingListMS($data));
             }
         }
     
