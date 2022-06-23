@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 // use PubSub;
 
-class WaitingListMS
+class WaitingListMSListener
 {
     public $inputData;
     /**

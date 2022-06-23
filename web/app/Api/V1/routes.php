@@ -13,6 +13,9 @@ $router->group([
 //    $router->group([], function ($router) {
 //    });
 
+    // $router->get('subscribers', 'SubscriberController@index');
+    // $router->post('waiting-list-messages', 'WaitingListMsController@store');
+
     /**
      * USER APPLICATION PRIVATE ACCESS
      */

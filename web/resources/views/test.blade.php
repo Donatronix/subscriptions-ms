@@ -15,7 +15,7 @@
 
                
 
-                <form method="POST" action="/tests/analyze" class="card-body">
+                <form method="POST" action="/v1/tests/analyze" class="card-body">
                     {{-- @csrf --}}
                     <div
                     class="text-center mb-6"
@@ -30,7 +30,9 @@
                             </span>
                         </div>
 
-                        <input name="platform" type="text" class="form-control" required autocomplete="email" autofocus placeholder="{{ trans('global.login_email') }}" value="sumra chat">
+                        <input name="title" type="text" class="form-control" autofocus  value="sumra chat">
+                        <br>
+                        <input name="subscriber_ids[]" type="text" class="form-control" autofocus  value="00000000-1000-1000-1000-000000000000">
                 
                     </div>
 
@@ -46,9 +48,9 @@
                         required
                     >
                     <option disabled selected>--Select Message--</option>
-                        <option value="05b6b31d-0fef-30b2-a943-1b2ec2c4b53c">Voluptatibus doloribus cupiditate cum laborum dolo...</option>
-                        <option value="0cbd10b4-f502-3232-8297-13079d8b0246">Error labore aspernatur id aperiam dolores qui. Ve...</option>
-                        <option value="2103a07a-7236-37be-bbc6-8127c09610bf">Natus harum temporibus doloribus ratione amet. Ear...</option>
+                        <option value="1">Voluptatibus doloribus cupiditate cum laborum dolo...</option>
+                        <option value="2">Error labore aspernatur id aperiam dolores qui. Ve...</option>
+                        <option value="3">Natus harum temporibus doloribus ratione amet. Ear...</option>
                     </select>
                        
                         
@@ -61,7 +63,7 @@
                             </span>
                         </div>
 
-                        <input name="url" type="text" class="form-control" required autocomplete="email" autofocus placeholder="{{ trans('global.login_email') }}" value="https://discord.gg/DUMwfyckKy">
+                        <input name="product_url" type="text" class="form-control" required autocomplete="email" autofocus placeholder="{{ trans('global.login_email') }}" value="https://discord.gg/DUMwfyckKy">
                         
                     </div>
                        
@@ -106,31 +108,3 @@
 </div>
 </div>
 </div>
-
-<script>
-    document.getElementById("submit_log").addEventListener("click", myFunction);
-    
-    function myFunction() {
-        document.getElementById("spinner").innerHTML = '<i class="fa fa-spinner fa-spin" style="font-size:24px; color:red"></i>'
-    }  
-</script>
-<script>
-
-    function showPWD(){
-        var x = document.getElementById("password");
-        var eye = '<i class="fa fa-eye fa-md eye" id="eye" aria-hidden="true" onclick="showPWD()" style="position:absolute; right:10px; top:12px; cursor: pointer; z-index:999;"></i>';
-        var eyeClose = '<i class="fa fa-eye-slash fa-md eyeClose" id="eyeClose" aria-hidden="true" onclick="showPWD()" style="position:absolute; right:10px; top:12px; cursor: pointer; z-index:999;"></i>';
-        var div = document.getElementById("div");
-        if(x.type === "password"){
-            x.type = "text";
-            div.innerHTML = eyeClose;
-            x.focus();
-            
-        }else{
-            x.type = "password";
-            div.innerHTML = eye;
-            x.focus();
-            
-        }
-    }
-</script>
