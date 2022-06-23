@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // Seeds for all
         $this->call([
             SubscribersTableSeeder::class,
             AdminsTableSeeder::class,

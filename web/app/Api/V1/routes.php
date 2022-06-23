@@ -10,6 +10,8 @@ $router->group([
     /**
      * PUBLIC ACCESS
      */
+//    $router->group([], function ($router) {
+//    });
 
     /**
      * USER APPLICATION PRIVATE ACCESS

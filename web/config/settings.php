@@ -29,7 +29,7 @@ return [
         '80000000-8000-8000-8000-000000000008',
         '80000008-8008-8008-8008-800000000008',
         '90000000-9000-9000-9000-000000000009',
-        '90000009-9009-9009-9009-900000000009',
+        '90000009-9009-9009-9009-900000000009'
     ],
 
     /**
@@ -51,11 +51,11 @@ return [
     ],
 
     /**
-     * RabbitMQ Exchange Points
+     * RabbitMQ Receivers
      */
-    'exchange_queue' => [
+    'pubsub_receiver' => [
         'files' => env('RABBITMQ_RECEIVER_FILES', 'FilesMS'),
         'referrals' => env('RABBITMQ_RECEIVER_REFERRALS', 'ReferralsMS'),
-        'contacts_book' => env('RABBITMQ_RECEIVER_CONTACTS', 'ContactsBooksMS'),
+        'contacts_books' => env('RABBITMQ_RECEIVER_CONTACTS', 'ContactsBooksMS')
     ],
 ];

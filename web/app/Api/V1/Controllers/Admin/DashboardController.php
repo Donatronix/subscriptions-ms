@@ -31,7 +31,7 @@ class DashboardController extends Controller
      *     x={
      *          "auth-type": "Applecation & Application Use",
      *          "throttling-tier": "Unlimited",
-     *          "wso2-appliocation-security": {
+     *          "wso2-application-security": {
      *              "security-types": {"oauth2"},
      *              "optional": "false"
      *           },
