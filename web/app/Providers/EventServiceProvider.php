@@ -21,7 +21,7 @@ class EventServiceProvider extends ServiceProvider
         'AdminManagerEvent' => [
             AdminManagerEventListener::class,
         ],
-        'WaitingList' => [
+        'Public' => [
             WaitingListMSListener::class,
         ],
     ];

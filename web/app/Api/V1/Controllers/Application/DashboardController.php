@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Api\V1\Controllers\User;
+namespace App\Api\V1\Controllers\Application;
 
 use App\Api\V1\Controllers\Controller;
 use App\Models\Subscriber;
@@ -279,6 +279,34 @@ class DashboardController extends Controller
             ], 200);
         } catch (Throwable $e) {
             return response()->jsonApi([
+                'type' => 'danger',
+                'title' => "Get subscriber dashboard failed",
+                'message' => $e->getMessage(),
+                'data' => null,
+            ], 404);
+        }
+    }
+
+    public function dashboard(Request $request)
+    {
+        $id = Auth::user()->getAuthIdentifier();
+        try {
+            return response()->json([
+                'type' => 'success',
+                'title' => "Get subscriber dashboard succeeded",
+                'data' => [
+                    'leaderboard_balance',
+                    'overview_balance',
+                    'total_invited_users',
+                    'platform_earnings' => [
+                        'platform' => 'sumra chat',
+                        'invited_users' => '50.50',
+                        'earnings' => '50.50',
+                    ],
+                ],
+            ]);
+        } catch (Throwable $e) {
+            return response()->json([
                 'type' => 'danger',
                 'title' => "Get subscriber dashboard failed",
                 'message' => $e->getMessage(),
