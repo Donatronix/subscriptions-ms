@@ -1,24 +1,22 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Api\V1\Controllers\Public;
 
 use App\Http\Controllers\Controller;
 use App\Jobs\PingJob;
-use App\Models\Admin;
 use App\Models\SubMgsId;
 use App\Models\WaitingListMS;
 use App\Services\PubSubService;
+use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Env;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use Sumra\SDK\Facades\PubSub;
 use Throwable;
 
 class WaitingListMSController extends Controller
 {
-    
+
     /**
      *  Add new message
      *
@@ -283,16 +281,16 @@ class WaitingListMSController extends Controller
 
                 $wait_message->update($validated);
             });
-            if($data['type'] == 'success'){
-            return response()->jsonApi([
-                'type' => 'success',
-                'title' => 'Update was a success',
-                'message' => 'Message was updated successfully',
-                'data' => $data['data'],
-            ], 200);
-        }else{
-            return response()->jsonApi($data, 404);
-        }
+            if ($data['type'] == 'success') {
+                return response()->jsonApi([
+                    'type' => 'success',
+                    'title' => 'Update was a success',
+                    'message' => 'Message was updated successfully',
+                    'data' => $data['data'],
+                ], 200);
+            } else {
+                return response()->jsonApi($data, 404);
+            }
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([
                 'type' => 'danger',
@@ -310,7 +308,7 @@ class WaitingListMSController extends Controller
         }
     }
 
-  /**
+    /**
      *  Send message to subscribers
      *
      * @OA\POST(
@@ -334,7 +332,7 @@ class WaitingListMSController extends Controller
      *              "optional": "false"
      *           },
      *     },
-     * 
+     *
      *   @OA\Parameter(
      *         name="title",
      *         in="query",
@@ -371,7 +369,7 @@ class WaitingListMSController extends Controller
      *         )
      *     ),
      *
-      *     @OA\Response(
+     *     @OA\Response(
      *         response="200",
      *         description="Output data",
      *
@@ -444,11 +442,11 @@ class WaitingListMSController extends Controller
     {
         $validation = Validator::make($request->all(), [
             'message_id' => 'string|required',
-            'subscriber_ids'   => 'required|array',
+            'subscriber_ids' => 'required|array',
         ]);
 
         $message = WaitingListMS::find($request->message_id);
-        // 
+        //
         if ($validation->fails()) {
             SubMgsId::create([
                 'status' => 'failed',
@@ -463,28 +461,28 @@ class WaitingListMSController extends Controller
                 'data' => null,
             ], 404);
         }
-        
+
         try {
             $waitListMs = SubMgsId::create([
-            'message_id' => $message->id,
-            'subscriber_ids' => $request->subscriber_id,
-            'status' => 'delivered',
+                'message_id' => $message->id,
+                'subscriber_ids' => $request->subscriber_id,
+                'status' => 'delivered',
             ]);
-            
+
             $data = [
                 "subscriber_ids" => json_encode($request->subscriber_ids),
                 "message" => $message->message,
                 "title" => $request->title,
             ];
             // dd($data);
-            dispatch(new PubSubService($data)); 
+            dispatch(new PubSubService($data));
             return response()->jsonApi([
                 'type' => 'success',
                 'title' => 'Message prodcast',
                 'message' => 'Message was sent successfully',
                 // 'data' => $waitListMs,
             ], 200);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->jsonApi([
                 'type' => 'danger',
                 'title' => "Not operation",
