@@ -18,7 +18,7 @@ use Throwable;
 
 class WaitingListMSController extends Controller
 {
-    
+
     /**
      *  Add new message
      *
@@ -84,7 +84,7 @@ class WaitingListMSController extends Controller
      *          description="Unauthorized"
      *     ),
      *     @OA\Response(
-     *         response=400,
+     *         response="400",
      *         description="Invalid request"
      *     ),
      *
@@ -232,7 +232,7 @@ class WaitingListMSController extends Controller
      *          description="Unauthorized"
      *     ),
      *     @OA\Response(
-     *         response=400,
+     *         response="400",
      *         description="Invalid request"
      *     ),
      *
@@ -327,14 +327,14 @@ class WaitingListMSController extends Controller
      *     }},
      *
      *     x={
-     *          "auth-type": "Applecation & Application Use",
+     *          "auth-type": "Application & Application User",
      *          "throttling-tier": "Unlimited",
      *          "wso2-appliocation-security": {
      *              "security-types": {"oauth2"},
      *              "optional": "false"
      *           },
      *     },
-     * 
+     *
      *   @OA\Parameter(
      *         name="title",
      *         in="query",
@@ -413,7 +413,7 @@ class WaitingListMSController extends Controller
      *          description="Unauthorized"
      *     ),
      *     @OA\Response(
-     *         response=400,
+     *         response="400",
      *         description="Invalid request"
      *     ),
      *
@@ -448,7 +448,7 @@ class WaitingListMSController extends Controller
         ]);
 
         $message = WaitingListMS::find($request->message_id);
-        // 
+        //
         if ($validation->fails()) {
             SubMgsId::create([
                 'status' => 'failed',
@@ -463,21 +463,21 @@ class WaitingListMSController extends Controller
                 'data' => null,
             ], 404);
         }
-        
+
         try {
             $waitListMs = SubMgsId::create([
             'message_id' => $message->id,
             'subscriber_ids' => $request->subscriber_id,
             'status' => 'delivered',
             ]);
-            
+
             $data = [
                 "subscriber_ids" => json_encode($request->subscriber_ids),
                 "message" => $message->message,
                 "title" => $request->title,
             ];
             // dd($data);
-            dispatch(new PubSubService($data)); 
+            dispatch(new PubSubService($data));
             return response()->jsonApi([
                 'type' => 'success',
                 'title' => 'Message prodcast',
@@ -552,7 +552,7 @@ class WaitingListMSController extends Controller
      *          description="Unauthorized"
      *     ),
      *     @OA\Response(
-     *         response=400,
+     *         response="400",
      *         description="Invalid request"
      *     ),
      *
