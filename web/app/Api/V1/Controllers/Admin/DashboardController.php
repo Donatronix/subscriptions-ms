@@ -293,7 +293,7 @@ class DashboardController extends Controller
 
 
     /**
-     *  Get Balance summary for user for user
+     *  Get Balance summary for user
      *
      * @OA\Get(
      *     path="/invited-users/{id}",
