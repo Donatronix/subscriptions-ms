@@ -310,7 +310,7 @@ class WaitingListMSController extends Controller
         }
     }
 
-  /**
+    /**
      *  Send message to subscribers
      *
      * @OA\POST(

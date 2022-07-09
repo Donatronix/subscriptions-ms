@@ -21,7 +21,7 @@ $router->group([
      */
     $router->group([
         'prefix' => 'user',
-        'namespace' => 'User',
+        'namespace' => 'Application',
         'middleware' => [
             'checkUser',
         ],
@@ -70,7 +70,7 @@ $router->group([
         /**
          * Waiting List Messages
          */
-        $router->get('waiting-list-messages', 'WaitingListMSController@index');
-        $router->post('waiting-list-messages', 'WaitingListMSController@store');
+        $router->get('waiting-list-messages', 'WaitingListMsController@index');
+        $router->post('waiting-list-messages', 'WaitingListMsController@store');
     });
 });
