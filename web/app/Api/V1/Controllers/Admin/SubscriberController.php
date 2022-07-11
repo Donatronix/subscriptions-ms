@@ -420,7 +420,7 @@ class SubscriberController extends Controller
             if ($subscriber) {
                 $response = Http::retry(3, 100, function ($exception, $request) {
                     return $exception instanceof ConnectionException;
-                })->get(env('APP_URL') . "/" . env('APP_API_VERSION') . 'subscriptions/webhooks/identities');
+                })->get(env('APP_URL') . "/" . env('APP_API_VERSION') . '/subscriptions/webhooks/identities');
 
                 $subscriber = $subscriber->toArray();
 
