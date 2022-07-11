@@ -1,110 +1,31 @@
 <?php
 
-namespace App\Api\V1\Controllers\Admin;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\PingJob;
+use App\Models\Admin;
 use App\Models\SubMgsId;
-use App\Models\Subscriber;
 use App\Models\WaitingListMS;
-use App\Listeners\WaitingListMSListener;
+use App\Services\PubSubService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Env;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Sumra\SDK\Facades\PubSub;
 use Throwable;
 
-class WaitingListMsController extends Controller
+class WaitingListMSController extends Controller
 {
-    /**
-     *  Display a listing of messages
-     *
-     * @OA\Get(
-     *     path="/admin/messages",
-     *     description="All messages",
-     *     tags={"Admin | Waitlist Messages"},
-     *
-     *     security={{
-     *          "default" :{
-     *              "ManagerRead",
-     *              "Admin",
-     *              "ManagerWrite"
-     *          },
-     *     }},
-     *
-     *     x={
-     *          "auth-type": "Applecation & Application Use",
-     *          "throttling-tier": "Unlimited",
-     *          "wso2-appliocation-security": {
-     *              "security-types": {"oauth2"},
-     *              "optional": "false"
-     *           },
-     *     },
-     *
-     *
-     *     @OA\Response(
-     *         response="200",
-     *         description="Output data",
-     *
-     *         @OA\JsonContent(
-     *             @OA\Property(
-     *                 property="data",
-     *                 type="object",
-     *                 description="Messages parameter list",
-     *                 @OA\Property(
-     *                     property="message",
-     *                     type="string",
-     *                     description="Messages",
-     *                     example="All new messages",
-     *                 ),
-     *             ),
-     *         ),
-     *     ),
-     *
-     *     @OA\Response(
-     *          response="401",
-     *          description="Unauthorized"
-     *     ),
-     *     @OA\Response(
-     *         response=400,
-     *         description="Invalid request"
-     *     ),
-     *
-     *     @OA\Response(
-     *          response="404",
-     *          description="Not found",
-     *          @OA\JsonContent(
-     *              type="object",
-     *              @OA\Property(
-     *                  property="messages",
-     *                  type="string",
-     *                  description="No data to display"
-     *              ),
-     *          ),
-     *     ),
-     *
-     *     @OA\Response(
-     *         response="500",
-     *         description="Unknown error"
-     *     ),
-     * )
-     *
-     * @param Request $request
-     *
-     * @return mixed
-     */
-    public function index()
-    {
-        $waitingListMs = WaitingListMS::with('submgId.subscribe')->all();
-        return response()->json($waitingListMs);
-    }
 
-     /**
+    /**
      *  Add new message
      *
      * @OA\Post(
      *     path="/waitlist/messages",
      *     description="Add new message",
-     *     tags={"Admin | Waitlist Messages"},
+     *     tags={"Waitlist Messages"},
      *
      *     security={{
      *          "default" :{
@@ -113,15 +34,6 @@ class WaitingListMsController extends Controller
      *              "ManagerWrite"
      *          },
      *     }},
-     *
-     *     x={
-     *          "auth-type": "Application & Application Use",
-     *          "throttling-tier": "Unlimited",
-     *          "wso2-appliocation-security": {
-     *              "security-types": {"oauth2"},
-     *              "optional": "false"
-     *           },
-     *     },
      *
      *     @OA\Parameter(
      *         name="wait_message",
@@ -163,7 +75,7 @@ class WaitingListMsController extends Controller
      *          description="Unauthorized"
      *     ),
      *     @OA\Response(
-     *         response=400,
+     *         response="400",
      *         description="Invalid request"
      *     ),
      *
@@ -192,48 +104,58 @@ class WaitingListMsController extends Controller
      */
     public function store(Request $request): mixed
     {
-        $validator = Validator::make($request->all(), [
-            'platform' => 'required',
-            'id' => 'required',
-            'message' => 'required',
-        ]);
-        $validated = $validator->validated();
-        $message = WaitingListMS::create($validated);
+        try {
+            $wait_message = null;
+            DB::transaction(function () use ($request, &$wait_message) {
+                $validator = Validator::make($request->all(), [
+                    'wait_message' => 'required|string|max:1000'
+                ]);
 
-        $message_id = $message->id;
-
-        if (is_array($request->platform) && count($request->platform) > 1) {
-
-            foreach ($request->platform as $platform) {
-                $subscribers = Subscriber::where('platform', $platform)->get(['username', 'id']);
-                foreach ($subscribers as $sub) {
-                    $data = [
-                        'title' => $request->title,
-                        "platform" => $platform,
-                        "subscriber_id" => $sub->id,
-                        "subscriber" => $sub->username,
-                        "waiting_list_ms_id" => $message_id,
-                        "product_url" => $request->url
-                    ];
-                    dispatch(new WaitingListMSListener($data));
+                if ($validator->fails()) {
+                    return response()->jsonApi([
+                        'type' => 'danger',
+                        'title' => "Invalid data",
+                        'message' => $validator->errors(),
+                        'data' => null,
+                    ], 404);
                 }
-            }
-        } else {
-            $subscribers = Subscriber::where('platform', $request->platform)->get(['username', 'id']);
-            foreach ($subscribers as $sub) {
-                $data = [
-                    'title' => $request->title,
-                    "platform" => $request->platform,
-                    "subscriber_id" => $sub->id,
-                    "subscriber" => $sub->username,
-                    "waiting_list_ms_id" => $message_id,
-                    "product_url" => $request->url
-                ];
-                dispatch(new WaitingListMSListener($data));
-            }
+
+                // Retrieve the validated input...
+                $validated = $validator->validated();
+
+                if ($wait_message = WaitingListMS::where('message', $validated['wait_message'])->first()) {
+                    return response()->jsonApi([
+                        'type' => 'danger',
+                        'title' => "Adding new message failed",
+                        'message' => "This same message content already exists",
+                        'data' => null,
+                    ], 404);
+                }
+
+                $wait_message = WaitingListMS::create($validated);
+            });
+
+            return response()->jsonApi([
+                'type' => 'success',
+                'title' => 'Operation was a success',
+                'message' => 'Message was added successfully',
+                'data' => $wait_message,
+            ], 200);
+        } catch (ModelNotFoundException $e) {
+            return response()->jsonApi([
+                'type' => 'danger',
+                'title' => "Not operation",
+                'message' => "Message was not added. Please try again.",
+                'data' => null,
+            ], 404);
+        } catch (Throwable $e) {
+            return response()->jsonApi([
+                'type' => 'danger',
+                'title' => "Operation failed",
+                'message' => $e->getMessage(),
+                'data' => null,
+            ], 404);
         }
-
-
     }
 
     /**
@@ -242,7 +164,7 @@ class WaitingListMsController extends Controller
      * @OA\Put(
      *     path="/waitlist/messages/{id}",
      *     description="Update message",
-     *     tags={"Admin | Waitlist Messages"},
+     *     tags={"Waitlist Messages"},
      *
      *     security={{
      *          "default" :{
@@ -251,15 +173,6 @@ class WaitingListMsController extends Controller
      *              "ManagerWrite"
      *          },
      *     }},
-     *
-     *     x={
-     *          "auth-type": "Application & Application Use",
-     *          "throttling-tier": "Unlimited",
-     *          "wso2-appliocation-security": {
-     *              "security-types": {"oauth2"},
-     *              "optional": "false"
-     *           },
-     *     },
      *
      *     @OA\Parameter(
      *         name="id",
@@ -279,7 +192,7 @@ class WaitingListMsController extends Controller
      *             @OA\Property(
      *                 property="data",
      *                 type="object",
-     *                 description="Admin | Waitlist Messages list",
+     *                 description="Waitlist Messages list",
      *                 @OA\Property(
      *                     property="id",
      *                     type="string",
@@ -301,7 +214,7 @@ class WaitingListMsController extends Controller
      *          description="Unauthorized"
      *     ),
      *     @OA\Response(
-     *         response=400,
+     *         response="400",
      *         description="Invalid request"
      *     ),
      *
@@ -353,15 +266,15 @@ class WaitingListMsController extends Controller
                 $wait_message->update($validated);
             });
             if($data['type'] == 'success'){
-                return response()->jsonApi([
-                    'type' => 'success',
-                    'title' => 'Update was a success',
-                    'message' => 'Message was updated successfully',
-                    'data' => $data['data'],
-                ], 200);
-            }else{
-                return response()->jsonApi($data, 404);
-            }
+            return response()->jsonApi([
+                'type' => 'success',
+                'title' => 'Update was a success',
+                'message' => 'Message was updated successfully',
+                'data' => $data['data'],
+            ], 200);
+        }else{
+            return response()->jsonApi($data, 404);
+        }
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([
                 'type' => 'danger',
@@ -379,32 +292,23 @@ class WaitingListMsController extends Controller
         }
     }
 
-    /**
+  /**
      *  Send message to subscribers
      *
      * @OA\POST(
      *     path="/publish/wait-messages",
      *     description="Send a new message",
-     *     tags={"Admin | Waitlist Messages"},
+     *     tags={"Waitlist Messages"},
      *
      *     security={{
-     *          "default" :{
-     *              "ManagerRead",
-     *              "Subscriber",
-     *              "ManagerWrite"
-     *          },
+     *         "default" :{
+     *             "ManagerRead",
+     *             "Subscriber",
+     *             "ManagerWrite"
+     *         }
      *     }},
      *
-     *     x={
-     *          "auth-type": "Applecation & Application Use",
-     *          "throttling-tier": "Unlimited",
-     *          "wso2-appliocation-security": {
-     *              "security-types": {"oauth2"},
-     *              "optional": "false"
-     *           },
-     *     },
-     *
-     *   @OA\Parameter(
+     *     @OA\Parameter(
      *         name="title",
      *         in="query",
      *         description="Message title",
@@ -472,9 +376,9 @@ class WaitingListMsController extends Controller
      *                     type="string",
      *                     description="Selected Subscriber Ids ",
      *                     example="subscriber 1, subscriber 2, subscriber 3",
-     *                 ),
-     *             ),
-     *         ),
+     *                 )
+     *             )
+     *         )
      *     ),
      *
      *     @OA\Response(
@@ -482,27 +386,27 @@ class WaitingListMsController extends Controller
      *          description="Unauthorized"
      *     ),
      *     @OA\Response(
-     *         response=400,
+     *         response="400",
      *         description="Invalid request"
      *     ),
      *
      *     @OA\Response(
-     *          response="404",
-     *          description="Not found",
-     *          @OA\JsonContent(
-     *              type="object",
-     *              @OA\Property(
-     *                  property="wait_message",
-     *                  type="string",
-     *                  description="message not found"
-     *              ),
-     *          ),
+     *         response="404",
+     *         description="Not found",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="wait_message",
+     *                 type="string",
+     *                 description="message not found"
+     *             )
+     *         )
      *     ),
      *
      *     @OA\Response(
      *         response="500",
      *         description="Unknown error"
-     *     ),
+     *     )
      * )
      *
      * @param Request $request
@@ -534,21 +438,21 @@ class WaitingListMsController extends Controller
         }
 
         try {
+            $corr_id = uniqid();
             $waitListMs = SubMgsId::create([
-                'message_id' => $message->id,
-                'subscriber_ids' => $request->subscriber_id,
-                'status' => 'delivered',
+            'message_id' => $corr_id,
+            'subscriber_ids' => $request->subscriber_id,
+            'status' => 'delivered',
             ]);
 
             $data = [
                 "subscriber_ids" => json_encode($request->subscriber_ids),
                 "message" => $message->message,
-                "message_id" => $message->id,
+                'message_id' => $corr_id,
                 "title" => $request->title,
-                "product_url" => $request->url,
             ];
             // dd($data);
-            dispatch(new WaitingListMSListener($data));
+            dispatch(new PubSubService($data));
             return response()->jsonApi([
                 'type' => 'success',
                 'title' => 'Message prodcast',
@@ -569,26 +473,17 @@ class WaitingListMsController extends Controller
      *  Delete a message
      *
      * @OA\Delete(
-     *     path="/delete/messages/{id}",
-     *     description="Delete a Admin | waitlist messages",
-     *     tags={"Admin | Waitlist Messages"},
+     *     path="/waitlist/messages/{id}",
+     *     description="Delete a waitlist messages",
+     *     tags={"Waitlist Messages"},
      *
      *     security={{
      *          "default" :{
      *              "ManagerRead",
      *              "Admin",
      *              "ManagerWrite"
-     *          },
+     *          }
      *     }},
-     *
-     *     x={
-     *          "auth-type": "Application & Application Use",
-     *          "throttling-tier": "Unlimited",
-     *          "wso2-appliocation-security": {
-     *              "security-types": {"oauth2"},
-     *              "optional": "false"
-     *           },
-     *     },
      *
      *     @OA\Parameter(
      *         name="id",
@@ -613,9 +508,9 @@ class WaitingListMsController extends Controller
      *                     type="string",
      *                     description="Message lists",
      *                     example="This is just a message to subscribers on waiting list",
-     *                 ),
-     *             ),
-     *         ),
+     *                 )
+     *             )
+     *         )
      *     ),
      *
      *     @OA\Response(
@@ -623,7 +518,7 @@ class WaitingListMsController extends Controller
      *          description="Unauthorized"
      *     ),
      *     @OA\Response(
-     *         response=400,
+     *         response="400",
      *         description="Invalid request"
      *     ),
      *

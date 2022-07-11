@@ -51,7 +51,7 @@ class WaitingListMSListener
             ], "waitingLinst");
             return true;
         }
-        
+
         $inputData = (object)$request->all();
         // Write log
         try {
@@ -65,7 +65,7 @@ class WaitingListMSListener
                     'subsriber_id' => $inputData->subscriber_ids,
                     'status' => "Failed",
                 ]);
-    
+
                 Log::info("WiatiList Message Failed");
                 exit;
             } else {
@@ -75,6 +75,8 @@ class WaitingListMSListener
                     'type' => 'success',
                     'title' => $inputData->title,
                     'data' => [
+//                        "subscriber_id" => $inputData->subsriber_id,
+//                        "waiting_list_ms_id" => $inputData->message_id,
                         "subscriber_ids" => $inputData->subscriber_ids,
                         "product_url" => $inputData->url,
                         "message" => $inputData->message,

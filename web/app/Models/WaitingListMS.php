@@ -13,7 +13,7 @@ class WaitingListMS extends Model
     use HasFactory;
     use SoftDeletes;
     use UuidTrait;
-    
+
     protected $table = 'waiting_list_ms';
 
     protected $fillable = [
@@ -26,6 +26,4 @@ class WaitingListMS extends Model
     public function submgId(){
         $this->hasMany('App\Models\SubMgsId', 'waiting_list_ms_id');
     }
-
-    
 }

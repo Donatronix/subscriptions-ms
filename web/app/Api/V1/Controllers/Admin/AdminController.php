@@ -3,7 +3,6 @@
 namespace App\Api\V1\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Jobs\PingJob;
 use App\Models\Admin;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;

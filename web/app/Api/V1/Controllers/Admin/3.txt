@@ -193,7 +193,6 @@ class WaitingListMsController extends Controller
     public function store(Request $request): mixed
     {
         $validator = Validator::make($request->all(), [
-            'platform' => 'required',
             'id' => 'required',
             'message' => 'required',
         ]);
@@ -232,8 +231,8 @@ class WaitingListMsController extends Controller
                 dispatch(new WaitingListMSListener($data));
             }
         }
-
-
+        
+    
     }
 
     /**
@@ -517,7 +516,7 @@ class WaitingListMsController extends Controller
         ]);
 
         $message = WaitingListMS::find($request->message_id);
-        //
+        // 
         if ($validation->fails()) {
             SubMgsId::create([
                 'status' => 'failed',

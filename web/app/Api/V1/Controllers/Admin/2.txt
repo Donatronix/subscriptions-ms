@@ -3,15 +3,15 @@
 namespace App\Api\V1\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\SubMgsId;
-use App\Models\Subscriber;
 use App\Models\WaitingListMS;
 use App\Listeners\WaitingListMSListener;
+use App\Models\SubMgsId;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Throwable;
+
 
 class WaitingListMsController extends Controller
 {
@@ -94,8 +94,14 @@ class WaitingListMsController extends Controller
      */
     public function index()
     {
-        $waitingListMs = WaitingListMS::with('submgId.subscribe')->all();
-        return response()->json($waitingListMs);
+        $waitingListMs = WaitingListMS::all();
+        return response()->jsonApi(
+            array_merge([
+                'type' => 'success',
+                'title' => 'Operation was success',
+                'message' => 'The data was displayed successfully',
+            ], ['data' => $waitingListMs->toArray() ?? []]),
+            200);
     }
 
      /**
@@ -192,48 +198,58 @@ class WaitingListMsController extends Controller
      */
     public function store(Request $request): mixed
     {
-        $validator = Validator::make($request->all(), [
-            'platform' => 'required',
-            'id' => 'required',
-            'message' => 'required',
-        ]);
-        $validated = $validator->validated();
-        $message = WaitingListMS::create($validated);
+        try {
+            $wait_message = null;
+            DB::transaction(function () use ($request, &$wait_message) {
+                $validator = Validator::make($request->all(), [
+                    'wait_message' => 'required|string|max:1000'
+                ]);
 
-        $message_id = $message->id;
-
-        if (is_array($request->platform) && count($request->platform) > 1) {
-
-            foreach ($request->platform as $platform) {
-                $subscribers = Subscriber::where('platform', $platform)->get(['username', 'id']);
-                foreach ($subscribers as $sub) {
-                    $data = [
-                        'title' => $request->title,
-                        "platform" => $platform,
-                        "subscriber_id" => $sub->id,
-                        "subscriber" => $sub->username,
-                        "waiting_list_ms_id" => $message_id,
-                        "product_url" => $request->url
-                    ];
-                    dispatch(new WaitingListMSListener($data));
+                if ($validator->fails()) {
+                    return response()->jsonApi([
+                        'type' => 'danger',
+                        'title' => "Invalid data",
+                        'message' => $validator->errors(),
+                        'data' => null,
+                    ], 404);
                 }
-            }
-        } else {
-            $subscribers = Subscriber::where('platform', $request->platform)->get(['username', 'id']);
-            foreach ($subscribers as $sub) {
-                $data = [
-                    'title' => $request->title,
-                    "platform" => $request->platform,
-                    "subscriber_id" => $sub->id,
-                    "subscriber" => $sub->username,
-                    "waiting_list_ms_id" => $message_id,
-                    "product_url" => $request->url
-                ];
-                dispatch(new WaitingListMSListener($data));
-            }
+
+                // Retrieve the validated input...
+                $validated = $validator->validated();
+
+                if ($wait_message = WaitingListMS::where('message', $validated['wait_message'])->first()) {
+                    return response()->jsonApi([
+                        'type' => 'danger',
+                        'title' => "Adding new message failed",
+                        'message' => "This same message content already exists",
+                        'data' => null,
+                    ], 404);
+                }
+
+                $wait_message = WaitingListMS::create($validated);
+            });
+
+            return response()->jsonApi([
+                'type' => 'success',
+                'title' => 'Operation was a success',
+                'message' => 'Message was added successfully',
+                'data' => $wait_message,
+            ], 200);
+        } catch (ModelNotFoundException $e) {
+            return response()->jsonApi([
+                'type' => 'danger',
+                'title' => "Not operation",
+                'message' => "Message was not added. Please try again.",
+                'data' => null,
+            ], 404);
+        } catch (Throwable $e) {
+            return response()->jsonApi([
+                'type' => 'danger',
+                'title' => "Operation failed",
+                'message' => $e->getMessage(),
+                'data' => null,
+            ], 404);
         }
-
-
     }
 
     /**
@@ -353,15 +369,15 @@ class WaitingListMsController extends Controller
                 $wait_message->update($validated);
             });
             if($data['type'] == 'success'){
-                return response()->jsonApi([
-                    'type' => 'success',
-                    'title' => 'Update was a success',
-                    'message' => 'Message was updated successfully',
-                    'data' => $data['data'],
-                ], 200);
-            }else{
-                return response()->jsonApi($data, 404);
-            }
+            return response()->jsonApi([
+                'type' => 'success',
+                'title' => 'Update was a success',
+                'message' => 'Message was updated successfully',
+                'data' => $data['data'],
+            ], 200);
+        }else{
+            return response()->jsonApi($data, 404);
+        }
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([
                 'type' => 'danger',
@@ -379,7 +395,7 @@ class WaitingListMsController extends Controller
         }
     }
 
-    /**
+  /**
      *  Send message to subscribers
      *
      * @OA\POST(
@@ -403,7 +419,7 @@ class WaitingListMsController extends Controller
      *              "optional": "false"
      *           },
      *     },
-     *
+     * 
      *   @OA\Parameter(
      *         name="title",
      *         in="query",
@@ -440,7 +456,7 @@ class WaitingListMsController extends Controller
      *         )
      *     ),
      *
-     *     @OA\Response(
+      *     @OA\Response(
      *         response="200",
      *         description="Output data",
      *
@@ -517,7 +533,7 @@ class WaitingListMsController extends Controller
         ]);
 
         $message = WaitingListMS::find($request->message_id);
-        //
+        // 
         if ($validation->fails()) {
             SubMgsId::create([
                 'status' => 'failed',
@@ -532,14 +548,14 @@ class WaitingListMsController extends Controller
                 'data' => null,
             ], 404);
         }
-
+        
         try {
             $waitListMs = SubMgsId::create([
-                'message_id' => $message->id,
-                'subscriber_ids' => $request->subscriber_id,
-                'status' => 'delivered',
+            'message_id' => $message->id,
+            'subscriber_ids' => $request->subscriber_id,
+            'status' => 'delivered',
             ]);
-
+            
             $data = [
                 "subscriber_ids" => json_encode($request->subscriber_ids),
                 "message" => $message->message,
@@ -548,7 +564,7 @@ class WaitingListMsController extends Controller
                 "product_url" => $request->url,
             ];
             // dd($data);
-            dispatch(new WaitingListMSListener($data));
+            dispatch(new WaitingListMSListener($data)); 
             return response()->jsonApi([
                 'type' => 'success',
                 'title' => 'Message prodcast',
