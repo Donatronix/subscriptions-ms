@@ -30,6 +30,7 @@ $router->group([
          * Dashboard
          */
         $router->get('/dashboard', 'DashboardController@index');
+        $router->get('/dashboard/balance-summary', 'DashboardController@getEarningsOverview');
     });
 
     /**

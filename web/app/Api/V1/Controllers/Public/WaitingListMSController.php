@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Api\V1\Controllers\Public;
 
 use App\Jobs\PingJob;
 use App\Models\SubMgsId;
 use App\Models\WaitingListMS;
 use App\Services\PubSubService;
+use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -451,7 +452,7 @@ class WaitingListMSController extends Controller
                 'message' => 'Message was sent successfully',
                 // 'data' => $waitListMs,
             ], 200);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->jsonApi([
                 'type' => 'danger',
                 'title' => "Not operation",

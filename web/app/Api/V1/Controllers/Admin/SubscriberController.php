@@ -5,8 +5,10 @@ namespace App\Api\V1\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Subscriber;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 use Throwable;
 
@@ -397,6 +399,19 @@ class SubscriberController extends Controller
         try {
             $subscriber = Subscriber::find($id);
 
+            if ($subscriber) {
+                $response = Http::retry(3, 100, function ($exception, $request) {
+                    return $exception instanceof ConnectionException;
+                })->get(env('APP_URL') . "/" . env('APP_API_VERSION') . '/subscriptions/webhooks/identities');
+
+                $subscriber = $subscriber->toArray();
+
+                if (!$response instanceof ConnectionException) {
+                    $subscriber = array_merge($subscriber->toArray(), $response->json('data'));
+                }
+            }
+
+
             return response()->jsonApi(
                 [
                     'type' => 'success',
@@ -410,23 +425,11 @@ class SubscriberController extends Controller
                         'new_subscribers_count_platforms_month' => Subscriber::countNewSubscribersByPlatform('month')->get()->toArray(),
                         //                        'total_earning' => 46.050,
                     ],
-                    'data' => $subscriber?->toArray(),
+                    'data' => $subscriber,
                 ],
                 200
             );
-            return response()->jsonApi([
-                'type' => 'success',
-                'title' => 'Operation was success',
-                'message' => 'Subscriber was displayed successfully',
-                'general' => [
-                    'total_subscribers' => Subscriber::count(),
-                    'new_subscribers_count_week' => Subscriber::countNewSubscriberByTime('week')->get()->count(),
-                    'new_subscribers_count_month' => Subscriber::countNewSubscriberByTime('month')->get()->count(),
-                    'new_subscribers_count_platforms_week' => Subscriber::countNewSubscribersByPlatform('week')->get()->toArray(),
-                    'new_subscribers_count_platforms_month' => Subscriber::countNewSubscribersByPlatform('month')->get()->toArray(),
-                ],
-                'data' => $subscriber,
-            ], 200);
+
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([
                 'type' => 'danger',

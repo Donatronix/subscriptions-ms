@@ -6,8 +6,11 @@ use App\Api\V1\Controllers\Controller;
 use App\Models\Subscriber;
 use App\Traits\SubscribersAnalysisTrait;
 use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Sumra\SDK\Enums\MicroservicesEnums;
 use Throwable;
 
 class DashboardController extends Controller
@@ -250,7 +253,7 @@ class DashboardController extends Controller
             $response = Http::retry(3, 100, function ($exception, $request) {
                 return $exception instanceof ConnectionException;
             })->withHeaders([
-                'app-id' => config('settings.api.app_id'),
+                'app-id' => MicroservicesEnums::REFERRALS_MS,
             ])->get(config('settings.api.referrals_ms') . '/total-earnings');
 
             $totalEarnings = null;
@@ -271,6 +274,123 @@ class DashboardController extends Controller
             ], 200);
         } catch (Throwable $e) {
             return response()->jsonApi([
+                'type' => 'danger',
+                'title' => "Get subscriber dashboard failed",
+                'message' => $e->getMessage(),
+                'data' => null,
+            ], 404);
+        }
+    }
+
+
+    /**
+     *  Get Balance summary for user
+     *
+     * @OA\Get(
+     *     path="/invited-users/{id}",
+     *     description="A list of leaders in the invitation referrals",
+     *     tags={"Balance Summary"},
+     *
+     *     security={{
+     *         "default" :{
+     *             "ManagerRead",
+     *             "User",
+     *             "ManagerWrite"
+     *         }
+     *     }},
+     *
+     *     x={
+     *         "auth-type": "Application & Application User",
+     *         "throttling-tier": "Unlimited",
+     *         "wso2-application-security": {
+     *             "security-types": {"oauth2"},
+     *             "optional": "false"
+     *         }
+     *     },
+     *
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="User id",
+     *         @OA\Schema(
+     *             type="string"
+     *         ),
+     *     ),
+     *
+     *     @OA\Response(
+     *         response="200",
+     *         description="invited referrals",
+     *
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="object",
+     *                 @OA\Property(
+     *                      property="overview_earnings",
+     *                      type="string",
+     *                      description="total earnings per platform and number of users",
+     *                      example=450000,
+     *                 ),
+     *                  @OA\Property(
+     *                      property="subTotalPlatformInvitedUsers",
+     *                      type="integer",
+     *                      description="Subtotal of number of platform users",
+     *                      example="300",
+     *                 ),
+     *                 @OA\Property(
+     *                      property="subTotalEarnings",
+     *                      type="string",
+     *                      description="Total earnings on all platforms",
+     *                      example="WhatsApp",
+     *                 ),
+     *             ),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *          response="401",
+     *          description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid request"
+     *     ),
+     *     @OA\Response(
+     *          response="404",
+     *          description="User not found",
+     *     ),
+     *     @OA\Response(
+     *         response="500",
+     *         description="Unknown error"
+     *     ),
+     * )
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getEarningsOverview(Request $request)
+    {
+        try {
+            $id = Auth::user()->getAuthIdentifier() ?? '96a64f64-3a29-43df-87b8-1357fd0a9256';
+
+            $response = Http::retry(3, 100, function ($exception, $request) {
+                return $exception instanceof ConnectionException;
+            })->withHeaders([
+                'app-id' => MicroservicesEnums::REFERRALS_MS,
+                'user-id' => $id,
+            ])->get(config('settings.api.referrals_ms') . '/v1/leaderboard/overview-earnings/' . $id);
+
+            $balance_summary = null;
+            if (!$response instanceof ConnectionException) {
+                $balance_summary = $response->json('data');
+            }
+
+            return response()->json([
+                'type' => 'success',
+                'title' => "Get subscriber dashboard succeeded",
+                'data' => $balance_summary,
+            ]);
+        } catch (Throwable $e) {
+            return response()->json([
                 'type' => 'danger',
                 'title' => "Get subscriber dashboard failed",
                 'message' => $e->getMessage(),
