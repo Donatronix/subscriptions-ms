@@ -21,7 +21,7 @@ $router->group([
      */
     $router->group([
         'prefix' => 'user',
-        'namespace' => 'User',
+        'namespace' => 'Application',
         'middleware' => [
             'checkUser',
         ],
