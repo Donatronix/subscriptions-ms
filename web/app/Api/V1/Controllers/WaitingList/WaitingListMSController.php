@@ -2,18 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Jobs\PingJob;
-use App\Models\Admin;
 use App\Models\SubMgsId;
 use App\Models\WaitingListMS;
 use App\Services\PubSubService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Env;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use Sumra\SDK\Facades\PubSub;
 use Throwable;
 
 class WaitingListMSController extends Controller
@@ -35,15 +31,6 @@ class WaitingListMSController extends Controller
      *          },
      *     }},
      *
-     *     x={
-     *          "auth-type": "Application & Application Use",
-     *          "throttling-tier": "Unlimited",
-     *          "wso2-appliocation-security": {
-     *              "security-types": {"oauth2"},
-     *              "optional": "false"
-     *           },
-     *     },
-     *
      *     @OA\Parameter(
      *         name="wait_message",
      *         in="query",
@@ -52,7 +39,6 @@ class WaitingListMSController extends Controller
      *             type="string"
      *         )
      *     ),
-     *
      *
      *     @OA\Response(
      *         response="200",
@@ -183,15 +169,6 @@ class WaitingListMSController extends Controller
      *          },
      *     }},
      *
-     *     x={
-     *          "auth-type": "Application & Application Use",
-     *          "throttling-tier": "Unlimited",
-     *          "wso2-appliocation-security": {
-     *              "security-types": {"oauth2"},
-     *              "optional": "false"
-     *           },
-     *     },
-     *
      *     @OA\Parameter(
      *         name="id",
      *         in="query",
@@ -200,7 +177,6 @@ class WaitingListMSController extends Controller
      *             type="string"
      *         )
      *     ),
-     *
      *
      *     @OA\Response(
      *         response="200",
@@ -283,16 +259,16 @@ class WaitingListMSController extends Controller
 
                 $wait_message->update($validated);
             });
-            if($data['type'] == 'success'){
-            return response()->jsonApi([
-                'type' => 'success',
-                'title' => 'Update was a success',
-                'message' => 'Message was updated successfully',
-                'data' => $data['data'],
-            ], 200);
-        }else{
-            return response()->jsonApi($data, 404);
-        }
+            if ($data['type'] == 'success') {
+                return response()->jsonApi([
+                    'type' => 'success',
+                    'title' => 'Update was a success',
+                    'message' => 'Message was updated successfully',
+                    'data' => $data['data'],
+                ], 200);
+            } else {
+                return response()->jsonApi($data, 404);
+            }
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([
                 'type' => 'danger',
@@ -310,8 +286,8 @@ class WaitingListMSController extends Controller
         }
     }
 
-  /**
-     *  Send message to subscribers
+    /**
+     * Send message to subscribers
      *
      * @OA\POST(
      *     path="/publish/wait-messages",
@@ -319,23 +295,14 @@ class WaitingListMSController extends Controller
      *     tags={"Waitlist Messages"},
      *
      *     security={{
-     *          "default" :{
-     *              "ManagerRead",
-     *              "Subscriber",
-     *              "ManagerWrite"
-     *          },
+     *         "default" :{
+     *             "ManagerRead",
+     *             "Subscriber",
+     *             "ManagerWrite"
+     *         },
      *     }},
      *
-     *     x={
-     *          "auth-type": "Application & Application User",
-     *          "throttling-tier": "Unlimited",
-     *          "wso2-appliocation-security": {
-     *              "security-types": {"oauth2"},
-     *              "optional": "false"
-     *           },
-     *     },
-     *
-     *   @OA\Parameter(
+     *     @OA\Parameter(
      *         name="title",
      *         in="query",
      *         description="Message title",
@@ -371,7 +338,7 @@ class WaitingListMSController extends Controller
      *         )
      *     ),
      *
-      *     @OA\Response(
+     *     @OA\Response(
      *         response="200",
      *         description="Output data",
      *
@@ -403,9 +370,9 @@ class WaitingListMSController extends Controller
      *                     type="string",
      *                     description="Selected Subscriber Ids ",
      *                     example="subscriber 1, subscriber 2, subscriber 3",
-     *                 ),
-     *             ),
-     *         ),
+     *                 )
+     *             )
+     *         )
      *     ),
      *
      *     @OA\Response(
@@ -418,22 +385,22 @@ class WaitingListMSController extends Controller
      *     ),
      *
      *     @OA\Response(
-     *          response="404",
-     *          description="Not found",
-     *          @OA\JsonContent(
-     *              type="object",
-     *              @OA\Property(
-     *                  property="wait_message",
-     *                  type="string",
-     *                  description="message not found"
-     *              ),
-     *          ),
+     *         response="404",
+     *         description="Not found",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="wait_message",
+     *                 type="string",
+     *                 description="message not found"
+     *             )
+     *         )
      *     ),
      *
      *     @OA\Response(
      *         response="500",
      *         description="Unknown error"
-     *     ),
+     *     )
      * )
      *
      * @param Request $request
@@ -444,7 +411,7 @@ class WaitingListMSController extends Controller
     {
         $validation = Validator::make($request->all(), [
             'message_id' => 'string|required',
-            'subscriber_ids'   => 'required|array',
+            'subscriber_ids' => 'required|array',
         ]);
 
         $message = WaitingListMS::find($request->message_id);
@@ -466,9 +433,9 @@ class WaitingListMSController extends Controller
 
         try {
             $waitListMs = SubMgsId::create([
-            'message_id' => $message->id,
-            'subscriber_ids' => $request->subscriber_id,
-            'status' => 'delivered',
+                'message_id' => $message->id,
+                'subscriber_ids' => $request->subscriber_id,
+                'status' => 'delivered',
             ]);
 
             $data = [
@@ -510,15 +477,6 @@ class WaitingListMSController extends Controller
      *          },
      *     }},
      *
-     *     x={
-     *          "auth-type": "Application & Application Use",
-     *          "throttling-tier": "Unlimited",
-     *          "wso2-appliocation-security": {
-     *              "security-types": {"oauth2"},
-     *              "optional": "false"
-     *           },
-     *     },
-     *
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -542,9 +500,9 @@ class WaitingListMSController extends Controller
      *                     type="string",
      *                     description="Message lists",
      *                     example="This is just a message to subscribers on waiting list",
-     *                 ),
-     *             ),
-     *         ),
+     *                 )
+     *             )
+     *         )
      *     ),
      *
      *     @OA\Response(
@@ -555,7 +513,6 @@ class WaitingListMSController extends Controller
      *         response="400",
      *         description="Invalid request"
      *     ),
-     *
      *     @OA\Response(
      *          response="404",
      *          description="Not found",
