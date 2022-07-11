@@ -29,7 +29,7 @@ $router->group([
    T E S T S  Routes
 -------------------------- */
 $router->group([
-    'prefix' => env('APP_API_PREFIX', '') . '/v1/tests'
+    'prefix' => env('APP_API_PREFIX', '') . '/tests'
 ], function ($router) {
     $router->get('db-test', function () {
         if (DB::connection()->getDatabaseName()) {
@@ -41,7 +41,7 @@ $router->group([
 
     //Simple test for view for waiting list messae
     $router->get('/view', function () use ($router) {
-        return view('test'); 
+        return view('test');
     });
 
     $router->post('/analyze', 'WaitingListMSController@waitingListMessage');

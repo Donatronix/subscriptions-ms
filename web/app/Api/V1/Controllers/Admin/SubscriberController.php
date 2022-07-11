@@ -31,7 +31,7 @@ class SubscriberController extends Controller
      *     }},
      *
      *     x={
-     *          "auth-type": "Applecation & Application Use",
+     *          "auth-type": "Application & Application User",
      *          "throttling-tier": "Unlimited",
      *          "wso2-application-security": {
      *              "security-types": {"oauth2"},
@@ -138,7 +138,7 @@ class SubscriberController extends Controller
      *          description="Unauthorized"
      *     ),
      *     @OA\Response(
-     *         response=400,
+     *         response="400",
      *         description="Invalid request"
      *     ),
      *
@@ -248,7 +248,7 @@ class SubscriberController extends Controller
      *     }},
      *
      *     x={
-     *          "auth-type": "Applecation & Application Use",
+     *          "auth-type": "Application & Application User",
      *          "throttling-tier": "Unlimited",
      *          "wso2-application-security": {
      *              "security-types": {"oauth2"},
@@ -355,7 +355,7 @@ class SubscriberController extends Controller
      *          description="Unauthorized"
      *     ),
      *     @OA\Response(
-     *         response=400,
+     *         response="400",
      *         description="Invalid request"
      *     ),
      *
@@ -482,7 +482,7 @@ class SubscriberController extends Controller
      *     }},
      *
      *     x={
-     *          "auth-type": "Applecation & Application Use",
+     *          "auth-type": "Application & Application User",
      *          "throttling-tier": "Unlimited",
      *          "wso2-application-security": {
      *              "security-types": {"oauth2"},
@@ -625,7 +625,7 @@ class SubscriberController extends Controller
      *          description="Unauthorized"
      *     ),
      *     @OA\Response(
-     *         response=400,
+     *         response="400",
      *         description="Invalid request"
      *     ),
      *
@@ -790,7 +790,7 @@ class SubscriberController extends Controller
      *     }},
      *
      *     x={
-     *          "auth-type": "Applecation & Application Use",
+     *          "auth-type": "Application & Application User",
      *          "throttling-tier": "Unlimited",
      *          "wso2-application-security": {
      *              "security-types": {"oauth2"},
@@ -933,7 +933,7 @@ class SubscriberController extends Controller
      *          description="Unauthorized"
      *     ),
      *     @OA\Response(
-     *         response=400,
+     *         response="400",
      *         description="Invalid request"
      *     ),
      *
@@ -1085,7 +1085,7 @@ class SubscriberController extends Controller
      *     }},
      *
      *     x={
-     *          "auth-type": "Applecation & Application Use",
+     *          "auth-type": "Application & Application User",
      *          "throttling-tier": "Unlimited",
      *          "wso2-application-security": {
      *              "security-types": {"oauth2"},
@@ -1201,7 +1201,7 @@ class SubscriberController extends Controller
      *          description="Unauthorized"
      *     ),
      *     @OA\Response(
-     *         response=400,
+     *         response="400",
      *         description="Invalid request"
      *     ),
      *
