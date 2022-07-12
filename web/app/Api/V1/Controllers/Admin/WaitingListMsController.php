@@ -31,16 +31,6 @@ class WaitingListMsController extends Controller
      *          },
      *     }},
      *
-     *     x={
-     *          "auth-type": "Applecation & Application Use",
-     *          "throttling-tier": "Unlimited",
-     *          "wso2-appliocation-security": {
-     *              "security-types": {"oauth2"},
-     *              "optional": "false"
-     *           },
-     *     },
-     *
-     *
      *     @OA\Response(
      *         response="200",
      *         description="Output data",
@@ -95,7 +85,13 @@ class WaitingListMsController extends Controller
     public function index()
     {
         $waitingListMs = WaitingListMS::with('submgId.subscribe')->all();
-        return response()->json($waitingListMs);
+        return response()->jsonApi(
+            array_merge([
+                'type' => 'success',
+                'title' => 'Operation was success',
+                'message' => 'The data was displayed successfully',
+            ], ['data' => $waitingListMs->toArray() ?? []]),
+            200);
     }
 
      /**
@@ -113,15 +109,6 @@ class WaitingListMsController extends Controller
      *              "ManagerWrite"
      *          },
      *     }},
-     *
-     *     x={
-     *          "auth-type": "Application & Application Use",
-     *          "throttling-tier": "Unlimited",
-     *          "wso2-appliocation-security": {
-     *              "security-types": {"oauth2"},
-     *              "optional": "false"
-     *           },
-     *     },
      *
      *     @OA\Parameter(
      *         name="wait_message",
@@ -232,8 +219,6 @@ class WaitingListMsController extends Controller
                 dispatch(new WaitingListMSListener($data));
             }
         }
-
-
     }
 
     /**
@@ -251,15 +236,6 @@ class WaitingListMsController extends Controller
      *              "ManagerWrite"
      *          },
      *     }},
-     *
-     *     x={
-     *          "auth-type": "Application & Application Use",
-     *          "throttling-tier": "Unlimited",
-     *          "wso2-appliocation-security": {
-     *              "security-types": {"oauth2"},
-     *              "optional": "false"
-     *           },
-     *     },
      *
      *     @OA\Parameter(
      *         name="id",
@@ -394,15 +370,6 @@ class WaitingListMsController extends Controller
      *              "ManagerWrite"
      *          },
      *     }},
-     *
-     *     x={
-     *          "auth-type": "Applecation & Application Use",
-     *          "throttling-tier": "Unlimited",
-     *          "wso2-appliocation-security": {
-     *              "security-types": {"oauth2"},
-     *              "optional": "false"
-     *           },
-     *     },
      *
      *   @OA\Parameter(
      *         name="title",
@@ -581,15 +548,6 @@ class WaitingListMsController extends Controller
      *          },
      *     }},
      *
-     *     x={
-     *          "auth-type": "Application & Application Use",
-     *          "throttling-tier": "Unlimited",
-     *          "wso2-appliocation-security": {
-     *              "security-types": {"oauth2"},
-     *              "optional": "false"
-     *           },
-     *     },
-     *
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -656,7 +614,6 @@ class WaitingListMsController extends Controller
             $wait_message = null;
             DB::transaction(function () use ($id, &$wait_message) {
                 $wait_message = WaitingListMS::find($id);
-
                 $wait_message->delete();
 
                 WaitingListMS::paginate(config('settings.pagination_limit'));
