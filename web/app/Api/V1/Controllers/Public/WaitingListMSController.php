@@ -2,7 +2,6 @@
 
 namespace App\Api\V1\Controllers\Public;
 
-use App\Http\Controllers\Controller;
 use App\Jobs\PingJob;
 use App\Models\SubMgsId;
 use App\Models\WaitingListMS;
@@ -33,15 +32,6 @@ class WaitingListMSController extends Controller
      *          },
      *     }},
      *
-     *     x={
-     *          "auth-type": "Application & Application Use",
-     *          "throttling-tier": "Unlimited",
-     *          "wso2-appliocation-security": {
-     *              "security-types": {"oauth2"},
-     *              "optional": "false"
-     *           },
-     *     },
-     *
      *     @OA\Parameter(
      *         name="wait_message",
      *         in="query",
@@ -50,7 +40,6 @@ class WaitingListMSController extends Controller
      *             type="string"
      *         )
      *     ),
-     *
      *
      *     @OA\Response(
      *         response="200",
@@ -181,15 +170,6 @@ class WaitingListMSController extends Controller
      *          },
      *     }},
      *
-     *     x={
-     *          "auth-type": "Application & Application Use",
-     *          "throttling-tier": "Unlimited",
-     *          "wso2-appliocation-security": {
-     *              "security-types": {"oauth2"},
-     *              "optional": "false"
-     *           },
-     *     },
-     *
      *     @OA\Parameter(
      *         name="id",
      *         in="query",
@@ -198,7 +178,6 @@ class WaitingListMSController extends Controller
      *             type="string"
      *         )
      *     ),
-     *
      *
      *     @OA\Response(
      *         response="200",
@@ -309,7 +288,7 @@ class WaitingListMSController extends Controller
     }
 
     /**
-     *  Send message to subscribers
+     * Send message to subscribers
      *
      * @OA\POST(
      *     path="/publish/wait-messages",
@@ -317,23 +296,14 @@ class WaitingListMSController extends Controller
      *     tags={"Waitlist Messages"},
      *
      *     security={{
-     *          "default" :{
-     *              "ManagerRead",
-     *              "Subscriber",
-     *              "ManagerWrite"
-     *          },
+     *         "default" :{
+     *             "ManagerRead",
+     *             "Subscriber",
+     *             "ManagerWrite"
+     *         },
      *     }},
      *
-     *     x={
-     *          "auth-type": "Application & Application User",
-     *          "throttling-tier": "Unlimited",
-     *          "wso2-appliocation-security": {
-     *              "security-types": {"oauth2"},
-     *              "optional": "false"
-     *           },
-     *     },
-     *
-     *   @OA\Parameter(
+     *     @OA\Parameter(
      *         name="title",
      *         in="query",
      *         description="Message title",
@@ -401,9 +371,9 @@ class WaitingListMSController extends Controller
      *                     type="string",
      *                     description="Selected Subscriber Ids ",
      *                     example="subscriber 1, subscriber 2, subscriber 3",
-     *                 ),
-     *             ),
-     *         ),
+     *                 )
+     *             )
+     *         )
      *     ),
      *
      *     @OA\Response(
@@ -416,22 +386,22 @@ class WaitingListMSController extends Controller
      *     ),
      *
      *     @OA\Response(
-     *          response="404",
-     *          description="Not found",
-     *          @OA\JsonContent(
-     *              type="object",
-     *              @OA\Property(
-     *                  property="wait_message",
-     *                  type="string",
-     *                  description="message not found"
-     *              ),
-     *          ),
+     *         response="404",
+     *         description="Not found",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="wait_message",
+     *                 type="string",
+     *                 description="message not found"
+     *             )
+     *         )
      *     ),
      *
      *     @OA\Response(
      *         response="500",
      *         description="Unknown error"
-     *     ),
+     *     )
      * )
      *
      * @param Request $request
@@ -508,15 +478,6 @@ class WaitingListMSController extends Controller
      *          },
      *     }},
      *
-     *     x={
-     *          "auth-type": "Application & Application Use",
-     *          "throttling-tier": "Unlimited",
-     *          "wso2-appliocation-security": {
-     *              "security-types": {"oauth2"},
-     *              "optional": "false"
-     *           },
-     *     },
-     *
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -540,9 +501,9 @@ class WaitingListMSController extends Controller
      *                     type="string",
      *                     description="Message lists",
      *                     example="This is just a message to subscribers on waiting list",
-     *                 ),
-     *             ),
-     *         ),
+     *                 )
+     *             )
+     *         )
      *     ),
      *
      *     @OA\Response(
@@ -553,7 +514,6 @@ class WaitingListMSController extends Controller
      *         response="400",
      *         description="Invalid request"
      *     ),
-     *
      *     @OA\Response(
      *          response="404",
      *          description="Not found",

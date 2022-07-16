@@ -30,15 +30,6 @@ class SubscriberController extends Controller
      *          },
      *     }},
      *
-     *     x={
-     *          "auth-type": "Application & Application User",
-     *          "throttling-tier": "Unlimited",
-     *          "wso2-application-security": {
-     *              "security-types": {"oauth2"},
-     *              "optional": "false"
-     *           },
-     *     },
-     *
      *     @OA\Response(
      *         response="200",
      *         description="Output data",
@@ -246,15 +237,6 @@ class SubscriberController extends Controller
      *              "ManagerWrite"
      *          },
      *     }},
-     *
-     *     x={
-     *          "auth-type": "Application & Application User",
-     *          "throttling-tier": "Unlimited",
-     *          "wso2-application-security": {
-     *              "security-types": {"oauth2"},
-     *              "optional": "false"
-     *           },
-     *     },
      *
      *     @OA\Response(
      *         response="200",
@@ -480,15 +462,6 @@ class SubscriberController extends Controller
      *              "ManagerWrite"
      *          },
      *     }},
-     *
-     *     x={
-     *          "auth-type": "Application & Application User",
-     *          "throttling-tier": "Unlimited",
-     *          "wso2-application-security": {
-     *              "security-types": {"oauth2"},
-     *              "optional": "false"
-     *           },
-     *     },
      *
      *     @OA\Parameter(
      *         name="id",
@@ -789,15 +762,6 @@ class SubscriberController extends Controller
      *          },
      *     }},
      *
-     *     x={
-     *          "auth-type": "Application & Application User",
-     *          "throttling-tier": "Unlimited",
-     *          "wso2-application-security": {
-     *              "security-types": {"oauth2"},
-     *              "optional": "false"
-     *           },
-     *     },
-     *
      *     @OA\Parameter(
      *         name="id",
      *         in="query",
@@ -1083,15 +1047,6 @@ class SubscriberController extends Controller
      *              "ManagerWrite"
      *          },
      *     }},
-     *
-     *     x={
-     *          "auth-type": "Application & Application User",
-     *          "throttling-tier": "Unlimited",
-     *          "wso2-application-security": {
-     *              "security-types": {"oauth2"},
-     *              "optional": "false"
-     *           },
-     *     },
      *
      *     @OA\Parameter(
      *         name="id",

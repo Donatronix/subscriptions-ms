@@ -1,0 +1,55 @@
+    public function store(Request $request): mixed
+    {
+        try {
+            $wait_message = null;
+            DB::transaction(function () use ($request, &$wait_message) {
+                $validator = Validator::make($request->all(), [
+                    'wait_message' => 'required|string|max:1000'
+                ]);
+
+                if ($validator->fails()) {
+                    return response()->jsonApi([
+                        'type' => 'danger',
+                        'title' => "Invalid data",
+                        'message' => $validator->errors(),
+                        'data' => null,
+                    ], 404);
+                }
+
+                // Retrieve the validated input...
+                $validated = $validator->validated();
+
+                if ($wait_message = WaitingListMS::where('message', $validated['wait_message'])->first()) {
+                    return response()->jsonApi([
+                        'type' => 'danger',
+                        'title' => "Adding new message failed",
+                        'message' => "This same message content already exists",
+                        'data' => null,
+                    ], 404);
+                }
+
+                $wait_message = WaitingListMS::create($validated);
+            });
+
+            return response()->jsonApi([
+                'type' => 'success',
+                'title' => 'Operation was a success',
+                'message' => 'Message was added successfully',
+                'data' => $wait_message,
+            ], 200);
+        } catch (ModelNotFoundException $e) {
+            return response()->jsonApi([
+                'type' => 'danger',
+                'title' => "Not operation",
+                'message' => "Message was not added. Please try again.",
+                'data' => null,
+            ], 404);
+        } catch (Throwable $e) {
+            return response()->jsonApi([
+                'type' => 'danger',
+                'title' => "Operation failed",
+                'message' => $e->getMessage(),
+                'data' => null,
+            ], 404);
+        }
+    }

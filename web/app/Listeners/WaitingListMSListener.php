@@ -46,38 +46,40 @@ class WaitingListMSListener
             PubSub::transaction(function () {})->publish(self::RECEIVER_LISTENER, [
                 'status' => 'error',
                 'subsriber_id' => $inputData['platform'],
-                'waiting_list_ms_id' => $inputData['message'],
+                'waiting_list_ms_id' => $inputData['message_id'],
                 'error' => $validation->errors()
             ], "waitingLinst");
             return true;
         }
-        
+
         $inputData = (object)$request->all();
         // Write log
         try {
             $waitListMs = SubMgsId::create([
                 'waiting_list_ms_id' => $inputData->message_id,
-                'subsriber_id' => $inputData->subscriber_id,
+                'subsriber_id' => $inputData->subscriber_ids,
             ]);
             if (!$waitListMs) {
                 $waitListMs = SubMgsId::create([
                     'waiting_list_ms_id' => $inputData->message_id,
-                    'subsriber_id' => $inputData->subscriber_id,
+                    'subsriber_id' => $inputData->subscriber_ids,
                     'status' => "Failed",
                 ]);
-    
+
                 Log::info("WiatiList Message Failed");
                 exit;
             } else {
                 // Return result
                 PubSub::transaction(function () {
                 })->publish(self::RECEIVER_LISTENER, [
-
                     'type' => 'success',
                     'title' => $inputData->title,
                     'data' => [
-                        "subscriber_id" => $inputData->subsriber_id,
-                        "waiting_list_ms_id" => $inputData->message_id,
+//                        "subscriber_id" => $inputData->subsriber_id,
+//                        "waiting_list_ms_id" => $inputData->message_id,
+                        "subscriber_ids" => $inputData->subscriber_ids,
+                        "product_url" => $inputData->url,
+                        "message" => $inputData->message,
                     ]
                 ], "waitingLinst");
                 return true;

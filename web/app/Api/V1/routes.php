@@ -14,7 +14,7 @@ $router->group([
 //    });
 
     // $router->get('subscribers', 'SubscriberController@index');
-    // $router->post('waiting-list-messages', 'WaitingListMsController@store');
+    // $router->post('subscriptions-messages', 'WaitingListMsController@store');
 
     /**
      * USER APPLICATION PRIVATE ACCESS
@@ -71,7 +71,7 @@ $router->group([
         /**
          * Waiting List Messages
          */
-        $router->get('waiting-list-messages', 'WaitingListMsController@index');
-        $router->post('waiting-list-messages', 'WaitingListMsController@store');
+        $router->get('subscriptions-messages', 'WaitingListMSController@index');
+        $router->post('subscriptions-messages', 'WaitingListMSController@store');
     });
 });

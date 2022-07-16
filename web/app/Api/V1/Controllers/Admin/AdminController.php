@@ -3,7 +3,6 @@
 namespace App\Api\V1\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Jobs\PingJob;
 use App\Models\Admin;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -28,15 +27,6 @@ class AdminController extends Controller
      *              "ManagerWrite"
      *          },
      *     }},
-     *
-     *     x={
-     *          "auth-type": "Application & Application User",
-     *          "throttling-tier": "Unlimited",
-     *          "wso2-application-security": {
-     *              "security-types": {"oauth2"},
-     *              "optional": "false"
-     *           },
-     *     },
      *
      *     @OA\Parameter(
      *         name="role",
@@ -189,15 +179,6 @@ class AdminController extends Controller
      *          },
      *     }},
      *
-     *     x={
-     *          "auth-type": "Application & Application User",
-     *          "throttling-tier": "Unlimited",
-     *          "wso2-application-security": {
-     *              "security-types": {"oauth2"},
-     *              "optional": "false"
-     *           },
-     *     },
-     *
      *     @OA\Response(
      *         response="200",
      *         description="Output data",
@@ -338,15 +319,6 @@ class AdminController extends Controller
      *              "ManagerWrite"
      *          },
      *     }},
-     *
-     *     x={
-     *          "auth-type": "Application & Application User",
-     *          "throttling-tier": "Unlimited",
-     *          "wso2-application-security": {
-     *              "security-types": {"oauth2"},
-     *              "optional": "false"
-     *           },
-     *     },
      *
      *     @OA\Parameter(
      *         name="phone",
@@ -553,15 +525,6 @@ class AdminController extends Controller
      *              "ManagerWrite"
      *          },
      *     }},
-     *
-     *     x={
-     *          "auth-type": "Application & Application User",
-     *          "throttling-tier": "Unlimited",
-     *          "wso2-application-security": {
-     *              "security-types": {"oauth2"},
-     *              "optional": "false"
-     *           },
-     *     },
      *
      *     @OA\Parameter(
      *         name="id",
@@ -779,15 +742,6 @@ class AdminController extends Controller
      *          },
      *     }},
      *
-     *     x={
-     *          "auth-type": "Application & Application User",
-     *          "throttling-tier": "Unlimited",
-     *          "wso2-application-security": {
-     *              "security-types": {"oauth2"},
-     *              "optional": "false"
-     *           },
-     *     },
-     *
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -942,15 +896,6 @@ class AdminController extends Controller
      *          },
      *     }},
      *
-     *     x={
-     *          "auth-type": "Application & Application User",
-     *          "throttling-tier": "Unlimited",
-     *          "wso2-application-security": {
-     *              "security-types": {"oauth2"},
-     *              "optional": "false"
-     *           },
-     *     },
-     *
      *     @OA\Parameter(
      *         name="role",
      *         in="query",
@@ -959,7 +904,6 @@ class AdminController extends Controller
      *             type="string"
      *         ),
      *     ),
-     *
      *
      *     @OA\Parameter(
      *         name="id",

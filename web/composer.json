@@ -1,6 +1,6 @@
 {
-    "name": "promo/subscriptions-ms",
-    "description": "Waiting Lists API Microservice",
+    "name": "kus/subscriptions-ms",
+    "description": "Subscriptions API Microservice",
     "license": "MIT",
     "type": "project",
     "private": true,
