@@ -136,7 +136,8 @@ class AdminController extends Controller
     {
         try {
 
-            $administrators = Admin::where('role', $request->get('role'))->paginate($request->get('limit', config('settings.pagination_limit')));
+            $administrators = Admin::query()->where('role', $request->get('role'))
+                ->paginate($request->get('limit', config('settings.pagination_limit')));
 
             return response()->jsonApi(
                 array_merge([
@@ -699,16 +700,16 @@ class AdminController extends Controller
                 ];
             });
 
-            if($data['type'] == 'success'){
-            return response()->jsonApi([
-                'type' => 'success',
-                'title' => 'Update was a success',
-                'message' => 'Administrator was updated successfully',
-                'data' => $data['data'],
-            ], 200);
-        }else{
-            return response()->jsonApi($data, 404);
-        }
+            if ($data['type'] == 'success') {
+                return response()->jsonApi([
+                    'type' => 'success',
+                    'title' => 'Update was a success',
+                    'message' => 'Administrator was updated successfully',
+                    'data' => $data['data'],
+                ], 200);
+            } else {
+                return response()->jsonApi($data, 404);
+            }
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([
                 'type' => 'danger',
