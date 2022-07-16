@@ -263,7 +263,7 @@ class DashboardController extends Controller
                 return $exception instanceof ConnectionException;
             })->withHeaders([
                 'app-id' => MicroservicesEnums::REFERRALS_MS,
-            ])->get(config('settings.api.referrals_ms') . '/total-earnings');
+            ])->get(config('settings.api.referrals_ms') . 'webhooks/total-earnings');
 
             $totalEarnings = null;
             if (!$response instanceof ConnectionException) {
