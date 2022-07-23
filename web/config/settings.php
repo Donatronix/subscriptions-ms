@@ -45,9 +45,9 @@ return [
             'host' => env('API_FILES_HOST', 'http://localhost:8080'),
             'version' => env('API_FILES_VERSION', '/v1'),
         ],
-        'app_id' => "subscriptions-ms-9009",
+        'app_id' => "subscriptions-ms",
         'referrals_ms' => env('API_REFERRALS_HOST', 'http://localhost'),
-        'microservice' => env('MICROSERVICE', ''),
+        'microservice' => env('MICROSERVICE', 'Subscriptions MS'),
     ],
 
     /**

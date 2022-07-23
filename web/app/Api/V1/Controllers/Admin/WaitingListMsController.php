@@ -3,10 +3,11 @@
 namespace App\Api\V1\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Listeners\WaitingListMSListener;
 use App\Models\SubMgsId;
 use App\Models\Subscriber;
 use App\Models\WaitingListMS;
-use App\Listeners\WaitingListMSListener;
+use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -85,7 +86,7 @@ class WaitingListMsController extends Controller
     public function index()
     {
         $waitingListMs = WaitingListMS::with('submgId.subscribe')->all();
-        return response()->jsonApi(
+        return response()->json(
             array_merge([
                 'type' => 'success',
                 'title' => 'Operation was success',
@@ -94,7 +95,7 @@ class WaitingListMsController extends Controller
             200);
     }
 
-     /**
+    /**
      *  Add new message
      *
      * @OA\Post(
@@ -328,25 +329,25 @@ class WaitingListMsController extends Controller
 
                 $wait_message->update($validated);
             });
-            if($data['type'] == 'success'){
-                return response()->jsonApi([
+            if ($data['type'] == 'success') {
+                return response()->json([
                     'type' => 'success',
                     'title' => 'Update was a success',
                     'message' => 'Message was updated successfully',
                     'data' => $data['data'],
                 ], 200);
-            }else{
-                return response()->jsonApi($data, 404);
+            } else {
+                return response()->json($data, 404);
             }
         } catch (ModelNotFoundException $e) {
-            return response()->jsonApi([
+            return response()->json([
                 'type' => 'danger',
                 'title' => "Update failed",
                 'message' => "Message does not exist",
                 'data' => null,
             ], 404);
         } catch (Throwable $e) {
-            return response()->jsonApi([
+            return response()->json([
                 'type' => 'danger',
                 'title' => "Update failed",
                 'message' => $e->getMessage(),
@@ -480,7 +481,7 @@ class WaitingListMsController extends Controller
     {
         $validation = Validator::make($request->all(), [
             'message_id' => 'string|required',
-            'subscriber_ids'   => 'required|array',
+            'subscriber_ids' => 'required|array',
         ]);
 
         $message = WaitingListMS::find($request->message_id);
@@ -492,7 +493,7 @@ class WaitingListMsController extends Controller
                 'message_id' => $message->id,
                 'message' => $validation->errors()
             ]);
-            return response()->jsonApi([
+            return response()->json([
                 'type' => 'danger',
                 'title' => "Not operation",
                 'message' => $validation->errors(),
@@ -516,14 +517,14 @@ class WaitingListMsController extends Controller
             ];
             // dd($data);
             dispatch(new WaitingListMSListener($data));
-            return response()->jsonApi([
+            return response()->json([
                 'type' => 'success',
                 'title' => 'Message prodcast',
                 'message' => 'Message was sent successfully',
                 // 'data' => $waitListMs,
             ], 200);
-        } catch (\Exception $e) {
-            return response()->jsonApi([
+        } catch (Exception $e) {
+            return response()->json([
                 'type' => 'danger',
                 'title' => "Not operation",
                 'message' => $e->getMessage(),
@@ -619,21 +620,21 @@ class WaitingListMsController extends Controller
                 WaitingListMS::paginate(config('settings.pagination_limit'));
             });
         } catch (ModelNotFoundException $e) {
-            return response()->jsonApi([
+            return response()->json([
                 'type' => 'danger',
                 'title' => "Delete failed",
                 'message' => "Message does not exist",
                 'data' => null,
             ], 404);
         } catch (Throwable $e) {
-            return response()->jsonApi([
+            return response()->json([
                 'type' => 'danger',
                 'title' => "Delete failed",
                 'message' => $e->getMessage(),
                 'data' => null,
             ], 404);
         }
-        return response()->jsonApi([
+        return response()->json([
             'type' => 'success',
             'title' => 'Operation was a success',
             'message' => 'Message was deleted successfully',
