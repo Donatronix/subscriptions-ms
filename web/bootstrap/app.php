@@ -109,7 +109,7 @@ $app->register(App\Providers\EventServiceProvider::class);
  * Pubsub - RabbitMQ
  */
 
-$app->configure('queues');
+$app->configure('queue');
 $app->register(VladimirYuldashev\LaravelQueueRabbitMQ\LaravelQueueRabbitMQServiceProvider::class);
 
 if (!class_exists('App')) {
