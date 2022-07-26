@@ -192,7 +192,6 @@ class SubscriberController extends Controller
             $subscribers = Subscriber::paginate($request->get('limit', config('settings.pagination_limit')));
 
             return response()->jsonApi([
-                'type' => 'success',
                 'title' => 'Operation was success',
                 'message' => 'The data was displayed successfully',
                 'general' => [
@@ -409,7 +408,6 @@ class SubscriberController extends Controller
             }
 
             return response()->jsonApi([
-                'type' => 'success',
                 'title' => 'Operation was success',
                 'message' => 'Subscriber was displayed successfully',
                 'general' => [

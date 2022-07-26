@@ -87,7 +87,6 @@ class WaitingListMsController extends Controller
     {
         $waitingListMs = WaitingListMS::with('submgId.subscribe')->all();
         return response()->jsonApi([
-            'type' => 'success',
             'title' => 'Operation was success',
             'message' => 'The data was displayed successfully',
             'data' => $waitingListMs

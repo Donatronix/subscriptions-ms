@@ -261,7 +261,6 @@ class DashboardController extends Controller
             $totalEarnings = floatVal($response->json('data'));
 
             return response()->jsonApi([
-                'type' => 'success',
                 'title' => 'Operation was success',
                 'message' => 'The data was displayed successfully',
                 'general' => [
@@ -372,7 +371,6 @@ class DashboardController extends Controller
             }
 
             return response()->jsonApi([
-                'type' => 'success',
                 'title' => "Get subscriber dashboard succeeded",
                 'data' => $balance_summary,
             ]);

@@ -28,7 +28,6 @@
             });
 
             return response()->jsonApi([
-                'type' => 'success',
                 'title' => 'Operation was a success',
                 'message' => 'Message was added successfully',
                 'data' => $wait_message,
