@@ -1,0 +1,4 @@
+
+[submodule "sumra-sdk"]
+	path = sumra-sdk
+	url = git@bitbucket.org:sumraprague/sumra-sdk.git
