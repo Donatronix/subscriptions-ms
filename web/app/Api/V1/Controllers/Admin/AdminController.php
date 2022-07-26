@@ -140,7 +140,6 @@ class AdminController extends Controller
                 ->paginate($request->get('limit', config('settings.pagination_limit')));
 
             return response()->jsonApi([
-                'type' => 'success',
                 'title' => 'Operation was success',
                 'message' => 'The data was displayed successfully',
                 'data' => $administrators
@@ -275,7 +274,6 @@ class AdminController extends Controller
             $admin = Admin::findOrFail($id);
 
             return response()->jsonApi([
-                'type' => 'success',
                 'title' => 'Operation was success',
                 'message' => 'Administrator was displayed successfully',
                 'data' => $admin
@@ -472,7 +470,6 @@ class AdminController extends Controller
             });
 
             return response()->jsonApi([
-                'type' => 'success',
                 'title' => 'Operation was a success',
                 'message' => 'Administrator was added successfully',
                 'data' => $admin->toArray(),
@@ -827,9 +824,7 @@ class AdminController extends Controller
 
             $administrators = Admin::paginate(config('settings.pagination_limit'));
 
-
             return response()->jsonApi([
-                'type' => 'success',
                 'title' => 'Operation was a success',
                 'message' => 'Administrator was deleted successfully',
                 'data' => $administrators,

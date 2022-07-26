@@ -430,7 +430,6 @@ class WaitingListMSController extends Controller
             // dd($data);
             dispatch(new PubSubService($data));
             return response()->jsonApi([
-                'type' => 'success',
                 'title' => 'Message prodcast',
                 'message' => 'Message was sent successfully',
                 // 'data' => $waitListMs,
