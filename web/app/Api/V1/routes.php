@@ -75,3 +75,6 @@ $router->group([
         $router->post('subscriptions-messages', 'WaitingListMSController@store');
     });
 });
+
+//$router->post('/analyze', 'WaitingListMSController@waitingListMessage');
+//$router->post('/waitlist/messages', WaitingListMSController::class, 'store');

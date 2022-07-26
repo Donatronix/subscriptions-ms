@@ -254,15 +254,14 @@ class DashboardController extends Controller
                 return $exception instanceof ConnectionException;
             })->withHeaders([
                 'app-id' => MicroservicesEnums::REFERRALS_MS,
-            ])->get(config('settings.api.referrals_ms') . 'webhooks/total-earnings');
+            ])->get(config('settings.api.referrals') . '/webhooks/total-earnings');
 
             $totalEarnings = null;
             if (!$response instanceof ConnectionException) {
                 $totalEarnings = $response->json('data');
             }
 
-            return response()->json([
-                'type' => 'success',
+            return response()->jsonApi([
                 'title' => 'Operation was success',
                 'message' => 'The data was displayed successfully',
                 'general' => [
@@ -273,11 +272,9 @@ class DashboardController extends Controller
                 'data' => Subscriber::all(),
             ], 200);
         } catch (Throwable $e) {
-            return response()->json([
-                'type' => 'danger',
+            return response()->jsonApi([
                 'title' => "Get subscriber dashboard failed",
                 'message' => $e->getMessage(),
-                'data' => null,
             ], 404);
         }
     }
@@ -368,24 +365,21 @@ class DashboardController extends Controller
             })->withHeaders([
                 'app-id' => MicroservicesEnums::REFERRALS_MS,
                 'user-id' => $id,
-            ])->get(config('settings.api.referrals_ms') . '/v1/leaderboard/overview-earnings/' . $id);
+            ])->get(config('settings.api.referrals') . '/webhooks/leaderboard/overview-earnings/' . $id);
 
             $balance_summary = null;
             if (!$response instanceof ConnectionException) {
                 $balance_summary = $response->json('data');
             }
 
-            return response()->json([
-                'type' => 'success',
+            return response()->jsonApi([
                 'title' => "Get subscriber dashboard succeeded",
                 'data' => $balance_summary,
             ]);
         } catch (Throwable $e) {
-            return response()->json([
-                'type' => 'danger',
+            return response()->jsonApi([
                 'title' => "Get subscriber dashboard failed",
                 'message' => $e->getMessage(),
-                'data' => null,
             ], 404);
         }
     }
