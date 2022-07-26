@@ -67,7 +67,7 @@ class Handler extends ExceptionHandler
         }
 
         if ($exception instanceof ValidationException) {
-            return response()->json([
+            return response()->jsonApi([
                 'message' => 'YOUR CUSTOM MESSAGE HERE',
                 'errors' => $exception->validator->getMessageBag(),
                 $exception->errors(),

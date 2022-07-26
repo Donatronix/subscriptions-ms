@@ -260,7 +260,7 @@ class DashboardController extends Controller
 
             $totalEarnings = floatVal($response->json('data'));
 
-            return response()->json([
+            return response()->jsonApi([
                 'type' => 'success',
                 'title' => 'Operation was success',
                 'message' => 'The data was displayed successfully',
@@ -272,7 +272,7 @@ class DashboardController extends Controller
                 'data' => Subscriber::find($user_id),
             ], 200);
         } catch (Throwable $e) {
-            return response()->json([
+            return response()->jsonApi([
                 'type' => 'danger',
                 'title' => "Get subscriber dashboard failed",
                 'message' => $e->getMessage(),
@@ -373,13 +373,13 @@ class DashboardController extends Controller
                 $balance_summary = $response->json('data');
             }
 
-            return response()->json([
+            return response()->jsonApi([
                 'type' => 'success',
                 'title' => "Get subscriber dashboard succeeded",
                 'data' => $balance_summary,
             ]);
         } catch (Throwable $e) {
-            return response()->json([
+            return response()->jsonApi([
                 'type' => 'danger',
                 'title' => "Get subscriber dashboard failed",
                 'message' => $e->getMessage(),

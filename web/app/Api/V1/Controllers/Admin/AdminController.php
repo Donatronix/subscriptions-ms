@@ -148,14 +148,14 @@ class AdminController extends Controller
                 200);
 
         } catch (ModelNotFoundException $e) {
-            return response()->json([
+            return response()->jsonApi([
                 'type' => 'danger',
                 'title' => "Not operation",
                 'message' => "Error showing all transactions",
                 'data' => null,
             ], 404);
         } catch (Throwable $e) {
-            return response()->json([
+            return response()->jsonApi([
                 'type' => 'danger',
                 'title' => "Operation failed",
                 'message' => $e->getMessage(),
@@ -289,14 +289,14 @@ class AdminController extends Controller
                 ], 200);
 
         } catch (ModelNotFoundException $e) {
-            return response()->json([
+            return response()->jsonApi([
                 'type' => 'danger',
                 'title' => "Not operation",
                 'message' => "Administrator does not exist",
                 'data' => null,
             ], 404);
         } catch (Throwable $e) {
-            return response()->json([
+            return response()->jsonApi([
                 'type' => 'danger',
                 'title' => "Get admin failed",
                 'message' => $e->getMessage(),
@@ -455,7 +455,7 @@ class AdminController extends Controller
                 ]);
 
                 if ($validator->fails()) {
-                    return response()->json([
+                    return response()->jsonApi([
                         'type' => 'danger',
                         'title' => "Invalid data",
                         'message' => $validator->messages()->toArray(),
@@ -468,7 +468,7 @@ class AdminController extends Controller
 
 
                 if ($admin = Admin::where('email', $validated['email'])->first()) {
-                    return response()->json([
+                    return response()->jsonApi([
                         'type' => 'danger',
                         'title' => "Adding new admin failed",
                         'message' => "Administrator already exists",
@@ -477,7 +477,7 @@ class AdminController extends Controller
                 }
 
                 if ($admin = Admin::where('name', $validated['name'])->first()) {
-                    return response()->json([
+                    return response()->jsonApi([
                         'type' => 'danger',
                         'title' => "Operation failed",
                         'message' => "Name already in use",
@@ -488,21 +488,21 @@ class AdminController extends Controller
                 $admin = Admin::create($validated);
             });
 
-            return response()->json([
+            return response()->jsonApi([
                 'type' => 'success',
                 'title' => 'Operation was a success',
                 'message' => 'Administrator was added successfully',
                 'data' => $admin->toArray(),
             ], 200);
         } catch (ModelNotFoundException $e) {
-            return response()->json([
+            return response()->jsonApi([
                 'type' => 'danger',
                 'title' => "Not operation",
                 'message' => "Administrator was not added. Please try again.",
                 'data' => null,
             ], 404);
         } catch (Throwable $e) {
-            return response()->json([
+            return response()->jsonApi([
                 'type' => 'danger',
                 'title' => "Operation failed",
                 'message' => $e->getMessage(),
@@ -701,7 +701,7 @@ class AdminController extends Controller
             });
 
             if ($data['type'] == 'success') {
-                return response()->json([
+                return response()->jsonApi([
                     'type' => 'success',
                     'title' => 'Update was a success',
                     'message' => 'Administrator was updated successfully',
@@ -711,14 +711,14 @@ class AdminController extends Controller
                 return response()->json($data, 404);
             }
         } catch (ModelNotFoundException $e) {
-            return response()->json([
+            return response()->jsonApi([
                 'type' => 'danger',
                 'title' => "Update failed",
                 'message' => "Administrator does not exist",
                 'data' => null,
             ], 404);
         } catch (Throwable $e) {
-            return response()->json([
+            return response()->jsonApi([
                 'type' => 'danger',
                 'title' => "Update failed",
                 'message' => $e->getMessage(),
@@ -857,7 +857,7 @@ class AdminController extends Controller
             $administrators = Admin::paginate(config('settings.pagination_limit'));
 
 
-            return response()->json([
+            return response()->jsonApi([
                 'type' => 'success',
                 'title' => 'Operation was a success',
                 'message' => 'Administrator was deleted successfully',
@@ -865,14 +865,14 @@ class AdminController extends Controller
             ], 200);
 
         } catch (ModelNotFoundException $e) {
-            return response()->json([
+            return response()->jsonApi([
                 'type' => 'danger',
                 'title' => "Delete failed",
                 'message' => "Administrator does not exist",
                 'data' => null,
             ], 404);
         } catch (Throwable $e) {
-            return response()->json([
+            return response()->jsonApi([
                 'type' => 'danger',
                 'title' => "Delete failed",
                 'message' => $e->getMessage(),
@@ -1021,7 +1021,7 @@ class AdminController extends Controller
             ]);
 
             if ($validator->fails()) {
-                return response()->json([
+                return response()->jsonApi([
                     'type' => 'danger',
                     'title' => "Not operation",
                     'message' => $validator->messages()->toArray(),
@@ -1035,21 +1035,21 @@ class AdminController extends Controller
             $admin->update($validated);
 
 
-            return response()->json([
+            return response()->jsonApi([
                 'type' => 'success',
                 'title' => 'Update was a success',
                 'message' => 'Administrator was updated successfully',
                 'data' => $admin,
             ], 200);
         } catch (ModelNotFoundException $e) {
-            return response()->json([
+            return response()->jsonApi([
                 'type' => 'danger',
                 'title' => "Update failed",
                 'message' => "Administrator does not exist",
                 'data' => null,
             ], 404);
         } catch (Throwable $e) {
-            return response()->json([
+            return response()->jsonApi([
                 'type' => 'danger',
                 'title' => "Update failed",
                 'message' => $e->getMessage(),
