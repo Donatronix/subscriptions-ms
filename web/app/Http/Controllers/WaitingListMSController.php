@@ -262,6 +262,7 @@ class WaitingListMSController extends Controller
 
                 $wait_message->update($validated);
             });
+
             if ($data['type'] == 'success') {
                 return response()->jsonApi([
                     'type' => 'success',
@@ -270,7 +271,7 @@ class WaitingListMSController extends Controller
                     'data' => $data['data'],
                 ], 200);
             } else {
-                return response()->json($data, 404);
+                return response()->jsonApi($data, 404);
             }
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([

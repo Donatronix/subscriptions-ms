@@ -412,24 +412,20 @@ class SubscriberController extends Controller
                 }
             }
 
-
-            return response()->json(
-                [
-                    'type' => 'success',
-                    'title' => 'Operation was success',
-                    'message' => 'Subscriber was displayed successfully',
-                    'general' => [
-                        'total_subscribers' => Subscriber::count(),
-                        'new_subscribers_count_week' => Subscriber::countNewSubscriberByTime('week')->get()->count(),
-                        'new_subscribers_count_month' => Subscriber::countNewSubscriberByTime('month')->get()->count(),
-                        'new_subscribers_count_platforms_week' => Subscriber::countNewSubscribersByPlatform('week')->get()->toArray(),
-                        'new_subscribers_count_platforms_month' => Subscriber::countNewSubscribersByPlatform('month')->get()->toArray(),
-                        //                        'total_earning' => 46.050,
-                    ],
-                    'data' => $subscriber,
+            return response()->jsonApi([
+                'type' => 'success',
+                'title' => 'Operation was success',
+                'message' => 'Subscriber was displayed successfully',
+                'general' => [
+                    'total_subscribers' => Subscriber::count(),
+                    'new_subscribers_count_week' => Subscriber::countNewSubscriberByTime('week')->get()->count(),
+                    'new_subscribers_count_month' => Subscriber::countNewSubscriberByTime('month')->get()->count(),
+                    'new_subscribers_count_platforms_week' => Subscriber::countNewSubscribersByPlatform('week')->get()->toArray(),
+                    'new_subscribers_count_platforms_month' => Subscriber::countNewSubscribersByPlatform('month')->get()->toArray(),
+                    // 'total_earning' => 46.050,
                 ],
-                200
-            );
+                'data' => $subscriber,
+            ]);
 
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([
@@ -728,7 +724,7 @@ class SubscriberController extends Controller
                     'data' => $subscriber['data'],
                 ], 200);
             } else {
-                return response()->json(Subscriber::all(), 404);
+                return response()->jsonApi(Subscriber::all(), 404);
             }
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([
@@ -1014,7 +1010,7 @@ class SubscriberController extends Controller
                     'data' => $subscriber->toArray(),
                 ], 200);
             } else {
-                return response()->json(Subscriber::all(), 404);
+                return response()->jsonApi(Subscriber::all(), 404);
             }
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([
@@ -1254,7 +1250,7 @@ class SubscriberController extends Controller
                     'data' => $subscribers['data'],
                 ], 200);
             } else {
-                return response()->json($subscribers, 404);
+                return response()->jsonApi($subscribers, 404);
             }
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([

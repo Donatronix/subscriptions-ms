@@ -139,14 +139,12 @@ class AdminController extends Controller
             $administrators = Admin::query()->where('role', $request->get('role'))
                 ->paginate($request->get('limit', config('settings.pagination_limit')));
 
-            return response()->json(
-                array_merge([
-                    'type' => 'success',
-                    'title' => 'Operation was success',
-                    'message' => 'The data was displayed successfully',
-                ], ['data' => $administrators->toArray() ?? []]),
-                200);
-
+            return response()->jsonApi([
+                'type' => 'success',
+                'title' => 'Operation was success',
+                'message' => 'The data was displayed successfully',
+                'data' => $administrators
+            ]);
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([
                 'type' => 'danger',
@@ -280,13 +278,12 @@ class AdminController extends Controller
         try {
             $admin = Admin::findOrFail($id);
 
-            return response()->json(
-                [
-                    'type' => 'success',
-                    'title' => 'Operation was success',
-                    'message' => 'Administrator was displayed successfully',
-                    'data' => $admin
-                ], 200);
+            return response()->jsonApi([
+                'type' => 'success',
+                'title' => 'Operation was success',
+                'message' => 'Administrator was displayed successfully',
+                'data' => $admin
+            ]);
 
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([
@@ -708,7 +705,7 @@ class AdminController extends Controller
                     'data' => $data['data'],
                 ], 200);
             } else {
-                return response()->json($data, 404);
+                return response()->jsonApi($data, 404);
             }
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([

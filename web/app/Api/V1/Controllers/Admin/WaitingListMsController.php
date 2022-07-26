@@ -86,13 +86,12 @@ class WaitingListMsController extends Controller
     public function index()
     {
         $waitingListMs = WaitingListMS::with('submgId.subscribe')->all();
-        return response()->json(
-            array_merge([
-                'type' => 'success',
-                'title' => 'Operation was success',
-                'message' => 'The data was displayed successfully',
-            ], ['data' => $waitingListMs->toArray() ?? []]),
-            200);
+        return response()->jsonApi([
+            'type' => 'success',
+            'title' => 'Operation was success',
+            'message' => 'The data was displayed successfully',
+            'data' => $waitingListMs
+        ]);
     }
 
     /**
@@ -337,7 +336,7 @@ class WaitingListMsController extends Controller
                     'data' => $data['data'],
                 ], 200);
             } else {
-                return response()->json($data, 404);
+                return response()->jsonApi($data, 404);
             }
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([
