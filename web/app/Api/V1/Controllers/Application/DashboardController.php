@@ -253,10 +253,10 @@ class DashboardController extends Controller
 
             $response = Http::retry(3, 100)
                 ->withHeaders([
-                    'app-id' => config('settings.api.app_id'),
+                    'app-id' => config('settings.app_id'),
                     'user_id' => $user_id,
                 ])
-                ->get(config('settings.api.referrals_ms') . '/v1/total-earnings');
+                ->get(config('settings.api.referrals') . '/webhooks/total-earnings');
 
             $totalEarnings = floatVal($response->json('data'));
 
@@ -366,7 +366,7 @@ class DashboardController extends Controller
             })->withHeaders([
                 'app-id' => MicroservicesEnums::REFERRALS_MS,
                 'user-id' => $id,
-            ])->get(config('settings.api.referrals_ms') . '/v1/leaderboard/overview-earnings/' . $id);
+            ])->get(config('settings.api.referrals') . '/webhooks/leaderboard/overview-earnings/' . $id);
 
             $balance_summary = null;
             if (!$response instanceof ConnectionException) {

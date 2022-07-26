@@ -2,9 +2,6 @@
 
 namespace App\Providers;
 
-use App\Listeners\AdminManagerEventListener;
-use App\Listeners\NewUserRegisteredListener;
-use App\Listeners\WaitingListMS;
 use Laravel\Lumen\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -16,13 +13,13 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen = [
         'NewUserRegistered' => [
-            NewUserRegisteredListener::class,
+            'App\Listeners\NewUserRegisteredListener',
         ],
         'AdminManagerEvent' => [
-            AdminManagerEventListener::class,
+            'App\Listeners\AdminManagerEventListener',
         ],
         'Public' => [
-            WaitingListMSListener::class,
+            'App\Listeners\WaitingListMSListener',
         ],
     ];
 

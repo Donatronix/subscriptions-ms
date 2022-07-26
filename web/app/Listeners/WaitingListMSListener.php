@@ -7,7 +7,6 @@ use App\Models\WaitingListMS as ModelsWaitingListMS;
 use Sumra\SDK\Facades\PubSub;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
-// use PubSub;
 
 class WaitingListMSListener
 {
@@ -43,12 +42,13 @@ class WaitingListMSListener
         ]);
 
         if ($validation->fails()) {
-            PubSub::transaction(function () {})->publish(self::RECEIVER_LISTENER, [
+            PubSub::publish(self::RECEIVER_LISTENER, [
                 'status' => 'error',
                 'subsriber_id' => $inputData['platform'],
                 'waiting_list_ms_id' => $inputData['message_id'],
                 'error' => $validation->errors()
-            ], "waitingLinst");
+            ], config('pubsub.queue.subscriptions'));
+
             return true;
         }
 
@@ -70,8 +70,7 @@ class WaitingListMSListener
                 exit;
             } else {
                 // Return result
-                PubSub::transaction(function () {
-                })->publish(self::RECEIVER_LISTENER, [
+                PubSub::publish(self::RECEIVER_LISTENER, [
                     'type' => 'success',
                     'title' => $inputData->title,
                     'data' => [
@@ -81,7 +80,8 @@ class WaitingListMSListener
                         "product_url" => $inputData->url,
                         "message" => $inputData->message,
                     ]
-                ], "waitingLinst");
+                ], config('pubsub.queue.subscriptions'));
+
                 return true;
             }
         } catch (\Exception $e) {
