@@ -136,16 +136,15 @@ class AdminController extends Controller
     {
         try {
 
-            $administrators = Admin::where('role', $request->get('role'))->paginate($request->get('limit', config('settings.pagination_limit')));
+            $administrators = Admin::query()->where('role', $request->get('role'))
+                ->paginate($request->get('limit', config('settings.pagination_limit')));
 
-            return response()->jsonApi(
-                array_merge([
-                    'type' => 'success',
-                    'title' => 'Operation was success',
-                    'message' => 'The data was displayed successfully',
-                ], ['data' => $administrators->toArray() ?? []]),
-                200);
-
+            return response()->jsonApi([
+                'type' => 'success',
+                'title' => 'Operation was success',
+                'message' => 'The data was displayed successfully',
+                'data' => $administrators
+            ]);
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([
                 'type' => 'danger',
@@ -277,15 +276,14 @@ class AdminController extends Controller
     public function show($id): mixed
     {
         try {
-            $admin = Admin::find($id);
+            $admin = Admin::findOrFail($id);
 
-            return response()->jsonApi(
-                array_merge([
-                    'type' => 'success',
-                    'title' => 'Operation was success',
-                    'message' => 'Administrator was displayed successfully',
-                ], ['data' => $admin?->toArray() ?? []]),
-                200);
+            return response()->jsonApi([
+                'type' => 'success',
+                'title' => 'Operation was success',
+                'message' => 'Administrator was displayed successfully',
+                'data' => $admin
+            ]);
 
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([
@@ -699,16 +697,16 @@ class AdminController extends Controller
                 ];
             });
 
-            if($data['type'] == 'success'){
-            return response()->jsonApi([
-                'type' => 'success',
-                'title' => 'Update was a success',
-                'message' => 'Administrator was updated successfully',
-                'data' => $data['data'],
-            ], 200);
-        }else{
-            return response()->jsonApi($data, 404);
-        }
+            if ($data['type'] == 'success') {
+                return response()->jsonApi([
+                    'type' => 'success',
+                    'title' => 'Update was a success',
+                    'message' => 'Administrator was updated successfully',
+                    'data' => $data['data'],
+                ], 200);
+            } else {
+                return response()->jsonApi($data, 404);
+            }
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([
                 'type' => 'danger',
@@ -849,14 +847,20 @@ class AdminController extends Controller
     public function destroy($id): mixed
     {
         try {
-            $administrators = null;
-            DB::transaction(function () use ($id, &$administrators) {
-                $admin = Admin::find($id);
+            $admin = Admin::findOrFail($id);
 
-                $admin->delete();
+            $admin->delete();
 
-                $administrators = Admin::paginate(config('settings.pagination_limit'));
-            });
+            $administrators = Admin::paginate(config('settings.pagination_limit'));
+
+
+            return response()->jsonApi([
+                'type' => 'success',
+                'title' => 'Operation was a success',
+                'message' => 'Administrator was deleted successfully',
+                'data' => $administrators,
+            ], 200);
+
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([
                 'type' => 'danger',
@@ -872,12 +876,6 @@ class AdminController extends Controller
                 'data' => null,
             ], 404);
         }
-        return response()->jsonApi([
-            'type' => 'success',
-            'title' => 'Operation was a success',
-            'message' => 'Administrator was deleted successfully',
-            'data' => $administrators->toArray(),
-        ], 200);
     }
 
     /**
@@ -1013,32 +1011,32 @@ class AdminController extends Controller
     public function updateRole(Request $request, $id): mixed
     {
         try {
-            $admin = Admin::find($id);
-            DB::transaction(function () use ($request, $id, &$admin) {
-                $validator = Validator::make($request->all(), [
-                    'role' => 'required|string',
-                ]);
+            $admin = Admin::findOrFail($id);
 
-                if ($validator->fails()) {
-                    return response()->jsonApi([
-                        'type' => 'danger',
-                        'title' => "Not operation",
-                        'message' => $validator->messages()->toArray(),
-                        'data' => null,
-                    ], 404);
-                }
+            $validator = Validator::make($request->all(), [
+                'role' => 'required|string',
+            ]);
 
-                // Retrieve the validated input...
-                $validated = $validator->validated();
+            if ($validator->fails()) {
+                return response()->jsonApi([
+                    'type' => 'danger',
+                    'title' => "Not operation",
+                    'message' => $validator->messages()->toArray(),
+                    'data' => null,
+                ], 404);
+            }
 
-                $admin->update($validated);
-            });
+            // Retrieve the validated input...
+            $validated = $validator->validated();
+
+            $admin->update($validated);
+
 
             return response()->jsonApi([
                 'type' => 'success',
                 'title' => 'Update was a success',
                 'message' => 'Administrator was updated successfully',
-                'data' => $admin->toArray(),
+                'data' => $admin,
             ], 200);
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([

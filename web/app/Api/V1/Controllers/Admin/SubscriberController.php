@@ -203,7 +203,7 @@ class SubscriberController extends Controller
                     'new_subscribers_count_platforms_month' => Subscriber::countNewSubscribersByPlatform('month')->get()->toArray(),
                     //                        'total_earning' => 46.050,
                 ],
-                'data' => $subscribers->toArray(),
+                'data' => $subscribers,
             ], 200);
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([
@@ -397,38 +397,35 @@ class SubscriberController extends Controller
     public function show($id): mixed
     {
         try {
-            $subscriber = Subscriber::find($id);
+            $subscriber = Subscriber::findOrFail($id);
 
             if ($subscriber) {
                 $response = Http::retry(3, 100, function ($exception, $request) {
                     return $exception instanceof ConnectionException;
                 })->get(env('APP_URL') . "/" . env('APP_API_VERSION') . '/subscriptions/webhooks/identities');
 
-                $subscriber = $subscriber->toArray();
 
                 if (!$response instanceof ConnectionException) {
-                    $subscriber = array_merge($subscriber->toArray(), $response->json('data'));
+                    if (!is_null($response->json('data'))) {
+                        $subscriber = array_merge($subscriber->toArray(), $response->json('data'));
+                    }
                 }
             }
 
-
-            return response()->jsonApi(
-                [
-                    'type' => 'success',
-                    'title' => 'Operation was success',
-                    'message' => 'Subscriber was displayed successfully',
-                    'general' => [
-                        'total_subscribers' => Subscriber::count(),
-                        'new_subscribers_count_week' => Subscriber::countNewSubscriberByTime('week')->get()->count(),
-                        'new_subscribers_count_month' => Subscriber::countNewSubscriberByTime('month')->get()->count(),
-                        'new_subscribers_count_platforms_week' => Subscriber::countNewSubscribersByPlatform('week')->get()->toArray(),
-                        'new_subscribers_count_platforms_month' => Subscriber::countNewSubscribersByPlatform('month')->get()->toArray(),
-                        //                        'total_earning' => 46.050,
-                    ],
-                    'data' => $subscriber,
+            return response()->jsonApi([
+                'type' => 'success',
+                'title' => 'Operation was success',
+                'message' => 'Subscriber was displayed successfully',
+                'general' => [
+                    'total_subscribers' => Subscriber::count(),
+                    'new_subscribers_count_week' => Subscriber::countNewSubscriberByTime('week')->get()->count(),
+                    'new_subscribers_count_month' => Subscriber::countNewSubscriberByTime('month')->get()->count(),
+                    'new_subscribers_count_platforms_week' => Subscriber::countNewSubscribersByPlatform('week')->get()->toArray(),
+                    'new_subscribers_count_platforms_month' => Subscriber::countNewSubscribersByPlatform('month')->get()->toArray(),
+                    // 'total_earning' => 46.050,
                 ],
-                200
-            );
+                'data' => $subscriber,
+            ]);
 
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([
