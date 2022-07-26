@@ -207,10 +207,8 @@ class SubscriberController extends Controller
             ], 200);
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([
-                'type' => 'danger',
                 'title' => "Not operation",
                 'message' => "Error showing all transactions",
-                'data' => null,
             ], 404);
         } catch (Throwable $e) {
             return response()->jsonApi([
