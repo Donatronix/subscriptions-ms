@@ -43,7 +43,4 @@ $router->group([
     $router->get('/view', function () use ($router) {
         return view('test');
     });
-
-    $router->post('/analyze', 'WaitingListMSController@waitingListMessage');
-    $router->post('/waitlist/messages', WaitingListMSController::class, 'store');
 });

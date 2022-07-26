@@ -110,8 +110,8 @@ class WaitingListMSController extends Controller
                 if ($validator->fails()) {
                     return response()->jsonApi([
                         'title' => "Invalid data",
-                        'message' => $validator->errors(),
-                    ], 404);
+                        'message' => $validator->errors()
+                    ], 422);
                 }
 
                 // Retrieve the validated input...
@@ -135,7 +135,7 @@ class WaitingListMSController extends Controller
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([
                 'title' => "Not operation",
-                'message' => "Message was not added. Please try again.",
+                'message' => "Message was not added. Please try again."
             ], 404);
         } catch (Throwable $e) {
             return response()->jsonApi([
@@ -249,6 +249,7 @@ class WaitingListMSController extends Controller
 
                 $wait_message->update($validated);
             });
+
             if ($data['type'] == 'success') {
                 return response()->jsonApi([
                     'title' => 'Update was a success',
@@ -284,7 +285,7 @@ class WaitingListMSController extends Controller
      *             "ManagerRead",
      *             "Subscriber",
      *             "ManagerWrite"
-     *         },
+     *         }
      *     }},
      *
      *     @OA\Parameter(
@@ -416,7 +417,9 @@ class WaitingListMSController extends Controller
         }
 
         try {
+            $corr_id = uniqid();
             $waitListMs = SubMgsId::create([
+                'message_id' => $corr_id,
                 'message_id' => $message->id,
                 'subscriber_ids' => $request->subscriber_id,
                 'status' => 'delivered',
@@ -425,10 +428,13 @@ class WaitingListMSController extends Controller
             $data = [
                 "subscriber_ids" => json_encode($request->subscriber_ids),
                 "message" => $message->message,
+                'message_id' => $corr_id,
                 "title" => $request->title,
             ];
+
             // dd($data);
             dispatch(new PubSubService($data));
+
             return response()->jsonApi([
                 'title' => 'Message prodcast',
                 'message' => 'Message was sent successfully',
@@ -455,7 +461,7 @@ class WaitingListMSController extends Controller
      *              "ManagerRead",
      *              "Admin",
      *              "ManagerWrite"
-     *          },
+     *          }
      *     }},
      *
      *     @OA\Parameter(
@@ -494,6 +500,7 @@ class WaitingListMSController extends Controller
      *         response="400",
      *         description="Invalid request"
      *     ),
+     *
      *     @OA\Response(
      *          response="404",
      *          description="Not found",
