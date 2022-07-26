@@ -75,7 +75,6 @@ class Subscriber extends Model
             ->selectRaw('channel, count(*) as total');
     }
 
-
     /**
      * @param $time
      *
@@ -109,12 +108,7 @@ class Subscriber extends Model
      *
      * @return mixed
      */
-
     public function submgId(){
         $this->hasMany('App\Models\SubMgsId', 'subscriber_id');
     }
-
-
-
-
 }
