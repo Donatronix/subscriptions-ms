@@ -273,10 +273,8 @@ class DashboardController extends Controller
             ], 200);
         } catch (Throwable $e) {
             return response()->jsonApi([
-                'type' => 'danger',
                 'title' => "Get subscriber dashboard failed",
                 'message' => $e->getMessage(),
-                'data' => null,
             ], 404);
         }
     }
@@ -380,10 +378,8 @@ class DashboardController extends Controller
             ]);
         } catch (Throwable $e) {
             return response()->jsonApi([
-                'type' => 'danger',
                 'title' => "Get subscriber dashboard failed",
                 'message' => $e->getMessage(),
-                'data' => null,
             ], 404);
         }
     }

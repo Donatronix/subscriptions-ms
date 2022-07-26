@@ -212,10 +212,8 @@ class SubscriberController extends Controller
             ], 404);
         } catch (Throwable $e) {
             return response()->jsonApi([
-                'type' => 'danger',
                 'title' => "Update failed",
                 'message' => $e->getMessage(),
-                'data' => null,
             ], 404);
         }
     }
@@ -427,17 +425,13 @@ class SubscriberController extends Controller
 
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([
-                'type' => 'danger',
                 'title' => "Not operation",
                 'message' => "Subscriber does not exist",
-                'data' => null,
             ], 404);
         } catch (Throwable $e) {
             return response()->jsonApi([
-                'type' => 'danger',
                 'title' => "Get subscriber failed",
                 'message' => $e->getMessage(),
-                'data' => null,
             ], 404);
         }
     }
@@ -669,10 +663,8 @@ class SubscriberController extends Controller
 
                 if ($validator->fails()) {
                     return [
-                        'type' => 'danger',
                         'title' => "Invalid data",
                         'message' => $validator->messages()->toArray(),
-                        'data' => null,
                     ];
                 }
 
@@ -682,25 +674,20 @@ class SubscriberController extends Controller
 
                 if ($subscriber = Subscriber::find($validated['id'])) {
                     return [
-                        'type' => 'danger',
                         'title' => "Adding new subscriber failed",
                         'message' => "Subscriber already exists",
-                        'data' => null,
                     ];
                 }
 
                 if ($subscriber = Subscriber::where('username', $validated['username'])->first()) {
                     return [
-                        'type' => 'danger',
                         'title' => "Not operation",
                         'message' => "Username already in use",
-                        'data' => null,
                     ];
                 }
 
                 $subscriber = Subscriber::create($validated);
                 return [
-                    'type' => 'success',
                     'title' => 'Operation was a success',
                     'message' => 'Subscriber was added successfully',
                     'data' => $subscriber,
@@ -709,7 +696,6 @@ class SubscriberController extends Controller
 
             if ($subscriber['type'] == "success") {
                 return response()->jsonApi([
-                    'type' => 'success',
                     'title' => 'Operation was a success',
                     'message' => 'Subscriber was added successfully',
                     'general' => [
@@ -726,17 +712,13 @@ class SubscriberController extends Controller
             }
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([
-                'type' => 'danger',
                 'title' => "Not operation",
                 'message' => "Subscriber was not added. Please try again.",
-                'data' => null,
             ], 404);
         } catch (Throwable $e) {
             return response()->jsonApi([
-                'type' => 'danger',
                 'title' => "Subscription failed",
                 'message' => $e->getMessage(),
-                'data' => null,
             ], 404);
         }
     }
@@ -962,10 +944,8 @@ class SubscriberController extends Controller
 
                 if ($validator->fails()) {
                     return [
-                        'type' => 'danger',
                         'title' => "Not operation",
                         'message' => $validator->messages()->toArray(),
-                        'data' => null,
                     ];
                 }
 
@@ -974,10 +954,8 @@ class SubscriberController extends Controller
 
                 if (Subscriber::where('username', $validated['username'])->first() != Subscriber::find($id)) {
                     return [
-                        'type' => 'danger',
                         'title' => "Not operation",
                         'message' => "Username already in use",
-                        'data' => null,
                     ];
                 }
 
@@ -985,7 +963,6 @@ class SubscriberController extends Controller
 
                 $subscriber->update($validated);
                 return [
-                    'type' => 'success',
                     'title' => 'Operation was a success',
                     'message' => 'Subscriber was added successfully',
                     'data' => $subscriber,
@@ -994,7 +971,6 @@ class SubscriberController extends Controller
 
             if ($subscriber['type'] == "success") {
                 return response()->jsonApi([
-                    'type' => 'success',
                     'title' => 'Operation was a success',
                     'message' => 'Subscriber was updated successfully',
                     'general' => [
@@ -1012,17 +988,13 @@ class SubscriberController extends Controller
             }
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([
-                'type' => 'danger',
                 'title' => "Update failed",
                 'message' => "Subscriber does not exist",
-                'data' => null,
             ], 404);
         } catch (Throwable $e) {
             return response()->jsonApi([
-                'type' => 'danger',
                 'title' => "Update failed",
                 'message' => $e->getMessage(),
-                'data' => null,
             ], 404);
         }
     }
@@ -1219,10 +1191,8 @@ class SubscriberController extends Controller
                     $subscriber->delete();
                 } else {
                     return [
-                        'type' => 'danger',
                         'title' => "Deletion failed",
                         'message' => "Subscriber does not exist",
-                        'data' => null,
                     ];
                 }
 
@@ -1235,7 +1205,6 @@ class SubscriberController extends Controller
 
             if ($subscribers['type'] == "success") {
                 return response()->jsonApi([
-                    'type' => 'success',
                     'title' => 'Operation was a success',
                     'message' => 'Subscriber was deleted successfully',
                     'general' => [
@@ -1252,17 +1221,13 @@ class SubscriberController extends Controller
             }
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([
-                'type' => 'danger',
                 'title' => "Delete failed",
-                'message' => "Subscriber does not exist",
-                'data' => null,
+                'message' => "Subscriber does not exist"
             ], 404);
         } catch (Throwable $e) {
             return response()->jsonApi([
-                'type' => 'danger',
                 'title' => "Delete failed",
                 'message' => $e->getMessage(),
-                'data' => null,
             ], 404);
         }
     }

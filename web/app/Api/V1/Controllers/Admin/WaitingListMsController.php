@@ -316,10 +316,8 @@ class WaitingListMsController extends Controller
 
                 if ($validator->fails()) {
                     return [
-                        'type' => 'danger',
                         'title' => "Not operation",
                         'message' => $validator->errors(),
-                        'data' => null,
                     ];
                 }
 
@@ -330,7 +328,6 @@ class WaitingListMsController extends Controller
             });
             if ($data['type'] == 'success') {
                 return response()->jsonApi([
-                    'type' => 'success',
                     'title' => 'Update was a success',
                     'message' => 'Message was updated successfully',
                     'data' => $data['data'],
@@ -340,17 +337,13 @@ class WaitingListMsController extends Controller
             }
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([
-                'type' => 'danger',
                 'title' => "Update failed",
                 'message' => "Message does not exist",
-                'data' => null,
             ], 404);
         } catch (Throwable $e) {
             return response()->jsonApi([
-                'type' => 'danger',
                 'title' => "Update failed",
                 'message' => $e->getMessage(),
-                'data' => null,
             ], 404);
         }
     }
@@ -492,11 +485,10 @@ class WaitingListMsController extends Controller
                 'message_id' => $message->id,
                 'message' => $validation->errors()
             ]);
+
             return response()->jsonApi([
-                'type' => 'danger',
                 'title' => "Not operation",
                 'message' => $validation->errors(),
-                'data' => null,
             ], 404);
         }
 
@@ -517,17 +509,14 @@ class WaitingListMsController extends Controller
             // dd($data);
             dispatch(new WaitingListMSListener($data));
             return response()->jsonApi([
-                'type' => 'success',
                 'title' => 'Message prodcast',
                 'message' => 'Message was sent successfully',
                 // 'data' => $waitListMs,
             ], 200);
         } catch (Exception $e) {
             return response()->jsonApi([
-                'type' => 'danger',
                 'title' => "Not operation",
-                'message' => $e->getMessage(),
-                'data' => null,
+                'message' => $e->getMessage()
             ], 404);
         }
     }
@@ -620,21 +609,16 @@ class WaitingListMsController extends Controller
             });
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([
-                'type' => 'danger',
                 'title' => "Delete failed",
                 'message' => "Message does not exist",
-                'data' => null,
             ], 404);
         } catch (Throwable $e) {
             return response()->jsonApi([
-                'type' => 'danger',
                 'title' => "Delete failed",
                 'message' => $e->getMessage(),
-                'data' => null,
             ], 404);
         }
         return response()->jsonApi([
-            'type' => 'success',
             'title' => 'Operation was a success',
             'message' => 'Message was deleted successfully',
             'data' => $wait_message,
