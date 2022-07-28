@@ -473,7 +473,7 @@ class AdminController extends Controller
                 'title' => 'Operation was a success',
                 'message' => 'Administrator was added successfully',
                 'data' => $admin->toArray(),
-            ], 200);
+            ]);
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([
                 'title' => "Not operation",
@@ -678,7 +678,7 @@ class AdminController extends Controller
                     'title' => 'Update was a success',
                     'message' => 'Administrator was updated successfully',
                     'data' => $data['data'],
-                ], 200);
+                ]);
             } else {
                 return response()->jsonApi($data, 404);
             }
@@ -758,9 +758,9 @@ class AdminController extends Controller
      *                     type="string",
      *                     description="Administrator role",
      *                     example="admin",
-     *                 ),
-     *             ),
-     *         ),
+     *                 )
+     *             )
+     *         )
      *     ),
      *
      *     @OA\Response(
@@ -828,7 +828,7 @@ class AdminController extends Controller
                 'title' => 'Operation was a success',
                 'message' => 'Administrator was deleted successfully',
                 'data' => $administrators,
-            ], 200);
+            ]);
 
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([
@@ -998,7 +998,7 @@ class AdminController extends Controller
                 'title' => 'Update was a success',
                 'message' => 'Administrator was updated successfully',
                 'data' => $admin,
-            ], 200);
+            ]);
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([
                 'title' => "Update failed",

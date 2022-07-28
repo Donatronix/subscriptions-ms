@@ -200,10 +200,10 @@ class SubscriberController extends Controller
                     'new_subscribers_count_month' => Subscriber::countNewSubscriberByTime('month')->get()->count(),
                     'new_subscribers_count_platforms_week' => Subscriber::countNewSubscribersByPlatform('week')->get()->toArray(),
                     'new_subscribers_count_platforms_month' => Subscriber::countNewSubscribersByPlatform('month')->get()->toArray(),
-                    //                        'total_earning' => 46.050,
+                    // 'total_earning' => 46.050,
                 ],
                 'data' => $subscribers,
-            ], 200);
+            ]);
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([
                 'title' => "Not operation",
@@ -704,7 +704,7 @@ class SubscriberController extends Controller
                         'new_subscribers_count_platforms_month' => Subscriber::countNewSubscribersByPlatform('month')->get()->toArray(),
                     ],
                     'data' => $subscriber['data'],
-                ], 200);
+                ]);
             } else {
                 return response()->jsonApi(Subscriber::all(), 404);
             }
@@ -980,7 +980,7 @@ class SubscriberController extends Controller
                         //                    'total_earning' => 46.050,
                     ],
                     'data' => $subscriber->toArray(),
-                ], 200);
+                ]);
             } else {
                 return response()->jsonApi(Subscriber::all(), 404);
             }
@@ -1213,7 +1213,7 @@ class SubscriberController extends Controller
                         'new_subscribers_count_platforms_month' => Subscriber::countNewSubscribersByPlatform('month')->get()->toArray(),
                     ],
                     'data' => $subscribers['data'],
-                ], 200);
+                ]);
             } else {
                 return response()->jsonApi($subscribers, 404);
             }

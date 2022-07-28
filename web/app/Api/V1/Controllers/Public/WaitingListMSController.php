@@ -15,7 +15,6 @@ use Throwable;
 
 class WaitingListMSController extends Controller
 {
-
     /**
      *  Add new message
      *
@@ -131,7 +130,7 @@ class WaitingListMSController extends Controller
                 'title' => 'Operation was a success',
                 'message' => 'Message was added successfully',
                 'data' => $wait_message,
-            ], 200);
+            ]);
         } catch (ModelNotFoundException $e) {
             return response()->jsonApi([
                 'title' => "Not operation",
@@ -255,7 +254,7 @@ class WaitingListMSController extends Controller
                     'title' => 'Update was a success',
                     'message' => 'Message was updated successfully',
                     'data' => $data['data'],
-                ], 200);
+                ]);
             } else {
                 return response()->jsonApi($data, 404);
             }
@@ -276,7 +275,7 @@ class WaitingListMSController extends Controller
      * Send message to subscribers
      *
      * @OA\POST(
-     *     path="/publish/wait-messages",
+     *     path="/waitlist/wait-messages",
      *     description="Send a new message",
      *     tags={"Waitlist Messages"},
      *
@@ -439,7 +438,7 @@ class WaitingListMSController extends Controller
                 'title' => 'Message prodcast',
                 'message' => 'Message was sent successfully',
                 // 'data' => $waitListMs,
-            ], 200);
+            ]);
         } catch (Exception $e) {
             return response()->jsonApi([
                 'title' => "Not operation",
