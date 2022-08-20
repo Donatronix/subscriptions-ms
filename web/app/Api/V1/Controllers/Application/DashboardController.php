@@ -19,9 +19,9 @@ class DashboardController extends Controller
      *  Display a listing of the subscribers
      *
      * @OA\Get(
-     *     path="/user/dashboard",
+     *     path="/app/dashboard",
      *     description="Get all subscribers dashboard",
-     *     tags={"User | Dashboard"},
+     *     tags={"Application | Dashboard"},
      *
      *     security={{
      *          "default" :{
@@ -269,7 +269,7 @@ class DashboardController extends Controller
                     'total_earning' => $totalEarnings,
                 ],
                 'data' => Subscriber::find($user_id),
-            ], 200);
+            ]);
         } catch (Throwable $e) {
             return response()->jsonApi([
                 'title' => "Get subscriber dashboard failed",
@@ -279,12 +279,12 @@ class DashboardController extends Controller
     }
 
     /**
-     *  Get Balance summary for user for user
+     *  Get Balance summary for user
      *
      * @OA\Get(
-     *     path="/invited-users/{id}",
+     *     path="/app/invited-users/{id}",
      *     description="A list of leaders in the invitation referrals",
-     *     tags={"Balance Summary"},
+     *     tags={"Application | Balance Summary"},
      *
      *     security={{
      *         "default" :{

@@ -9,22 +9,25 @@ $router->group([
 ], function ($router) {
     /**
      * PUBLIC ACCESS
+     *
+     * level with free access to the endpoint
      */
-//    $router->group([], function ($router) {
-//    });
-
-    // $router->get('subscribers', 'SubscriberController@index');
-    // $router->post('subscriptions-messages', 'WaitingListMsController@store');
+    $router->group([
+        'namespace' => 'Public'
+    ], function ($router) {
+        $router->post('/waitlist/messages', 'WaitingListMSController@store');
+        $router->post('/analyze', 'WaitingListMSController@waitingListMessage');
+    });
 
     /**
      * USER APPLICATION PRIVATE ACCESS
+     *
+     * Application level for users
      */
     $router->group([
-        'prefix' => 'user',
+        'prefix' => 'app',
         'namespace' => 'Application',
-        'middleware' => [
-            'checkUser',
-        ],
+        'middleware' => 'checkUser'
     ], function ($router) {
         /**
          * Dashboard
@@ -35,6 +38,8 @@ $router->group([
 
     /**
      * ADMIN PANEL ACCESS
+     *
+     * Admin / super admin access level (E.g CEO company)
      */
     $router->group([
         'prefix' => 'admin',
@@ -74,7 +79,16 @@ $router->group([
         $router->get('subscriptions-messages', 'WaitingListMSController@index');
         $router->post('subscriptions-messages', 'WaitingListMSController@store');
     });
-});
 
-//$router->post('/analyze', 'WaitingListMSController@waitingListMessage');
-//$router->post('/waitlist/messages', WaitingListMSController::class, 'store');
+    /**
+     * WEBHOOKS
+     *
+     * Access level of external / internal software services
+     */
+    $router->group([
+        'prefix' => 'webhooks',
+        'namespace' => 'Webhooks'
+    ], function ($router) {
+        //
+    });
+});

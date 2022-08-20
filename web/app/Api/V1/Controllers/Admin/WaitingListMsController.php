@@ -97,7 +97,7 @@ class WaitingListMsController extends Controller
      *  Add new message
      *
      * @OA\Post(
-     *     path="/waitlist/messages",
+     *     path="/admin/waitlist/messages",
      *     description="Add new message",
      *     tags={"Admin | Waitlist Messages"},
      *
@@ -224,7 +224,7 @@ class WaitingListMsController extends Controller
      *  Update message record
      *
      * @OA\Put(
-     *     path="/waitlist/messages/{id}",
+     *     path="/admin/waitlist/messages/{id}",
      *     description="Update message",
      *     tags={"Admin | Waitlist Messages"},
      *
@@ -330,7 +330,7 @@ class WaitingListMsController extends Controller
                     'title' => 'Update was a success',
                     'message' => 'Message was updated successfully',
                     'data' => $data['data'],
-                ], 200);
+                ]);
             } else {
                 return response()->jsonApi($data, 404);
             }
@@ -351,7 +351,7 @@ class WaitingListMsController extends Controller
      *  Send message to subscribers
      *
      * @OA\POST(
-     *     path="/publish/wait-messages",
+     *     path="/admin/publish/wait-messages",
      *     description="Send a new message",
      *     tags={"Admin | Waitlist Messages"},
      *
@@ -511,7 +511,7 @@ class WaitingListMsController extends Controller
                 'title' => 'Message prodcast',
                 'message' => 'Message was sent successfully',
                 // 'data' => $waitListMs,
-            ], 200);
+            ]);
         } catch (Exception $e) {
             return response()->jsonApi([
                 'title' => "Not operation",
@@ -524,7 +524,7 @@ class WaitingListMsController extends Controller
      *  Delete a message
      *
      * @OA\Delete(
-     *     path="/delete/messages/{id}",
+     *     path="/admin/delete/messages/{id}",
      *     description="Delete a Admin | waitlist messages",
      *     tags={"Admin | Waitlist Messages"},
      *

@@ -247,7 +247,6 @@ class DashboardController extends Controller
     public function index(Request $request): mixed
     {
         try {
-
             $statistics = SubscribersAnalysisTrait::getSubscribersStatistics();
 
             $response = Http::retry(3, 100, function ($exception, $request) {
@@ -270,7 +269,7 @@ class DashboardController extends Controller
                     'total_earning' => $totalEarnings,
                 ],
                 'data' => Subscriber::all(),
-            ], 200);
+            ]);
         } catch (Throwable $e) {
             return response()->jsonApi([
                 'title' => "Get subscriber dashboard failed",
@@ -279,12 +278,11 @@ class DashboardController extends Controller
         }
     }
 
-
     /**
      *  Get Balance summary for user
      *
      * @OA\Get(
-     *     path="/invited-users/{id}",
+     *     path="/admin/invited-users/{id}",
      *     description="A list of leaders in the invitation referrals",
      *     tags={"Balance Summary"},
      *
